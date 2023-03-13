@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>课表</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/public/atom/img/core-img/favicon.ico">
+
+    <!-- These plugins only need for the run this page -->
+    <link rel="stylesheet" href="/public/atom/css/fullcalendar.min.css">
+
+    <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
+    <link rel="stylesheet" href="/public/atom/style.css">
+
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- ======================================
+    ******* Page Wrapper Area Start **********
+    ======================================= -->
+    <div class="admetro-page-wrapper">
+
+        <!-- Page Content -->
+        <div class="admetro-page-content" style="margin-left:0px">
+            <!-- Top Header Area -->
+            <header class="top-header-area d-flex align-items-center justify-content-between" style="width:calc(100%); left:0px">
+                <div class="left-side-content-area d-flex align-items-center">
+                    <!-- Mobile Logo -->
+                    <div class="mobile-logo mr-3 mr-sm-4">
+                    </div>
+
+                    <!-- Triggers -->
+                    <div class="admetro-triggers mr-1 mr-sm-3">
+                        <div class="menu-collasped" id="menuCollasped">
+                            <i class="ti-align-right"></i>
+                        </div>  
+                        <div class="mobile-menu-open" id="mobileMenuOpen">
+                            <i class="ti-align-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-side-navbar d-flex align-items-center justify-content-end">
+                    <!-- Top Bar Nav -->
+                    <ul class="d-flex align-items-center">
+
+                        <li class="nav-item dropdown">
+                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/public/atom/img/member-img/women.jpg" alt=""></button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <!-- User Profile Area -->
+                                <div class="user-profile-area">
+                                    <div class="user-profile-heading">
+                                        <!-- Profile Text -->
+                                        <div class="profile-text">
+                                            <h6>Samantha Sarah</h6>
+                                        </div>
+                                    </div>
+                                    <a href="login.html" class="dropdown-item"><i class="ti-unlink text-warning" aria-hidden="true"></i> 推出</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <div class="main-content" style="padding:30px 0">
+                <!-- Calendar area Start -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="content calender-content">
+                             <div class="" style="padding: 0px 5px;">
+                                <div class="alert success-color text-white" role="alert"> <i class="ti-close close" data-dismiss="alert"></i> <strong>提醒:</strong> 课表显示当前时间前15天后90天的排课. </div>
+                            </div>
+                            <div class="row">
+                                <div class="" style="padding: 0px 5px;">
+                                    <div class="card bg-boxshadow mb-30">
+                                        <div class="card-body" >
+                                            <div id='fullcalendar-default-view'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================
+    ********* Page Wrapper Area End ***********
+    ======================================= -->
+    <!-- Must needed plugins to the run this template -->
+    <script src="/public/atom/js/jquery.min.js"></script>
+    <script src="/public/atom/js/bootstrap.min.js"></script>
+    <script src="/public/atom/js/admetro.bundle.js"></script>
+
+    <!-- These plugins only need for the run this page -->
+    <script src="/public/atom/js/default-assets/fullcalendar-moment.min.js"></script>
+    <script src="/public/atom/js/fullcalendar.min.js"></script>
+    <script >
+(function ($) {
+    'use strict';
+
+    var today = new Date();
+    var y = today.getFullYear();
+    var m = today.getMonth();
+    var d = today.getDate();
+
+    
+    // Default view
+    $('#fullcalendar-default-view').fullCalendar({
+        themeSystem: 'bootstrap4',
+        bootstrapFontAwesome: {
+            close: ' ion ion-md-close',
+            prev: ' fa fa-angle-left scaleX--1-rtl',
+            next: ' fa fa-angle-right scaleX--1-rtl',
+            prevYear: ' fa fa-angle-left scaleX--1-rtl',
+            nextYear: ' fa fa-angle-right scaleX--1-rtl'
+        },
+
+        header: {
+            left: 'title',
+            center: 'month,agendaDay',
+            right: 'prev,next today'
+        },
+        timeZone: 'PRC',
+
+        contentHeight:550,
+        dayMaxEventRows: 1, //最大事件行数
+        moreLinkContent(jsEvent) {
+            console.log(jsEvent)
+            return jsEvent.shortText;
+        },
+        defaultDate: today,
+        navLinks: true,
+        selectable: true,
+        selectHelper: true,
+        weekNumbers: false,
+        nowIndicator: true,
+        firstDay: 1,
+        businessHours: {
+            dow: [1, 2, 3, 4, 5],
+            start: '9:00',
+            end: '18:00',
+        },
+        editable: false,
+        eventLimit: true,
+           dayGridMonth: { // name of view
+        titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' }
+        // other view-specific options here
+        },
+        events: "/mapi/schedule/joblistv2?client=1&student_id={{ data.student_id }}"
+    });
+
+})(jQuery);
+</script>
+
+    <!-- Active JS -->
+    <script src="/public/atom/js/default-assets/active.js"></script>
+
+
+</body>
+
+</html>

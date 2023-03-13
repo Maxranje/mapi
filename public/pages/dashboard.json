@@ -1,0 +1,16 @@
+{
+    "type": "page",
+    "title": "",
+    "body": [
+      {
+        "type": "alert",
+        "level": "success",
+        "body": "温馨提示：欢迎到来"
+      },
+      {
+        "type": "alert",
+        "level": "warning",
+        "body": "系统操作有任何问题请及时联系管理员, 谢谢~"
+      }
+    ]
+  }

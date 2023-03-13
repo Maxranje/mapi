@@ -1,0 +1,22 @@
+<?php
+
+class Service_Page_Teacher_Delete extends Zy_Core_Service{
+
+    public function execute () {
+        if (!$this->checkAdmin()) {
+            throw new Zy_Core_Exception(405, "无权限");
+        }
+
+        if (empty($this->request['uid'])) {
+            throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
+        }
+
+        $serviceData = new Service_Data_User_Profile();
+        $status = $serviceData->deleteTeacher(intval($this->request['uid']));
+        if (!$status) {
+            throw new Zy_Core_Exception(405, "删除错误, 请重试");
+        }
+        
+        return array();
+    }
+}
