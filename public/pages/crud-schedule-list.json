@@ -8,7 +8,7 @@
         "name":"schedule_list",
         "api": {
             "method": "post",
-            "url":  "/mapi/schedule/listsv2",
+            "url":  "/mapi/schedule/pklists",
             "dataType": "form"
         },
         "perPage": 20,
@@ -86,7 +86,7 @@
                 "type": "action",
                 "actionType": "download",
                 "label": "导出Excel",
-                "api": "/mapi/schedule/listsv2?group_id=${group_id}&teacher_id=${teacher_id}&daterange=${daterange}&export=1"
+                "api": "/mapi/schedule/pklists?group_id=${group_id}&teacher_id=${teacher_id}&daterange=${daterange}&export=1"
             },
             {
                 "type": "tpl",
@@ -211,7 +211,7 @@
                         "confirmText": "您确认要结算?",
                         "api": {
                             "method": "get",
-                            "url": "/mapi/schedule/jobs?id=${id}"
+                            "url": "/mapi/schedule/checkout?id=${id}"
                         },
                         "onEvent": {
                             "click": {

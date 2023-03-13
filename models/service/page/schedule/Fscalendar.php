@@ -1,6 +1,6 @@
 <?php
 // 学生端显示
-class Service_Page_Schedule_Joblist extends Zy_Core_Service{
+class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkStudent() && !$this->checkTeacher()) {

@@ -1,6 +1,6 @@
 <?php
 
-class Service_Page_Schedule_Jobs extends Zy_Core_Service{
+class Service_Page_Schedule_Checkout extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {

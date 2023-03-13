@@ -592,7 +592,7 @@
                                     "body": {
                                         "type": "service",
                                         "name" : "time_calendar",
-                                        "schemaApi": "/mapi/schedule/listsv3?student_id=${uid}&group_id=${group_id}&isSelect=1"
+                                        "schemaApi": "/mapi/schedule/bscalendar?student_id=${uid}&group_id=${group_id}&isSelect=1"
                                     }
                                 }
                             ]

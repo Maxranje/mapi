@@ -1,7 +1,7 @@
 <?php
 
 // 排课中查询功能
-class Service_Page_Schedule_Lists extends Zy_Core_Service{
+class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
