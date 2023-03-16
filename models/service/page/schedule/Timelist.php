@@ -9,12 +9,12 @@ class Service_Page_Schedule_Timelist extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限");
         }
 
-        $type = empty($this->request['type']) ? 0 : intval($this->request['type']);
-        $week = empty($this->request['week']) ? "" : $this->request['week'];
-        $week = empty($week) ? array() : explode(",", $week);
-        $length = empty($this->request['length']) ? 0 : intval($this->request['length']);
-        $startDay = empty($this->request['startDay']) ? 0 : intval($this->request['startDay']);
-        $defaultTime = empty($this->request['defaultTime']) ? array() : $this->request['defaultTime'];
+        $type       = empty($this->request['type']) ? 0 : intval($this->request['type']);
+        $week       = empty($this->request['week']) ? "" : $this->request['week'];
+        $week       = empty($week) ? array() : explode(",", $week);
+        $length     = empty($this->request['length']) ? 0 : intval($this->request['length']);
+        $startDay   = empty($this->request['start_day']) ? 0 : intval($this->request['start_day']);
+        $defaultTime= empty($this->request['default_time']) ? array() : $this->request['default_time'];
 
         if (!in_array($type, array(1,2))){
             throw new Zy_Core_Exception(405, "每周/隔周必须选一个");

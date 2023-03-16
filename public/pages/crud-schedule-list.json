@@ -39,6 +39,15 @@
                     "source": "/mapi/teacher/lists?isSelect=1&isNoSubject=1"
                 },
                 {
+                    "type": "tree-select",
+                    "name": "area_id",
+                    "searchable":true,
+                    "onlyLeaf":true,
+                    "label": "校区",
+                    "size":"md",
+                    "source": "/mapi/area/aslists"
+                },
+                {
                     "label": "结算状态",
                     "type": "select",
                     "name": "status",
@@ -125,34 +134,30 @@
             {
                 "name": "id",
                 "label": "ID",
-                
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "teacher_name",
                 "label": "教师名",
-                
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "group_name",
                 "label": "班级名",
-                
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "subject_name",
                 "label": "课程名",
-                
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "area_name",
-                "label": "校区",
+                "label": "校区(教室)",
                 "type": "text",
                 "toggled": true
             },
@@ -207,21 +212,11 @@
                         "label" : "结算",
                         "disabledOn": "this.state === '0'",
                         "actionType": "ajax",
-                        "tooltip": "确认结算",
-                        "confirmText": "您确认要结算?",
+                        "tooltip": "结算",
+                        "confirmText": "您确认结算?",
                         "api": {
                             "method": "get",
-                            "url": "/mapi/schedule/checkout?id=${id}"
-                        },
-                        "onEvent": {
-                            "click": {
-                                "actions": [
-                                    {
-                                    "actionType": "reload",
-                                    "componentId": "schedule_list"
-                                    }
-                                ]
-                            }
+                            "url": "/mapi/schedule/checkout?id=$id"
                         }
                     }
                 ],
@@ -274,6 +269,7 @@
                                         "label": "教师",
                                         "initiallyOpen": false,
                                         "size": "full",
+                                        "searchable":true,
                                         "value": "${s_t_id}",
                                         "required": true,
                                         "source": "/mapi/teacher/lists?isSelect=1"
@@ -343,14 +339,19 @@
                                         "type": "input-text",
                                         "name": "id",
                                         "label": "id",
+                                        "size":"md",
                                         "disabled": true
                                     },
                                     {
-                                        "type": "input-text",
-                                        "name": "area",
-                                        "label": "校区",
-                                        "value": "${area_name}",
-                                        "desc": "此处校区调整只会影响当前排课记录"
+                                        "type": "tree-select",
+                                        "name": "area_id",
+                                        "onlyLeaf":true,
+                                        "label": "校区和教室",
+                                        "searchable":true,
+                                        "size":"md",
+                                        "value": "${a_r_id}",
+                                        "initiallyOpen":false,
+                                        "source": "/mapi/area/pklists"
                                     }
                                 ]
                             }

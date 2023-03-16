@@ -1,5 +1,9 @@
 {
     "type": "page",
+    "cssVars": {
+        "--fontSizeBase": "10px",
+        "--borderRadius":"2px"
+    },
     "title": "班级管理",
     "remark": "bla bla bla",
     "toolbar": [
@@ -45,14 +49,6 @@
                             "type": "input-text",
                             "name": "descs",
                             "label": "描述"
-                        },
-                        {
-                            "type": "divider"
-                        },
-                        {
-                            "type": "input-text",
-                            "name": "area",
-                            "label": "校区"
                         },
                         {
                             "type": "divider"
@@ -219,16 +215,10 @@
                 "toggled": true
             },
             {
-                "type": "text",
-                "name": "area",
-                "label": "校区",
-                "toggled": true
-            },
-            {
                 "name": "descs",
                 "label": "描述",
                 "type": "text",
-                "toggled": false
+                "toggled": true
             },
             {
                 "name": "statusInfo",
@@ -294,14 +284,6 @@
                                         "type": "static",
                                         "name": "name",
                                         "label": "班级名称"
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "static",
-                                        "name": "area",
-                                        "label": "校区"
                                     },
                                     {
                                         "type": "divider"
@@ -420,14 +402,6 @@
                                         "name": "name",
                                         "label": "班级名称",
                                         "required": true
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "input-text",
-                                        "name": "area",
-                                        "label": "校区"
                                     },
                                     {
                                         "type": "divider"

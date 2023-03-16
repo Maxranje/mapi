@@ -1,18 +1,16 @@
 <?php
 
-class Dao_Group extends Zy_Core_Dao {
+class Dao_Room extends Zy_Core_Dao {
+
+    public $arrFieldsMap;
 
     public function __construct() {
         $this->_dbName      = "zy_mapi";
-        $this->_table       = "tblGroup";
+        $this->_table       = "tblRoom";
         $this->arrFieldsMap = array(
             "id"  => "id" , 
             "name"  => "name", 
-            "descs"  => "descs" ,
-            "status" => "status",
-            "price" => "price",
-            "discount" => "discount",
-            "duration" => "duration" ,
+            "area_id"  => "area_id",
             "create_time"  => "create_time" , 
             "update_time"  => "update_time" , 
             "ext"  => "ext" , 

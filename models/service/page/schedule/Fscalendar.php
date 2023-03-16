@@ -65,9 +65,17 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
         $columnIds = array();
         $groupIds = array();
+        $areaIds = array();
+        $roomIds = array();
         foreach ($lists as $item) {
             $columnIds[] = intval($item['column_id']);
             $groupIds[] = intval($item['group_id']);
+            
+            // 获取校区id
+            if (!empty($item['area_id']) && !empty($item['room_id'])) {
+                $areaIds[] = intval($item['area_id']);
+                $roomIds[] = intval($item['room_id']);
+            }
         }
 
         // 获取教师名字
@@ -88,6 +96,17 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         $serviceGroup = new Service_Data_Group();
         $groupInfos = $serviceGroup->getListByConds(array('id in ('.implode(",", $groupIds).')'));
         $groupInfos = array_column($groupInfos, null, 'id');
+
+        $areaInfos = $roomInfos = array();
+        if (!empty($areaIds) && !empty($roomIds)) {
+            $serviceArea = new Service_Data_Area();
+            $roomInfos = $serviceArea->getRoomListByConds(array('id in ('.implode(",", $roomIds).')'));
+            $roomInfos = array_column($roomInfos, null, 'id');
+
+            $areaInfos = $serviceArea->getAreaListByConds(array('id in ('.implode(",", $areaIds).')'));
+            $areaInfos = array_column($areaInfos, null, 'id');
+        }
+
         
         $result = array();
         foreach ($lists as $key => $item) {
@@ -108,16 +127,20 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
             $teacherName = $userInfos[$tid]['nickname'];
             $subjectName = $subjectInfo[$sid]['name'];
             $groupName = $groupInfos[$item['group_id']]['name'];
-            $areaName = $groupInfos[$item['group_id']]['area'];
-            $extJson = empty($item['ext']) ? array() : json_decode($item['ext'], true);
-            if (!empty($extJson['area'])) {
-                $areaName = $extJson['area'];
+
+            // 校区信息
+            $areaName = "";
+            if (!empty($item['area_id']) 
+                && !empty($item['room_id'])
+                && !empty($areaInfos[$item['area_id']]['name'])
+                && !empty($roomInfos[$item['room_id']]['name'])) {
+                $areaName = sprintf("%s_%s", $areaInfos[$item['area_id']]['name'], $roomInfos[$item['room_id']]['name']);
             }
 
             if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {
-		$duration = (($item['end_time'] - $item['start_time']) / 3600) . "小时";
+		        $duration = (($item['end_time'] - $item['start_time']) / 3600) . "小时";
                 $tmp['title'] = sprintf("%s %s %s %s", $duration, $groupName, $subjectName, $areaName);    
-		if ($item['state'] == 0) {
+		        if ($item['state'] == 0) {
                     $tmp['title'] .= "(已结算)";
                 }
             } else {

@@ -10,8 +10,9 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限");
         }
 
-        $groupId = empty($this->request['groupId']) ? 0 : intval($this->request['groupId']);
-        $teacherId = empty($this->request['teacherId']) ? "" : $this->request['teacherId'];
+        $groupId    = empty($this->request['group_id']) ? 0 : intval($this->request['group_id']);
+        $teacherId  = empty($this->request['teacher_id']) ? "" : $this->request['teacher_id'];
+        $areaId     = empty($this->request['area_id']) ? "" : $this->request['area_id'];
 
         // 教师信息获取
         if (empty($teacherId) || strpos($teacherId, "_") === false) {
@@ -22,6 +23,18 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "教师和班级不能为空");
         }
 
+        // 教室信息提取
+        $roomId = 0;
+        if (!empty($areaId) && strpos($areaId, "_") !== false) {
+            list($areaId, $roomId) = explode("_", $areaId);
+            if ($roomId <= 0 || $areaId <= 0){
+                throw new Zy_Core_Exception(405, "校区教室不能为空");
+            }    
+        }
+        if ($areaId <= 0 || $roomId <= 0) {
+            $areaId = $roomId = 0;
+        }
+        
         // 时间获取
         $times = array();
         foreach ($this->request as $k => $v) {
@@ -82,6 +95,14 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无法查到教师绑定信息");
         }
 
+        if ($roomId > 0 && $areaId > 0) {
+            $serviceArea = new Service_Data_Area();
+            $roomInfo = $serviceArea->getAreaRoomById($areaId, $roomId);
+            if (empty($roomInfo)) {
+                throw new Zy_Core_Exception(405, "无法查到校区和教室信息");
+            }
+        }
+
         $this->serviceSchedule = new Service_Data_Schedule();
 
         $ret = $this->checkGroup ($needTimes, $needDays, $groupId);
@@ -99,6 +120,8 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
             'group_id' => $groupInfos['id'],
             'needTimes' => $needTimes,
             'teacher_id' => $teacherId,
+            'room_id' => $roomId,
+            'area_id' => $areaId,
         ];
 
         $ret = $this->serviceSchedule->create($profile);

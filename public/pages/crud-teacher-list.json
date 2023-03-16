@@ -238,7 +238,7 @@
                 "name": "teacher_capital_format",
                 "label": "收入",
                 "type": "text",
-                "toggled": true,
+                "toggled": false,
                 "classNameExpr": "<%= data.teacher_capital < 0 ? 'bg-danger' : (data.teacher_capital > 0 ? 'bg-success' : 'bg-default' ) %>"
             },
             {

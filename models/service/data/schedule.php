@@ -21,6 +21,8 @@ class Service_Data_Schedule {
                 "group_id"  => $params['group_id'],
                 "column_id"  => $params['column_id'],
                 "teacher_id"  => $params['teacher_id'],
+                "area_id"  => $params['area_id'],
+                "room_id"  => $params['room_id'],
                 "start_time"  => $time['sts'] , 
                 "end_time"  => $time['ets'], 
                 "operator" => OPERATOR,
@@ -47,8 +49,8 @@ class Service_Data_Schedule {
             "column_id"  => $params['column_id'],
             "start_time"  => $params['needTimes']['sts'] , 
             "end_time"  => $params['needTimes']['ets'], 
-	    'teacher_id' => $params['teacher_id'],
-	    "operator" => OPERATOR,
+	        'teacher_id' => $params['teacher_id'],
+	        "operator" => OPERATOR,
             "state"  => 1 , 
             "update_time"  => time(),
         );
@@ -61,7 +63,8 @@ class Service_Data_Schedule {
         );
 
         $profile = array(
-            "ext" => json_encode(["area" => $params['area']]),
+            "room_id" => $params['room_id'],
+            "area_id" => $params['area_id'],
         );
         return $this->daoSchedule->updateByConds($conds, $profile);
     }

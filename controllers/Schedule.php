@@ -12,5 +12,6 @@ class Controller_Schedule extends Zy_Core_Controller{
         "checkout"      => "actions/schedule/Checkout.php",
         "fscalendar"    => "actions/schedule/Fscalendar.php",
         "timelist"      => "actions/schedule/Timelist.php",
+        "updatearea"    => "actions/schedule/Updatearea.php",
     );
 }

@@ -26,6 +26,7 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
 
         $groupId = empty($this->request['group_ids']) ? "" : strval($this->request['group_ids']);
         $teacherId = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
+        $areaId = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
         $daterange = empty($this->request['daterange']) ? "" : $this->request['daterange'];
         $status = empty($this->request['status']) || !in_array($this->request['status'], [1,2]) ? 0 : $this->request['status'];
 
@@ -49,6 +50,9 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         } 
         if (!empty($columnIds)) {
             $conds[] = sprintf('column_id in (%s)', implode(",", $columnIds));
+        }
+        if ($areaId > 0) {
+            $conds[] = "area_id = ".$areaId;
         }
         if ($sts > 0) {
             $conds[] = "start_time >= ".$sts;
@@ -88,9 +92,23 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
             return array();
         }
 
-        $columnIds = array_column($lists, 'column_id');
-        $groupIds = array_column($lists, 'group_id');
-        $operator = array_column($lists, 'operator');
+        // 初始化参数
+        $operatorIds    = array();
+        $columnIds      = array();
+        $groupIds       = array();
+        $areaIds        = array();
+        $roomIds        = array();
+        foreach ($lists as $item) {
+            $columnIds[] = intval($item['column_id']);
+            $groupIds[] = intval($item['group_id']);
+            $operatorIds[] = intval($item['operator']);
+            
+            // 获取校区id
+            if (!empty($item['area_id']) && !empty($item['room_id'])) {
+                $areaIds[] = intval($item['area_id']);
+                $roomIds[] = intval($item['room_id']);
+            }
+        }
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
@@ -107,12 +125,22 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $teacher_ids).')'));
         $userInfos = array_column($userInfos, null, 'uid');
 
-        $operators = $serviceUser->getListByConds(array('uid in ('.implode(',', $operator).')'));
+        $operators = $serviceUser->getListByConds(array('uid in ('.implode(',', $operatorIds).')'));
         $operators = array_column($operators, null, 'uid');
 
         $serviceGroup = new Service_Data_Group();
         $groupInfos = $serviceGroup->getListByConds(array('id in ('.implode(",", $groupIds).')'));
         $groupInfos = array_column($groupInfos, null, 'id');
+
+        $areaInfos = $roomInfos = array();
+        if (!empty($areaIds) && !empty($roomIds)) {
+            $serviceArea = new Service_Data_Area();
+            $roomInfos = $serviceArea->getRoomListByConds(array('id in ('.implode(",", $roomIds).')'));
+            $roomInfos = array_column($roomInfos, null, 'id');
+
+            $areaInfos = $serviceArea->getAreaListByConds(array('id in ('.implode(",", $areaIds).')'));
+            $areaInfos = array_column($areaInfos, null, 'id');
+        }
         
         $sum_duration = 0;
         foreach ($lists as $key => &$item) {
@@ -144,11 +172,18 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
             $item['teacher_name'] = $userInfos[$tid]['nickname'];
             $item['subject_name'] = $subjectInfo[$sid]['name'];
             $item['group_name'] = $groupInfos[$item['group_id']]['name'];
-            $item['area_name'] = $groupInfos[$item['group_id']]['area'];
-            $extJson = empty($item['ext']) ? array() : json_decode($item['ext'], true);
-            if (!empty($extJson['area'])) {
-                $item['area_name'] = $extJson['area'];
+            
+            // 校区信息
+            $item['area_name'] = "";
+            $item['a_r_id'] = "";
+            if (!empty($item['area_id']) 
+                && !empty($item['room_id'])
+                && !empty($areaInfos[$item['area_id']]['name'])
+                && !empty($roomInfos[$item['room_id']]['name'])) {
+                $item['a_r_id'] = sprintf("%s_%s", $item['area_id'], $item['room_id']);
+                $item['area_name'] = sprintf("%s(%s)", $areaInfos[$item['area_id']]['name'], $roomInfos[$item['room_id']]['name']);
             }
+
             $item['operator_name']= $operators[$item['operator']]['nickname'];
             $item['stateInfo'] = $item['state'] == 1 ? "未结算" : "已结算";
             

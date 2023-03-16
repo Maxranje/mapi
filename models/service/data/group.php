@@ -37,7 +37,6 @@ class Service_Data_Group {
         $profile = array(
             "name"  => $params['name'], 
             "descs"  => $params['descs'] ,
-            "area"  => $params['area'] ,
             "price" => $params['price'] ,
             "status" => $params['status'] ,
             "duration" => $params['duration'],
@@ -94,7 +93,6 @@ class Service_Data_Group {
         $profile = array(
             "name"  => $params['name'], 
             "descs"  => $params['descs'] ,
-            "area"  => $params['area'] ,
             "price" => $params['price'] ,
             "status" => $params['status'] ,
             "duration" => $params['duration'],

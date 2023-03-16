@@ -117,3 +117,26 @@ alter table tblUser add column `student_price`  int(11) NOT NULL DEFAULT '0' COM
 alter table tblSchedule add column `teacher_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '老师id';
 
 alter table tblSchedule add index `t` (`teacher_id`, `state`, `start_time`);
+
+CREATE TABLE `tblRoom` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '教室名称',
+  `area_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区id',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `ext` varchar(2000) NOT NULL DEFAULT '' COMMENT '冗余',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教室表';
+
+CREATE TABLE `tblArea` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '名称',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `ext` varchar(2000) NOT NULL DEFAULT '' COMMENT '冗余',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='地区表';
+
+alter table tblSchedule add column `area_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区id';
+alter table tblSchedule add column `room_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '房间id';
+alter table tblSchedule add index `a_r` (`area_id`, `room_id`);

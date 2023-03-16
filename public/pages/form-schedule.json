@@ -18,7 +18,6 @@
                         "size": "md",
                         "label": "班级",
                         "placeholder": "请选择班级",
-                        
                         "source": "/mapi/group/lists?isSelect=1&status=1"
                     },
                     {
@@ -71,7 +70,7 @@
                                 "body": [
                                     {
                                         "type": "tree-select",
-                                        "name": "groupId",
+                                        "name": "group_id",
                                         "onlyLeaf":true,
                                         "label": "班级",
                                         "searchable":true,
@@ -80,7 +79,7 @@
                                     },
                                     {
                                         "type": "tree-select",
-                                        "name": "teacherId",
+                                        "name": "teacher_id",
                                         "onlyLeaf":true,
                                         "searchable":true,
                                         "label": "教师",
@@ -94,6 +93,20 @@
                                 "type": "divider"
                             },
                             {
+                                "type": "tree-select",
+                                "name": "area_id",
+                                "onlyLeaf":true,
+                                "label": "校区和教室",
+                                "searchable":true,
+                                "size":"md",
+                                "initiallyOpen":false,
+                                "source": "/mapi/area/pklists",
+                                "description": "校区为非必选项"
+                            },
+                            {
+                                "type": "divider"
+                            },
+                            {
                                 "type": "input-number",
                                 "label": "总课程量",
                                 "name": "length",
@@ -101,7 +114,7 @@
                                 "max":30,
                                 "precision" : 0,
                                 "showSteps":true,
-                                "inline":true,
+                                "size":"md",
                                 "description": "一共多少节课(非多少小时), 系统会自动除每周选择时间, 确定延续到第几周, 一次最多可配置20节课"
                             },
                             {
@@ -110,8 +123,8 @@
                             {
                                 "type": "input-date",
                                 "label": "起始时间",
-                                "name": "startDay",
-                                "inline":true,
+                                "name": "start_day",
+                                "size":"md",
                                 "description": "重要: 设定起始时间后, 会根据起始时间本周开始排"
                             },
                             {
@@ -174,7 +187,7 @@
                             },
                             {
                                 "type": "combo",
-                                "name": "defaultTime",
+                                "name": "default_time",
                                 "label" : "默认时间",
                                 "description": "详细时间以默认时间为基础值, 进行填充, 从几点开始, 课时长度最小0.5小时, 最大4小时",
                                 "items": [
@@ -247,7 +260,7 @@
                                 "body": [
                                     {
                                         "type": "tree-select",
-                                        "name": "groupId",
+                                        "name": "group_id",
                                         "onlyLeaf":true,
                                         "label": "班级",
                                         "searchable":true,
@@ -256,7 +269,7 @@
                                     },
                                     {
                                         "type": "tree-select",
-                                        "name": "teacherId",
+                                        "name": "teacher_id",
                                         "onlyLeaf":true,
                                         "label": "教师",
                                         "searchable":true,
@@ -265,6 +278,23 @@
                                         "source": "/mapi/teacher/lists?isSelect=1"
                                     }
                                 ]
+                            },
+                            {
+                                "type": "divider"
+                            },
+                            {
+                                "type": "tree-select",
+                                "name": "area_id",
+                                "onlyLeaf":true,
+                                "label": "校区和教室",
+                                "searchable":true,
+                                "size":"md",
+                                "initiallyOpen":false,
+                                "source": "/mapi/area/pklists",
+                                "description": "校区为非必选项"
+                            },
+                            {
+                                "type": "divider"
                             },
                             {
                                 "type": "combo",

@@ -74186,12 +74186,12 @@ title: Word Break
     "SF Pro Text", "Helvetica Neue", Helvetica, "PingFang SC", "Segoe UI",
     Roboto, "Hiragino Sans GB", "Arial", "microsoft yahei ui", "Microsoft YaHei",
     SimSun, sans-serif;
-  --fontSizeBase: 0.875rem;
-  --fontSizeMd: 0.875rem;
-  --fontSizeLg: 1rem;
-  --fontSizeXl: 1.25rem;
-  --fontSizeSm: 0.75rem;
-  --fontSizeXs: 0.6875rem;
+  --fontSizeBase: 0.725rem;
+  --fontSizeMd: 0.725rem;
+  --fontSizeLg: 0.875rem;
+  --fontSizeXl: 1rem;
+  --fontSizeSm: 0.65rem;
+  --fontSizeXs: 0.6275rem;
   --text-color: #58666e;
   --button-color: #fff;
   --animation-duration: 0.2s;
@@ -74201,7 +74201,7 @@ title: Word Break
   --borderColor: #d1d5db;
   --borderColorLight: #dfe2e6;
   --borderColorDarken: #b4bbc5;
-  --borderRadius: 0.142rem;
+  --borderRadius: 0.172rem;
   --borderRadiusMd: 0.285rem;
   --borderRadiusLg: 0.428rem;
   --boxShadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);

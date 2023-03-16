@@ -59,6 +59,12 @@ return array(
             "schemaApi": "get:/public/pages/crud-teacher-list.json"
         },
         {
+            "label": "校区管理",
+            "url": "/area",
+            "icon": "fa fa-street-view",
+            "schemaApi": "get:/public/pages/crud-area-list.json"
+        },
+        {
             "label": "系统信息",
             "url": "/system",
             "icon": "fa fa-cog",

@@ -63,8 +63,23 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
     private function formatSelect ($lists) {
 
         $resultList = array();
-        $columnIds = array_column($lists, 'column_id');
-        $groupIds = array_column($lists, 'group_id');
+
+        // 初始化参数
+        $columnIds  = array();
+        $groupIds   = array();
+        $areaIds    = array();
+        $roomIds    = array();
+        foreach ($lists as $item) {
+            $columnIds[] = intval($item['column_id']);
+            $groupIds[] = intval($item['group_id']);
+            
+            // 获取校区id
+            if (!empty($item['area_id']) && !empty($item['room_id'])) {
+                $areaIds[] = intval($item['area_id']);
+                $roomIds[] = intval($item['room_id']);
+            }
+        }
+
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
         $columnInfos = $serviceColumn->getListByConds(array('id in ('.implode(',', $columnIds).')'));
@@ -83,6 +98,16 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
         $serviceSubject = new Service_Data_Subject();
         $subjectInfos = $serviceSubject->getListByConds(array('id in ('.implode(",", $subject_ids).')'));
         $subjectInfos = array_column($subjectInfos, null, 'id');
+
+        $areaInfos = $roomInfos = array();
+        if (!empty($areaIds) && !empty($roomIds)) {
+            $serviceArea = new Service_Data_Area();
+            $roomInfos = $serviceArea->getRoomListByConds(array('id in ('.implode(",", $roomIds).')'));
+            $roomInfos = array_column($roomInfos, null, 'id');
+
+            $areaInfos = $serviceArea->getAreaListByConds(array('id in ('.implode(",", $areaIds).')'));
+            $areaInfos = array_column($areaInfos, null, 'id');
+        }
         
         foreach ($lists as $item) {
             if (empty($columnInfos[$item['column_id']]['teacher_id'])) {
@@ -97,13 +122,21 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
                 continue;
             }
             $gname = $groupInfos[$item['group_id']]['name'];
-            $area = $groupInfos[$item['group_id']]['area'];
 
             if (empty($columnInfos[$item['column_id']]['subject_id'])) {
                 continue;
             }
             $sid = $columnInfos[$item['column_id']]['subject_id'];
             $sname = $subjectInfos[$sid]['name'];
+            
+            // 校区信息
+            $areaName = "";
+            if (!empty($item['area_id']) 
+                && !empty($item['room_id'])
+                && !empty($areaInfos[$item['area_id']]['name'])
+                && !empty($roomInfos[$item['room_id']]['name'])) {
+                $areaName = sprintf("%s_%s", $areaInfos[$item['area_id']]['name'], $roomInfos[$item['room_id']]['name']);
+            }
 
             $end_time = $item['end_time'];
             if (date('H:s', $end_time) == "00:00") {

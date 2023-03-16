@@ -9,7 +9,6 @@ class Service_Page_Group_Create extends Zy_Core_Service{
 
         $name = empty($this->request['name']) ? "" : $this->request['name'];
         $descs = empty($this->request['descs']) ? "" : $this->request['descs'];
-        $area = empty($this->request['area']) ? "" : $this->request['area'];
         $price = empty($this->request['price']) ? 0 : $this->request['price'];
         $duration = empty($this->request['duration']) || !is_numeric($this->request['duration']) ? 0 : $this->request['duration'];
         $discount = empty($this->request['discount']) ? 0 : intval($this->request['discount']);
@@ -25,7 +24,6 @@ class Service_Page_Group_Create extends Zy_Core_Service{
             "student_ids"  => $studentIds,
             "name" => $name,
             "descs"  =>  $descs, 
-            "area" => $area,
             "price" => intval($price * 100),
             "status" => $status,
             'duration' => $duration,
