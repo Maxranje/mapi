@@ -209,11 +209,61 @@
                         "type": "button",
                         "icon": "fa fa-check",
                         "level" : "success",
+                        "label" : "点名",
+                        "disabledOn": "this.state === '0'",
+                        "hiddenOn" : "this.muilt_scount === 0",
+                        "actionType": "dialog",
+                        "tooltip": "点名",
+                        "dialog": {
+                            "position": "right",
+                            "title": "选择未参加课程同学, 进行剔除  (默认为全部结算)",
+                            "body": {
+                                "type": "form",
+                                "name": "sample-edit-form2",
+                                "api": {
+                                    "method": "post",
+                                    "url": "/mapi/schedule/muiltcheckout",
+                                    "dataType": "form"
+                                },
+                                "onEvent": {
+                                    "click": {
+                                        "actions": [
+                                            {
+                                            "actionType": "reload",
+                                            "componentId": "schedule_list"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "body":  [
+                                    {
+                                        "type": "input-text",
+                                        "name": "id",
+                                        "label": "id",
+                                        "hidden": true
+                                    },
+                                    {
+                                        "type": "tree-select",
+                                        "name": "uids",
+                                        "onlyLeaf":true,
+                                        "multiple": true,
+                                        "searchable":true,
+                                        "label": "请选择",
+                                        "source": "/mapi/group/pkslists?group_id=$group_id"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "button",
+                        "icon": "fa fa-check",
+                        "level" : "success",
                         "label" : "结算",
                         "disabledOn": "this.state === '0'",
+                        "hiddenOn" : "this.muilt_scount === 1",
                         "actionType": "ajax",
                         "tooltip": "结算",
-                        "confirmText": "您确认结算?",
                         "api": {
                             "method": "get",
                             "url": "/mapi/schedule/checkout?id=$id"

@@ -99,16 +99,21 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $areaIds        = array();
         $roomIds        = array();
         foreach ($lists as $item) {
-            $columnIds[] = intval($item['column_id']);
-            $groupIds[] = intval($item['group_id']);
-            $operatorIds[] = intval($item['operator']);
+            $columnIds[intval($item['column_id'])] = intval($item['column_id']);
+            $groupIds[intval($item['group_id'])] = intval($item['group_id']);
+            $operatorIds[intval($item['operator'])] = intval($item['operator']);
             
             // 获取校区id
             if (!empty($item['area_id']) && !empty($item['room_id'])) {
-                $areaIds[] = intval($item['area_id']);
-                $roomIds[] = intval($item['room_id']);
+                $areaIds[intval($item['area_id'])] = intval($item['area_id']);
+                $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
         }
+        $operatorIds = array_values($operatorIds);
+        $columnIds = array_values($columnIds);
+        $groupIds = array_values($groupIds);
+        $areaIds = array_values($areaIds);
+        $roomIds = array_values($roomIds);
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
@@ -131,6 +136,10 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $serviceGroup = new Service_Data_Group();
         $groupInfos = $serviceGroup->getListByConds(array('id in ('.implode(",", $groupIds).')'));
         $groupInfos = array_column($groupInfos, null, 'id');
+
+        $serviceGroupMap = new Service_Data_User_Group();
+        $groupMapInfos = $serviceGroupMap->getStudentCountByConds(array('group_id in ('.implode(",", $groupIds).')'));
+        $groupMapInfos = array_column($groupMapInfos, null, 'group_id');
 
         $areaInfos = $roomInfos = array();
         if (!empty($areaIds) && !empty($roomIds)) {
@@ -182,6 +191,12 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
                 && !empty($roomInfos[$item['room_id']]['name'])) {
                 $item['a_r_id'] = sprintf("%s_%s", $item['area_id'], $item['room_id']);
                 $item['area_name'] = sprintf("%s(%s)", $areaInfos[$item['area_id']]['name'], $roomInfos[$item['room_id']]['name']);
+            }
+
+            // 学生数量是不是大于1个
+            $item['muilt_scount'] = 0;
+            if (!empty($groupMapInfos[$item['group_id']]['count']) && $groupMapInfos[$item['group_id']]['count'] > 1) {
+                $item['muilt_scount'] = 1;
             }
 
             $item['operator_name']= $operators[$item['operator']]['nickname'];

@@ -63,20 +63,24 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
             return array();
         }
 
-        $columnIds = array();
-        $groupIds = array();
-        $areaIds = array();
-        $roomIds = array();
+        $columnIds      = array();
+        $groupIds       = array();
+        $areaIds        = array();
+        $roomIds        = array();
         foreach ($lists as $item) {
-            $columnIds[] = intval($item['column_id']);
-            $groupIds[] = intval($item['group_id']);
+            $columnIds[intval($item['column_id'])] = intval($item['column_id']);
+            $groupIds[intval($item['group_id'])] = intval($item['group_id']);
             
             // 获取校区id
             if (!empty($item['area_id']) && !empty($item['room_id'])) {
-                $areaIds[] = intval($item['area_id']);
-                $roomIds[] = intval($item['room_id']);
+                $areaIds[intval($item['area_id'])] = intval($item['area_id']);
+                $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
         }
+        $columnIds = array_values($columnIds);
+        $groupIds = array_values($groupIds);
+        $areaIds = array_values($areaIds);
+        $roomIds = array_values($roomIds);
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();

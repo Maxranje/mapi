@@ -46,4 +46,20 @@ class Service_Data_User_Group {
 
         return $Group;
     }
+
+    public function getStudentCountByConds ($conds){
+        $fileds = array(
+            "count(student_id) as count",
+            "group_id"
+        );
+        $append = array(
+            "group by group_id"
+        );
+        $Group = $this->daoGroup->getListByConds($conds, $fileds, null, $append);
+        if (empty($Group)) {
+            return array();
+        }
+
+        return $Group;
+    }
 }

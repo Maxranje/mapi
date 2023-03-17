@@ -6,5 +6,6 @@ class Controller_Group extends Zy_Core_Controller{
         "create"    => "actions/group/Create.php",
         "update"    => "actions/group/Update.php",
         "delete"    => "actions/group/Delete.php",
+        "pkslists"  => "actions/group/Pkslists.php",
     );
 }
