@@ -48,6 +48,15 @@
                     "source": "/mapi/area/aslists"
                 },
                 {
+                    "type": "tree-select",
+                    "name": "area_op",
+                    "searchable":true,
+                    "onlyLeaf":true,
+                    "label": "区域管理",
+                    "size":"md",
+                    "source": "/mapi/admins/arealists"
+                },
+                {
                     "label": "结算状态",
                     "type": "select",
                     "name": "status",
@@ -164,6 +173,12 @@
             {
                 "name": "operator_name",
                 "label": "排课人员",
+                "type": "text",
+                "toggled": true
+            },
+            {
+                "name": "area_op_name",
+                "label": "区域管理",
                 "type": "text",
                 "toggled": true
             },
@@ -353,55 +368,18 @@
                                         "showSteps":true,
                                         "required": true,
                                         "suffix" : " hour"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "type": "button",
-                        "icon": "fa fa-edit",
-                        "disabledOn": "this.state === '0'",
-                        "tooltip": "编辑校区",
-                        "actionType": "dialog",
-                        "dialog": {
-                            "title": "编辑",
-                            "body": {
-                                "type": "form",
-                                "name": "sample-edit-formv2",
-                                "api": {
-                                    "method": "post",
-                                    "url": "/mapi/schedule/updatearea",
-                                    "dataType": "form"
-                                },
-                                "onEvent": {
-                                    "click": {
-                                        "actions": [
-                                            {
-                                            "actionType": "reload",
-                                            "componentId": "schedule_list"
-                                            }
-                                        ]
-                                    }
-                                },
-                                "body": [
-                                    {
-                                        "type": "input-text",
-                                        "name": "id",
-                                        "label": "id",
-                                        "size":"md",
-                                        "disabled": true
                                     },
                                     {
                                         "type": "tree-select",
-                                        "name": "area_id",
+                                        "name": "area_op",
                                         "onlyLeaf":true,
-                                        "label": "校区和教室",
+                                        "label": "区域管理",
                                         "searchable":true,
                                         "size":"md",
-                                        "value": "${a_r_id}",
                                         "initiallyOpen":false,
-                                        "source": "/mapi/area/pklists"
+                                        "value":"$area_op",
+                                        "source": "/mapi/admins/arealists",
+                                        "description": "区域管理非必选"
                                     }
                                 ]
                             }

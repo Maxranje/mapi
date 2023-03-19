@@ -140,3 +140,6 @@ CREATE TABLE `tblArea` (
 alter table tblSchedule add column `area_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区id';
 alter table tblSchedule add column `room_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '房间id';
 alter table tblSchedule add index `a_r` (`area_id`, `room_id`);
+
+ALTER Table tblSchedule add column `area_op` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区管理者';
+alter table tblSchedule add index `areaop` (`area_op`);

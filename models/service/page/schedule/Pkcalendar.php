@@ -74,8 +74,10 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
             $groupIds[intval($item['group_id'])] = intval($item['group_id']);
             
             // 获取校区id
-            if (!empty($item['area_id']) && !empty($item['room_id'])) {
+            if (!empty($item['area_id'])) {
                 $areaIds[intval($item['area_id'])] = intval($item['area_id']);
+            }
+            if (!empty($item['room_id'])) {
                 $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
         }
@@ -104,11 +106,13 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
         $subjectInfos = array_column($subjectInfos, null, 'id');
 
         $areaInfos = $roomInfos = array();
-        if (!empty($areaIds) && !empty($roomIds)) {
+        if (!empty($roomIds)) {
             $serviceArea = new Service_Data_Area();
             $roomInfos = $serviceArea->getRoomListByConds(array('id in ('.implode(",", $roomIds).')'));
             $roomInfos = array_column($roomInfos, null, 'id');
-
+        }
+        if (!empty($areaIds)) {
+            $serviceArea = new Service_Data_Area();
             $areaInfos = $serviceArea->getAreaListByConds(array('id in ('.implode(",", $areaIds).')'));
             $areaInfos = array_column($areaInfos, null, 'id');
         }
@@ -135,13 +139,15 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
             
             // 校区信息
             $areaName = "";
-            if (!empty($item['area_id']) 
-                && !empty($item['room_id'])
-                && !empty($areaInfos[$item['area_id']]['name'])
-                && !empty($roomInfos[$item['room_id']]['name'])) {
-                $areaName = sprintf("%s_%s", $areaInfos[$item['area_id']]['name'], $roomInfos[$item['room_id']]['name']);
+            if (!empty($item['area_id']) && !empty($areaInfos[$item['area_id']]['name'])) {
+                $areaName = $areaInfos[$item['area_id']]['name'];
+                if (!empty($item['room_id']) && !empty($roomInfos[$item['room_id']]['name'])) {
+                    $areaName = sprintf("%s_%s", $areaName, $roomInfos[$item['room_id']]['name']);
+                } else {
+                    $areaName = sprintf("%s_%s", $areaName, "无教室");
+                }
             }
-
+            
             $end_time = $item['end_time'];
             if (date('H:s', $end_time) == "00:00") {
                 $item['end_time'] -= 1;

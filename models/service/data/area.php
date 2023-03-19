@@ -10,7 +10,7 @@ class Service_Data_Area {
         $this->daoRoom = new Dao_Room () ;
     }
 
-    public function getAreaById ($areaId, $withRoom = false) {
+    public function getAreaById ($areaId, $withRoom = true) {
         $arrConds = array(
             'id'  => $areaId,
         );

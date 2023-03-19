@@ -36,6 +36,12 @@ return array(
                 "url": "/schedule/schedulelist",
                 "icon": "fa fa-list",
                 "schemaApi": "get:/public/pages/crud-schedule-list.json"
+            },
+            {
+                "label": "校区教室",
+                "url": "/schedule/pkarealist",
+                "icon": "fa fa-bars",
+                "schemaApi": "get:/public/pages/crud-pkarea-list.json"
             }]
         },
         {

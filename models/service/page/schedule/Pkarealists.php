@@ -1,7 +1,7 @@
 <?php
 
 // 排课列表
-class Service_Page_Schedule_PkLists extends Zy_Core_Service{
+class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
 
     public $weekName = [
         1 => "周一",
@@ -29,7 +29,6 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $areaId = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
         $daterange = empty($this->request['daterange']) ? "" : $this->request['daterange'];
         $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
-        $status = empty($this->request['status']) || !in_array($this->request['status'], [1,2]) ? 0 : $this->request['status'];
 
         list($sts, $ets) = empty($daterange) ? array(0,0) : explode(",", $daterange);
 
@@ -54,6 +53,12 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         }
         if ($areaId > 0) {
             $conds[] = "area_id = ".$areaId;
+        } 
+        if ($areaId == -1) {
+            $conds[] = "area_id = 0";
+        }
+        if ($areaId == -2) {
+            $conds[] = "room_id = 0";
         }
         if ($areaop > 0) {
             $conds[] = "area_op = ".$areaop;
@@ -64,9 +69,7 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         if ($ets > 0) {
             $conds[] = "end_time <= ".($ets + 1);
         }
-        if ($status > 0) {
-            $conds[] = "state = " . ($status == 1 ? 0 : 1) ;
-        }
+        $conds[] = "state = 1" ;
         $arrAppends[] = 'order by start_time';
         if (empty($this->request['export'])) {
             $arrAppends[] = "limit {$pn} , {$rn}";
@@ -78,11 +81,6 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $sum_duration = 0;
         $lists = $this->formatBase($lists, $sum_duration);
         
-        if (!empty($this->request['export'])) {
-            $data = $this->formatExcel($lists);
-            Zy_Helper_Utils::exportExcelSimple("Schedule", $data['title'], $data['lists']);
-        }
-
         $result = array(
             'rows' => $lists,
             'total' => $total,
@@ -97,15 +95,20 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         }
 
         // 初始化参数
-        $uids           = array();
         $columnIds      = array();
         $groupIds       = array();
         $areaIds        = array();
         $roomIds        = array();
+        $uids      = array();
         foreach ($lists as $item) {
             $columnIds[intval($item['column_id'])] = intval($item['column_id']);
             $groupIds[intval($item['group_id'])] = intval($item['group_id']);
-            $uids[intval($item['operator'])] = intval($item['operator']);
+            $uids[intval($item['area_op'])] = intval($item['area_op']);
+
+            //区域管理者
+            if (!empty($item['area_op'])) {
+                $areaopIds[intval($item['area_op'])] = intval($item['area_op']);
+            }
             
             // 获取校区id
             if (!empty($item['area_id'])) {
@@ -114,17 +117,12 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
             if (!empty($item['room_id'])) {
                 $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
-
-            //区域管理者
-            if (!empty($item['area_op'])) {
-                $uids[intval($item['area_op'])] = intval($item['area_op']);
-            }
         }
-        $uids = array_values($uids);
         $columnIds = array_values($columnIds);
         $groupIds = array_values($groupIds);
         $areaIds = array_values($areaIds);
         $roomIds = array_values($roomIds);
+        $uids = array_values($uids);
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
@@ -148,10 +146,6 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
         $serviceGroup = new Service_Data_Group();
         $groupInfos = $serviceGroup->getListByConds(array('id in ('.implode(",", $groupIds).')'));
         $groupInfos = array_column($groupInfos, null, 'id');
-
-        $serviceGroupMap = new Service_Data_User_Group();
-        $groupMapInfos = $serviceGroupMap->getStudentCountByConds(array('group_id in ('.implode(",", $groupIds).')'));
-        $groupMapInfos = array_column($groupMapInfos, null, 'group_id');
 
         $areaInfos = $roomInfos = array();
         if (!empty($roomIds)) {
@@ -208,51 +202,19 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
                 $item['area_name'] = $areaName;
             }
 
-            // 学生数量是不是大于1个
-            $item['muilt_scount'] = 0;
-            if (!empty($groupMapInfos[$item['group_id']]['count']) && $groupMapInfos[$item['group_id']]['count'] > 1) {
-                $item['muilt_scount'] = 1;
+            if (empty($item['area_id'])) {
+                $item['area_id'] = "";
             }
 
             $item['area_op_name'] = "-";
             if (!empty($userInfos[$item['area_op']]['nickname'])) {
                 $item['area_op_name'] = $userInfos[$item['area_op']]['nickname'];
             }
-            if (empty($item['area_op'])) {
-                $item['area_op'] = "";
-            }
 
-            $item['operator_name']= $userInfos[$item['operator']]['nickname'];
             $item['stateInfo'] = $item['state'] == 1 ? "未结算" : "已结算";
             
 	    }
 	    $lists = array_values($lists);
         return $lists;
-    }
-
-    private function formatExcel($lists) {
-        $result = array(
-            'title' => array('ID', '教师名', '班级名', '课程名', '校区', '排课人员', '状态', '星期', '时长', '时间', '创建时间'),
-            'lists' => array(),
-        );
-        
-        foreach ($lists as $item) {
-            $tmp = array(
-                $item['id'],
-                $item['teacher_name'],
-                $item['group_name'],
-                $item['subject_name'],
-                $item['area_name'],
-                $item['operator_name'],
-                $item['stateInfo'],
-                $item['week_time'],
-                $item['time_len'],
-                $item['range_time'],
-                $item['create_time'],
-            );
-            $result['lists'][] = $tmp;
-        }
-        return $result;
-
     }
 }

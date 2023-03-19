@@ -13,6 +13,7 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
         $date = empty($this->request['date']) ? 0 : intval($this->request['date']);
         $timeRange = empty($this->request['timeRange']) ? "" : $this->request['timeRange'];
         $timeRange = empty($timeRange) ? array() : explode(":", $timeRange);
+        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         $timeDw = empty($this->request['timeDw']) ? 0 : floatval($this->request['timeDw']);
 
         if ($id <= 0){
@@ -95,8 +96,9 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
         $profile = [
             "id" => $id,
             "column_id" => $columnInfos['id'],
-	    'needTimes' => $needTimes,
-	    'teacher_id' => $columnInfos['teacher_id'],
+	        'needTimes' => $needTimes,
+            "area_op" => $areaop,
+	        'teacher_id' => $columnInfos['teacher_id'],
         ];
 
         $ret = $this->serviceSchedule->update($profile);

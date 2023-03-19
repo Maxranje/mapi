@@ -96,12 +96,26 @@
                                 "type": "tree-select",
                                 "name": "area_id",
                                 "onlyLeaf":true,
-                                "label": "校区和教室",
+                                "label": "校区",
                                 "searchable":true,
                                 "size":"md",
                                 "initiallyOpen":false,
-                                "source": "/mapi/area/pklists",
+                                "source": "/mapi/area/pkarealists",
                                 "description": "校区为非必选项"
+                            },
+                            {
+                                "type": "divider"
+                            },
+                            {
+                                "type": "tree-select",
+                                "name": "area_op",
+                                "onlyLeaf":true,
+                                "label": "区域管理",
+                                "searchable":true,
+                                "size":"md",
+                                "initiallyOpen":false,
+                                "source": "/mapi/admins/arealists",
+                                "description": "区域管理非必选"
                             },
                             {
                                 "type": "divider"
@@ -286,12 +300,26 @@
                                 "type": "tree-select",
                                 "name": "area_id",
                                 "onlyLeaf":true,
-                                "label": "校区和教室",
+                                "label": "校区",
                                 "searchable":true,
                                 "size":"md",
                                 "initiallyOpen":false,
-                                "source": "/mapi/area/pklists",
+                                "source": "/mapi/area/pkarealists",
                                 "description": "校区为非必选项"
+                            },
+                            {
+                                "type": "divider"
+                            },
+                            {
+                                "type": "tree-select",
+                                "name": "area_op",
+                                "onlyLeaf":true,
+                                "label": "区域管理",
+                                "searchable":true,
+                                "size":"md",
+                                "initiallyOpen":false,
+                                "source": "/mapi/admins/arealists",
+                                "description": "区域管理非必选"
                             },
                             {
                                 "type": "divider"

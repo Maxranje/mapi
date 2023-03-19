@@ -6,6 +6,7 @@ class Controller_Schedule extends Zy_Core_Controller{
         "create"        => "actions/schedule/Create.php",
         "createv2"      => "actions/schedule/Createv2.php",
         "pklists"       => "actions/schedule/Pklists.php",
+        "pkarealists"   => "actions/schedule/Pkarealists.php",
         "bscalendar"    => "actions/schedule/Bscalendar.php",
         "update"        => "actions/schedule/Update.php",
         "delete"        => "actions/schedule/Delete.php",

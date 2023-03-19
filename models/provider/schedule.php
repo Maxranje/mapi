@@ -13,6 +13,7 @@ class Dao_Schedule extends Zy_Core_Dao {
             "column_id"  => "column_id" , 
             "area_id"   => "area_id",
             "room_id"   => "room_id",
+            "area_op" => "area_op",
 	        "teacher_id" => "teacher_id",
 	        "start_time"  => "start_time" , 
             "operator" => "operator",
