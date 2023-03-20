@@ -143,3 +143,6 @@ alter table tblSchedule add index `a_r` (`area_id`, `room_id`);
 
 ALTER Table tblSchedule add column `area_op` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区管理者';
 alter table tblSchedule add index `areaop` (`area_op`);
+
+ALTER Table tblGroup add column `area_op` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区管理者';
+alter table tblGroup add index `areaop` (`area_op`);

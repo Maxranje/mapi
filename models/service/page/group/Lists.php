@@ -21,6 +21,7 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
         $name = empty($this->request['groupName']) ? "" : $this->request['groupName'];
         $status = empty($this->request['status']) ? 0 : intval($this->request['status']);
         $studentId = empty($this->request['studentId']) ? 0 : intval($this->request['studentId']);
+        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         $studentNickName = empty($this->request['studentNickName']) ? "" : $this->request['studentNickName'];
         $isSelect = empty($this->request['isSelect']) ? false : true;
 
@@ -86,6 +87,10 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
             $groupConds[] = "status = " . $status;
         }
 
+        if ($areaop > 0) {
+            $groupConds[] = "area_op = " . $areaop;
+        }
+
         $arrAppends[] = 'order by id desc';
 
         if (!$isSelect) {
@@ -110,10 +115,15 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
             return array();
         }
 
-        $groupIds = $groupMapInfo = $studentUids = array();
+        $groupIds = array();
+        $groupMapInfo = array();
+        $uids = array();
         foreach ($lists as $item) {
-            $groupIds[] = intval($item['id']);
+            $groupIds[$item['id']] = intval($item['id']);
+            $uids[$item['area_op']] = intval($item['area_op']);
         }
+        $groupIds = array_values($groupIds);
+
         $conds = array(
             sprintf("group_id in (%s)", implode(",", $groupIds))
         );
@@ -123,14 +133,15 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
                 $groupMapInfo[$item['group_id']] = array();
             }
             $groupMapInfo[$item['group_id']][] = intval($item['student_id']);
-            $studentUids[] = intval($item['student_id']);
+            $uids[intval($item['student_id'])] = intval($item['student_id']);
         }
+        $uids = array_values($uids);
 
         $conds = array(
-            sprintf("uid in (%s)", implode(",", $studentUids))
+            sprintf("uid in (%s)", implode(",", $uids))
         );
-        $studetntInfos = $this->serviceUsers->getListByConds($conds);
-        $studetntInfos = array_column($studetntInfos, null, 'uid');
+        $userInfos = $this->serviceUsers->getListByConds($conds);
+        $userInfos = array_column($userInfos, null, 'uid');
 
         $serviceSchedule = new Service_Data_Schedule();
         $scheduleCount = $serviceSchedule->getLastDuration($groupIds);
@@ -141,9 +152,9 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
             $item['studentCount'] = count($gInfo);
             if (!empty($gInfo)) {
                 foreach ($gInfo as $index => $values) {
-                    if (!empty($studetntInfos[$values])) {
-                        $item['students'][] = $studetntInfos[$values];
-                        $item['studentNames'][] = $studetntInfos[$values]['nickname'];
+                    if (!empty($userInfos[$values])) {
+                        $item['students'][] = $userInfos[$values];
+                        $item['studentNames'][] = $userInfos[$values]['nickname'];
                     }
                 }
                 if (!empty($item['students'])) {
@@ -156,6 +167,13 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
                 $item['lastDuration'] = $item['duration'];
             }
             $item['lastDurationInfo'] = $item['lastDuration'] . "课时";
+
+            if (!empty($item['area_op']) && !empty($userInfos[$item['area_op']]['nickname'])){
+                $item['area_op_name'] = $userInfos[$item['area_op']]['nickname'];
+            }
+            if (empty($item['area_op'])) {
+                $item['area_op'] = "";
+            }
         }
         return $lists;
     }

@@ -11,6 +11,7 @@ class Dao_Group extends Zy_Core_Dao {
             "descs"  => "descs" ,
             "status" => "status",
             "price" => "price",
+            "area_op" => "area_op",
             "discount" => "discount",
             "duration" => "duration" ,
             "create_time"  => "create_time" , 

@@ -189,18 +189,21 @@
                 {
                     "type": "input-text",
                     "name": "studentNickName",
+                    "size" : "md",
                     "label": "昵称",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
                     "name": "studentName",
+                    "size" : "md",
                     "label": "登录名",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
                     "name": "studentPhone",
+                    "size" : "md",
                     "label": "手机号",
                     "placeholder": ""
                 },

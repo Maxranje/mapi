@@ -198,14 +198,18 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
             
             // 校区信息
             $item['area_name'] = "";
+            $item['room_name'] = "";
             if (!empty($item['area_id']) && !empty($areaInfos[$item['area_id']]['name'])) {
-                $areaName = $areaInfos[$item['area_id']]['name'];
+                $item['area_name'] = $areaInfos[$item['area_id']]['name'];
                 if (!empty($item['room_id']) && !empty($roomInfos[$item['room_id']]['name'])) {
-                    $areaName = sprintf("%s(%s)", $areaName, $roomInfos[$item['room_id']]['name']);
+                    $item['room_name'] = $roomInfos[$item['room_id']]['name'];
                 } else {
-                    $areaName = sprintf("%s(%s)", $areaName, "无教室");
+                    $item['room_name'] = "无教室";
                 }
-                $item['area_name'] = $areaName;
+                if (empty($this->request['export'])) {
+                    $item['area_name'] = sprintf("%s(%s)", $item['area_name'], $item['room_name']);
+                    unset($item['room_name']);
+                }
             }
 
             // 学生数量是不是大于1个
@@ -232,7 +236,7 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
 
     private function formatExcel($lists) {
         $result = array(
-            'title' => array('ID', '教师名', '班级名', '课程名', '校区', '排课人员', '状态', '星期', '时长', '时间', '创建时间'),
+            'title' => array('ID', '教师名', '班级名', '课程名', '校区', '教室', '排课人员', '区域管理', '状态', '星期', '时长', '时间', '创建时间'),
             'lists' => array(),
         );
         
@@ -243,7 +247,9 @@ class Service_Page_Schedule_PkLists extends Zy_Core_Service{
                 $item['group_name'],
                 $item['subject_name'],
                 $item['area_name'],
+                $item['room_name'],
                 $item['operator_name'],
+                $item['area_op_name'],
                 $item['stateInfo'],
                 $item['week_time'],
                 $item['time_len'],

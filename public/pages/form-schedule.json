@@ -107,20 +107,6 @@
                                 "type": "divider"
                             },
                             {
-                                "type": "tree-select",
-                                "name": "area_op",
-                                "onlyLeaf":true,
-                                "label": "区域管理",
-                                "searchable":true,
-                                "size":"md",
-                                "initiallyOpen":false,
-                                "source": "/mapi/admins/arealists",
-                                "description": "区域管理非必选"
-                            },
-                            {
-                                "type": "divider"
-                            },
-                            {
                                 "type": "input-number",
                                 "label": "总课程量",
                                 "name": "length",
@@ -306,20 +292,6 @@
                                 "initiallyOpen":false,
                                 "source": "/mapi/area/pkarealists",
                                 "description": "校区为非必选项"
-                            },
-                            {
-                                "type": "divider"
-                            },
-                            {
-                                "type": "tree-select",
-                                "name": "area_op",
-                                "onlyLeaf":true,
-                                "label": "区域管理",
-                                "searchable":true,
-                                "size":"md",
-                                "initiallyOpen":false,
-                                "source": "/mapi/admins/arealists",
-                                "description": "区域管理非必选"
                             },
                             {
                                 "type": "divider"

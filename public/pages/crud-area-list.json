@@ -40,7 +40,7 @@
                             "type": "input-text",
                             "name": "area_name",
                             "size":"md",
-                            "label": "教室名称",
+                            "label": "校区名称",
                             "required": true
                         },
                         {
@@ -58,7 +58,7 @@
                         },
                         {
                             "type": "html",
-                            "html": "<p>新增校区必须增加一个教室.</p>"
+                            "html": "<p>新增的校区, 最小需要有一个教室.</p>"
                         }
                     ]
                 }
@@ -67,7 +67,7 @@
         {
             "type": "button",
             "actionType": "drawer",
-            "label": "新增房间",
+            "label": "新增教室",
             "className": "m-r-sm",
             "primary": true,
             "drawer": {
@@ -251,7 +251,7 @@
                                         "type": "input-text",
                                         "name": "area_name",
                                         "size":"md",
-                                        "label": "教室名称",
+                                        "label": "校区名称",
                                         "required": true
                                     },
                                     {

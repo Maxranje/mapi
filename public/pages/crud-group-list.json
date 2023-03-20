@@ -91,6 +91,20 @@
                             "type": "divider"
                         },
                         {
+                            "type": "tree-select",
+                            "name": "area_op",
+                            "onlyLeaf":true,
+                            "label": "区域管理",
+                            "searchable":true,
+                            "size":"md",
+                            "initiallyOpen":false,
+                            "source": "/mapi/admins/arealists",
+                            "required": true
+                        },
+                        {
+                            "type": "divider"
+                        },
+                        {
                             "type": "input-text",
                             "name": "price",
                             "label": "课时单价(元)",
@@ -140,13 +154,25 @@
                     "type": "input-text",
                     "name": "groupName",
                     "label": "班级名称",
+                    "size":"md",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
                     "name": "studentNickName",
                     "label": "学生昵称",
+                    "size":"md",
                     "placeholder": ""
+                },
+                {
+                    "type": "tree-select",
+                    "name": "area_op",
+                    "onlyLeaf":true,
+                    "label": "区域管理",
+                    "searchable":true,
+                    "size":"md",
+                    "initiallyOpen":false,
+                    "source": "/mapi/admins/arealists"
                 },
                 {
                     "label": "状态",
@@ -229,6 +255,12 @@
             {
                 "name": "studentCount",
                 "label": "学生数量",
+                "type": "text",
+                "toggled": true
+            },
+            {
+                "name": "area_op_name",
+                "label": "区域管理",
                 "type": "text",
                 "toggled": true
             },
@@ -443,6 +475,21 @@
                                         "searchApi": "/mapi/student/lists?isSelect=1&group_id=${id}&term=$term",
                                         "selectMode": "list",
                                         
+                                        "required": true
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "tree-select",
+                                        "name": "area_op",
+                                        "onlyLeaf":true,
+                                        "label": "区域管理",
+                                        "searchable":true,
+                                        "size":"md",
+                                        "initiallyOpen":false,
+                                        "value" : "${area_op}",
+                                        "source": "/mapi/admins/arealists",
                                         "required": true
                                     },
                                     {

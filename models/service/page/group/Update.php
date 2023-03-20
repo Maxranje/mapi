@@ -13,6 +13,7 @@ class Service_Page_Group_Update extends Zy_Core_Service{
         $price = empty($this->request['price']) ? 0 : $this->request['price'];
         $duration = empty($this->request['duration']) || !is_numeric($this->request['duration']) ? 0 : $this->request['duration'];
         $discount = empty($this->request['discount']) ? 0 : intval($this->request['discount']);
+        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         $studentIds = empty($this->request['studentIds']) ? array() : 
             (is_array($this->request['studentIds']) ? $this->request['studentIds'] : explode(",", $this->request['studentIds']));
         $status = empty($this->request['status']) || !in_array($this->request['status'], [1,2]) ? 1 : intval($this->request['status']);
@@ -37,6 +38,7 @@ class Service_Page_Group_Update extends Zy_Core_Service{
             "student_ids" => $studentIds,
             "name" => $name,
             "descs"  =>  $descs, 
+            "area_op" => $areaop,
             "status" => $status,
             "price" => intval($price * 100),
             'duration' => $duration,

@@ -13,7 +13,6 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
         $groupId    = empty($this->request['group_id']) ? 0 : intval($this->request['group_id']);
         $teacherId  = empty($this->request['teacher_id']) ? "" : $this->request['teacher_id'];
         $areaId     = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
-        $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
 
         // 教师信息获取
         if (empty($teacherId) || strpos($teacherId, "_") === false) {
@@ -77,6 +76,7 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
         if (empty($groupInfos)) {
             throw new Zy_Core_Exception(405, "无法查到班级信息");
         }
+        $areaop = intval($groupInfos['area_op']);
 
         $serviceColumn = new Service_Data_Column();
         $columnInfos = $serviceColumn->getColumnByTSId($teacherId, $subjectId);

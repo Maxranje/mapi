@@ -104,7 +104,7 @@
                 "type": "action",
                 "actionType": "download",
                 "label": "导出Excel",
-                "api": "/mapi/schedule/pklists?group_id=${group_id}&teacher_id=${teacher_id}&daterange=${daterange}&export=1"
+                "api": "/mapi/schedule/pklists?group_id=${group_id}&teacher_id=${teacher_id}&daterange=${daterange}&area_id=${area_id}&area_op=${area_op}&export=1"
             },
             {
                 "type": "tpl",
