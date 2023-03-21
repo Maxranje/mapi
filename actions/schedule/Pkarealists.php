@@ -8,7 +8,7 @@ class Actions_Pkarealists extends Zy_Core_Actions {
             $this->error(405, "请先登录");
         }
 
-        $serivce = new Service_Page_Schedule_PkareaLists ($this->_request, $this->_userInfo);
+        $serivce = new Service_Page_Schedule_Pkarealists ($this->_request, $this->_userInfo);
         $this->_data = $serivce->execute();
         return $this->_data;
     }

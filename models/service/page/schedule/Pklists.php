@@ -1,7 +1,7 @@
 <?php
 
 // 排课列表
-class Service_Page_Schedule_PkLists extends Zy_Core_Service{
+class Service_Page_Schedule_Pklists extends Zy_Core_Service{
 
     public $weekName = [
         1 => "周一",
