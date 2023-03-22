@@ -48,6 +48,10 @@ class Service_Page_Student_Batchcreate extends Zy_Core_Service{
                 $record['graduate'] = "";
             }
 
+            if (empty($record['birthplace'])) {
+                $record['birthplace'] = "";
+            }
+
             if (empty($record['capital'])) {
                 $record['capital'] = 0;
             }
@@ -59,6 +63,7 @@ class Service_Page_Student_Batchcreate extends Zy_Core_Service{
                 "phone"  => $record['phone']  , 
                 "avatar" => "",
                 "school"  => $record['school']  , 
+                "birthplace" => $record['birthplace'],
                 "graduate"  => $record['graduate']  ,
                 "sex"  => $record['sex'] , 
                 "student_capital" => $record['capital'],

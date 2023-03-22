@@ -12,7 +12,7 @@ class Service_Page_Column_Create extends Zy_Core_Service{
         $price = empty($this->request['price']) ? 0 : $this->request['price'];
         $duration = empty($this->request['duration']) ? 0 : intval($this->request['duration']);
 
-        if (empty($uid) || empty($subject_id) || empty($price)) {
+        if (empty($uid) || empty($subject_id)) {
             throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
         }
 
@@ -25,7 +25,7 @@ class Service_Page_Column_Create extends Zy_Core_Service{
         $profile = [
             "subject_id"  => $subject_id, 
             "teacher_id"  => $uid, 
-            "price"  => intval($price * 100), 
+            "price"  => intval($price) * 100, 
             "duration"  => $duration, 
             'update_time' => time(),
             'create_time' => time(),

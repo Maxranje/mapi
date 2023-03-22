@@ -27,6 +27,10 @@ class Service_Page_Student_Create extends Zy_Core_Service{
             $this->request['graduate'] = "";
         }
 
+        if (empty($this->request['birthplace'])) {
+            $this->request['birthplace'] = "";
+        }
+
         if (empty($this->request['sex'])) {
             $this->request['sex'] = "M";
         }
@@ -37,12 +41,6 @@ class Service_Page_Student_Create extends Zy_Core_Service{
 
         if (empty($this->request['student_capital'])) {
             $this->request['student_capital'] = 0;
-        }
-
-        if (empty($this->request['student_price']) 
-            || !is_numeric($this->request['student_price'])
-            || $this->request['student_price'] <= 0) {
-            $this->request['student_price'] = 0;
         }
 
         $serviceData = new Service_Data_User_Profile();
@@ -57,12 +55,12 @@ class Service_Page_Student_Create extends Zy_Core_Service{
             "nickname" => $this->request["nickname"],
             "phone"  => $this->request['phone']  , 
             "avatar" => "",
+            "birthplace" => $this->request["birthplace"],
             "school"  => $this->request['school']  , 
             "graduate"  => $this->request['graduate']  ,
             "sex"  => $this->request['sex'] , 
             "capital_remark" => $this->request['capital_remark'],
             "student_capital" => $this->request['student_capital'],
-            "student_price" => $this->request['student_price'],
             "teacher_capital" => 0,
             "create_time"  => time() , 
             "update_time"  => time() , 

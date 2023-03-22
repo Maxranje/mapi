@@ -73,8 +73,6 @@ class Service_Data_User_Profile {
             unset($profile['capital']);
         }
 
-        $profile['student_price'] = empty($profile['student_price']) ? 0 : intval($profile['student_price'] * 100);
-
         $capital_remark = empty($profile['capital_remark']) ? "" : $profile['capital_remark'];
         unset($profile['capital_remark']);
         
@@ -137,7 +135,6 @@ class Service_Data_User_Profile {
             $profile['student_capital'] = $profile['student_capital'] * 100;
             $profile['teacher_capital'] = $profile['teacher_capital'] * 100;
         }
-        $profile['student_price'] = empty($profile['student_price']) ? 0 : intval($profile['student_price'] * 100);
         $capital_remark = empty($profile['capital_remark']) ? "" : $profile['capital_remark'];
         unset($profile['capital_remark']);
 
@@ -283,8 +280,6 @@ class Service_Data_User_Profile {
             $item['sexInfo']  = $item['sex'] == "M" ? "男" : "女";
             $item['student_capital_format']  = ($item['student_capital'] / 100) . "元";
             $item['teacher_capital_format']  = ($item['teacher_capital'] / 100) . "元";
-            $item['student_price_format'] = ($item['student_price'] / 100) . "元";
-            $item['student_price'] = $item['student_price'] / 100;
             $lists[$index] = $item;
         }
         return $lists;

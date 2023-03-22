@@ -11,7 +11,7 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         $type = $this->adption['type'];
 
         $ets = strtotime(date('Y-m-d',  strtotime("+60 day")));
-        $sts = strtotime(date('Y-m-d',  strtotime("-60 day")));
+        $sts = strtotime(date('Y-m-d',  strtotime("-90 day")));
 
         $columnIds = array();
         if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {

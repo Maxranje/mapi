@@ -23,6 +23,7 @@
                     "type": "input-text",
                     "name": "uid",
                     "label": "用户UID",
+                    "size": "md",
                     "placeholder": ""
                 },
                 {
@@ -119,6 +120,12 @@
             {
                 "name": "typeInfo",
                 "label": "用户类型",     
+                "type": "text",
+                "toggled": true
+            },
+            {
+                "name": "birthplace",
+                "label": "生源地",     
                 "type": "text",
                 "toggled": true
             },

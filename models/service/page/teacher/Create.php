@@ -32,7 +32,6 @@ class Service_Page_Teacher_Create extends Zy_Core_Service{
             "sex"  => $sex, 
             "student_capital" => 0,
             "teacher_capital" => $capital,
-            "student_price" => 0,
             "create_time" => time(),
             "update_time" => time(),
         ];

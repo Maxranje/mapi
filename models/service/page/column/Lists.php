@@ -149,8 +149,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                                             "type"=> "text",
                                             "label"=> "元"
                                         ],
-                                        "desc"=> "一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格",
-                                        "required"=> true
+                                        "desc"=> "一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格, 0为免费课"
                                     ]
                                 ]
                             ]

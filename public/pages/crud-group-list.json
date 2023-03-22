@@ -112,8 +112,7 @@
                                 "type": "text",
                                 "label": "$"
                             },
-                            "desc" : "一小时的课程价格, 如果课程有半小时情况, 系统会自行计算, 填写谨慎, 保留小数点后两位",
-                            "required": true
+                            "desc" : "一小时的课程价格, 如果课程有半小时情况, 系统会自行计算, 填写谨慎, 保留小数点后两位, 0为免费"
                         },
                         {
                             "type": "divider"
@@ -504,8 +503,7 @@
                                             "type": "text",
                                             "label": "$"
                                         },
-                                        "desc" : "一小时的课程价格, 如果课程有半小时情况, 系统会自行计算, 填写谨慎, 保留小数点后两位",
-                                        "required": true
+                                        "desc" : "一小时的课程价格, 如果课程有半小时情况, 系统会自行计算, 填写谨慎, 保留小数点后两位, 0为免费"
                                     },
                                     {
                                         "type": "divider"
@@ -520,6 +518,46 @@
                                         },
                                         "desc" : "一共要上多少课时, 填写必须大于0, 请谨慎填写",
                                         "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "button",
+                        "icon": "fa fa-bitcoin",
+                        "tooltip": "设置单个学生价格",
+                        "actionType": "drawer",
+                        "drawer": {
+                            "position": "right",
+                            "size": "lg",
+                            "title": "编辑",
+                            "body" : {
+                                "type": "form",
+                                "name": "sample-edit-formv2",
+                                "mode": "horizontal",
+                                "horizontal": {
+                                    "justify": true
+                                },
+                                "api": {
+                                    "method": "post",
+                                    "url": "/mapi/group/updateprice",
+                                    "dataType": "form"
+                                },
+                                "onEvent": {
+                                    "click": {
+                                        "actions": [
+                                            {
+                                            "actionType": "reload",
+                                            "componentId": "group_list"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "body": [
+                                    {
+                                        "type": "service",
+                                        "schemaApi": "/mapi/group/singleprice?group_id=${id}"
                                     }
                                 ]
                             }

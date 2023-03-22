@@ -11,7 +11,7 @@ class Service_Page_Column_Update extends Zy_Core_Service{
         $subjectId = empty($this->request['subjectId']) ? 0 : intval($this->request['subjectId']);
         $price = empty($this->request['price']) ? 0 : floatval($this->request['price']);
 
-        if ($teacherId <= 0 || $subjectId <= 0 || $price <= 0) {
+        if ($teacherId <= 0 || $subjectId <= 0) {
             throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
         }
 
@@ -33,7 +33,7 @@ class Service_Page_Column_Update extends Zy_Core_Service{
             'subject_id' => $subjectId,
         );
         $profile = [
-            "price"  => intval($price * 100), 
+            "price"  => intval($price) * 100, 
             "discount"  => 0,
             'update_time' => time(),
         ];

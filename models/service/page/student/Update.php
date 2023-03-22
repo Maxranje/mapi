@@ -22,13 +22,7 @@ class Service_Page_Student_Update extends Zy_Core_Service{
             || strlen($this->request['phone']) > 12) {
             throw new Zy_Core_Exception(405, "手机号参数错误, 请检查");
         }
-
-        if (empty($this->request['student_price']) 
-            || !is_numeric($this->request['student_price']) 
-            || $this->request['student_price'] <= 0) {
-            $this->request['student_price'] = 0;
-        }
-
+        
         $serviceData = new Service_Data_User_Profile();
         $userInfo = $serviceData->getUserInfoByUid($this->request['uid']);
         if (empty($userInfo)) {
@@ -40,11 +34,11 @@ class Service_Page_Student_Update extends Zy_Core_Service{
             "name"  => $this->request['name'] ,
             "nickname"  => $this->request['nickname'] , 
             "phone"  => $this->request['phone']  , 
+            "birthplace"  => $this->request['birthplace']  , 
             "avatar" => "",
             "school"  => $this->request['school']  , 
             "graduate"  => $this->request['graduate']  ,
             "sex"  => $this->request['sex'] , 
-            "student_price" => $this->request['student_price'],
             "update_time"  => time() , 
             "capital_remark" => empty($this->request['capital_remark']) ? "" : $this->request['capital_remark'],
         ];

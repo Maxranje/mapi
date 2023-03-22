@@ -32,7 +32,7 @@ class Service_Page_Student_Lists extends Zy_Core_Service{
             $conds['phone'] = intval($this->request['studentPhone']);
         }
         
-        $this->serviceData = new Service_Data_User_Profile();
+        $serviceData = new Service_Data_User_Profile();
 
         $arrAppends[] = 'order by uid desc';
 
@@ -40,8 +40,8 @@ class Service_Page_Student_Lists extends Zy_Core_Service{
             $arrAppends[] = "limit {$pn} , {$rn}";
         }
 
-        $lists = $this->serviceData->getListByConds($conds, false, NULL, $arrAppends);
-        $total = $this->serviceData->getTotalByConds($conds);
+        $lists = $serviceData->getListByConds($conds, false, NULL, $arrAppends);
+        $total = $serviceData->getTotalByConds($conds);
 
         if (!empty($this->request['isSelect'])) {
             return $this->formatSelect ($lists);

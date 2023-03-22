@@ -55,22 +55,25 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
         if (empty($lists)) {
             return array();
         }
-        $uids = array_column($lists, 'uid');
+        $uids = array();
+        foreach ($lists as $item) {
+            $uids[intval($item['uid'])] = intval($item['uid']);
+            $uids[intval($item['operator'])] = intval($item['operator']);
+        }
+        $uids = array_values($uids);
+
         $serviceUsers = new Service_Data_User_Profile();
         $userInfos = $serviceUsers->getListByConds(array('uid in ('.implode(",", $uids).')'));
         $userInfos = array_column($userInfos, null, "uid");
 
-        $opuids = array_column($lists, 'operator');
-        $opUserInfos = $serviceUsers->getListByConds(array('uid in ('.implode(",", $opuids).')'));
-        $opUserInfos = array_column($opUserInfos, null, "uid");
-
         foreach ($lists as &$item) {
             if (isset($userInfos[$item['uid']])) {
                 $item['name'] = $userInfos[$item['uid']]['nickname'];
+                $item['birthplace'] = $userInfos[$item['uid']]['birthplace'];
                 $item['typeInfo'] = $userInfos[$item['uid']]['type'] == Service_Data_User_Profile::USER_TYPE_STUDENT ? "学生" : "教师";
             }
-            if (isset($opUserInfos[$item['operator']])) {
-                $item['operatorName'] = $opUserInfos[$item['operator']]['name'];
+            if (isset($userInfos[$item['operator']])) {
+                $item['operatorName'] = $userInfos[$item['operator']]['nickname'];
             }
             if ($item['category'] == Service_Data_Schedule::CATEGORY_TEACHER_RECHARGE) {
                 $item['categoryInfo'] = "教师充值";
@@ -92,7 +95,7 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
 
     private function formatExcel($lists) {
         $result = array(
-            'title' => array('UID', '用户名', '用户类型', '场景', '金额', '备注', '操作员', '创建时间'),
+            'title' => array('UID', '用户名', '用户类型', "生源地", '场景', '金额', '备注', '操作员', '创建时间'),
             'lists' => array(),
         );
         
@@ -104,6 +107,7 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
                 $item['uid'],
                 $item['name'],
                 $item['typeInfo'],
+                $item['birthplace'],
                 $item['categoryInfo'],
                 $item['capitalInfo'],
                 $item['capital_remark'],

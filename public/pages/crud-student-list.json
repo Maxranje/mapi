@@ -63,6 +63,14 @@
                         },
                         {
                             "type": "input-text",
+                            "name": "birthplace",
+                            "label": "生源地"
+                        },
+                        {
+                            "type": "divider"
+                        },
+                        {
+                            "type": "input-text",
                             "name": "school",
                             "label": "学校"
                         },
@@ -112,20 +120,6 @@
                             "type": "input-text",
                             "name": "capital_remark",
                             "placeholder": "存额备注, 选填, 填写后会显示在订单列表中"
-                        },
-                        {
-                            "type": "divider"
-                        },
-                        {
-                            "type": "input-text",
-                            "name": "student_price",
-                            "label": "客单价(元)",
-                            "addOn": {
-                                "type": "text",
-                                "label": "$"
-                            },
-                            "placeholder": "元为单位, 只保留小数点后两位, 谨慎填写价格",
-                            "desc": "非必填, 学生端设置客单价后, 结算不走所属班级客单价, 谨慎填写"
                         }
                     ]
                 }
@@ -163,7 +157,7 @@
                             "type": "input-excel",
                             "name": "excel",
                             "label": "批量上传",
-                            "desc":"上传内容不允许有空行和空列, 第一行格式固定: name, phone, nickname, school, sex, graduate, capital 其中capital为价格(数字, 单位元, 小数点后两位), sex 为M或F"
+                            "desc":"上传内容不允许有空行和空列, 第一行格式固定: name, phone, nickname, school, birthplace, sex, graduate, capital 其中capital为价格(数字, 单位元, 小数点后两位), sex 为M或F"
                         }
                     ]
                 }
@@ -272,21 +266,20 @@
                 "toggled": true
             },
             {
+                "name": "birthplace",
+                "label": "生源地",
+                "type": "text",
+                "toggled": true
+            },
+            {
                 "name": "school",
                 "label": "学校",
-                
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "graduate",
                 "label": "学级",
-                "type": "text",
-                "toggled": true
-            },
-            {
-                "name": "student_price_format",
-                "label": "客单价",
                 "type": "text",
                 "toggled": true
             },
@@ -360,6 +353,14 @@
                                     },
                                     {
                                         "type": "static",
+                                        "name": "birthplace",
+                                        "label": "生源地"
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "static",
                                         "name": "school",
                                         "label": "学校"
                                     },
@@ -370,14 +371,6 @@
                                         "type": "static",
                                         "name": "graduate",
                                         "label": "学级"
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "static",
-                                        "name": "student_price_format",
-                                        "label": "客单价"
                                     },
                                     {
                                         "type": "divider"
@@ -500,6 +493,14 @@
                                     },
                                     {
                                         "type": "input-text",
+                                        "name": "birthplace",
+                                        "label": "生源地"
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "input-text",
                                         "name": "school",
                                         "label": "学校"
                                     },
@@ -530,20 +531,6 @@
                                         "type": "input-text",
                                         "name": "capital_remark",
                                         "placeholder": "存额备注, 选填, 填写后会显示在订单列表中"
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "input-text",
-                                        "name": "student_price",
-                                        "label": "客单价(元)",
-                                        "addOn": {
-                                            "type": "text",
-                                            "label": "$"
-                                        },
-                                        "placeholder": "元为单位, 只保留小数点后两位, 谨慎填写价格",
-                                        "desc": "非必填, 学生端设置客单价后, 结算不走所属班级客单价, 谨慎填写"
                                     }
                                 ]
                             }

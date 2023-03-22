@@ -26,6 +26,18 @@ class Service_Data_Group {
         return $Group;
     }
 
+
+    public function editGroupStuPrice ($id, $studentPrice) {
+        $arrConds = array(
+            'id'  => $id,
+        );
+        $profile = array(
+            "student_price" => json_encode($studentPrice),
+        );
+
+        return $this->daoGroup->updateByConds($arrConds, $profile);
+    }
+
     public function editGroup ($id, $params) {
         $arrConds = array(
             'id'  => $id,

@@ -161,15 +161,28 @@ class Service_Data_Schedule {
         $now = time();
         $daoUser = new Dao_User();
         $daoCapital = new Dao_Capital();
-        $this->daoSchedule->startTransaction();
 
         // 按小时计算
         $timeLength = ($params['job']['end_time'] - $params['job']['start_time']) / 3600;
         $teacherPrice = $params['column']['price'] * $timeLength;
         $studentPrice = $params['group']['price'] * $timeLength;
-        $studentInfos = $params['studentInfos'];
+
+        // 过滤有效的uid
+        foreach ($params['studentUids'] as $key => $uid) {
+            if (empty($params['studentInfos'][$uid])) {
+                unset($params['studentUids'][$key]);
+            }
+        }
+        $params['studentUids'] = array_values($params['studentUids']);
         unset($params['studentInfos']);
 
+        // 获取班级单个学生价格
+        $singlePrice = array();
+        if (!empty($params['group']['student_price'])) {
+            $singlePrice = json_decode($params['group']['student_price'], true);
+        }
+
+        $this->daoSchedule->startTransaction();
         // 教师
         $profile = array(
             'uid' => intval($params['column']['teacher_id']),
@@ -200,11 +213,12 @@ class Service_Data_Schedule {
             return false;
         }
 
+        // 获取班级中学生独立价格
         foreach ($params['studentUids'] as $uid) {
             $stuPrice = $studentPrice; 
             $stuCategory =  self::CATEGORY_STUDENT_PAID;
-            if (!empty($studentInfos[$uid]['student_price']) && $studentInfos[$uid]['student_price'] > 0) {
-                $stuPrice = $studentInfos[$uid]['student_price'] * $timeLength;
+            if (isset($singlePrice[$uid])) {
+                $stuPrice = intval($singlePrice[$uid]) * $timeLength;
                 $stuCategory = self::CATEGORY_STUDENT_PAID_PERSONAL;
             }
             // 学生支出
