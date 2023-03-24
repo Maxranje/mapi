@@ -10,11 +10,31 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
         }
 
         $menuConf = Zy_Helper_Config::getAppConfig("menu");
-        $menuAdmin = json_decode($menuConf['admin'], true);
 
-        if ($this->checkSuper()) {
-            $menuSuper = json_decode($menuConf['super'], true);
-            $menuAdmin = array_merge($menuAdmin, $menuSuper);
+        $superMenuIds = array(52, 6 , 7, 8, 91);
+
+        if (!$this->checkSuper()) {
+            foreach ($menuConf as $key => $item) {
+                if (in_array($item['id'], $superMenuIds)) {
+                    unset($menuConf[$key]);
+                    continue;
+                }
+                if (!empty($item['children'])) {
+                    foreach ($item['children'] as $ck => $citem) {
+                        if (in_array($citem['id'], $superMenuIds)) {
+                            unset($item['children'][$ck]);
+                            continue;
+                        }
+                    }
+                    if (empty($item['children'])) {
+                        unset($menuConf[$key]);
+                        continue;
+                    }
+                    $item['children'] = array_values($item['children']);
+                    $menuConf[$key] = $item;
+                }
+            }
+            $menuConf = array_values($menuConf);
         }
 
         $menuBase = array(
@@ -25,7 +45,7 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
                     "redirect" => "/index/1"
                 ),
                 array(
-                    'children' => $menuAdmin,
+                    'children' => $menuConf,
                 ),
             ),
         );

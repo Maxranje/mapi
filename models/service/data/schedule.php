@@ -187,6 +187,9 @@ class Service_Data_Schedule {
         $profile = array(
             'uid' => intval($params['column']['teacher_id']),
             'type' => Service_Data_User_Profile::USER_TYPE_TEACHER,
+            'column_id' => $params['job']['column_id'],
+            'group_id' => $params['job']['group_id'],
+            'schedule_id' => $params['job']['id'],
             'category' => self::CATEGORY_TEACHER_PAID,  // 1用户充值, 2作者充值, 3,用户消耗, 4,作者收入
             'operator' => OPERATOR,
             'capital' => $teacherPrice,
@@ -226,6 +229,9 @@ class Service_Data_Schedule {
                 'uid' => intval($uid),
                 'type' => Service_Data_User_Profile::USER_TYPE_STUDENT,
                 'category' => $stuCategory,  // 1用户充值, 2作者充值, 3,用户消耗(班级), 4,作者收入, 5 用户消耗(个人)
+                'column_id' => $params['job']['column_id'],
+                'group_id' => $params['job']['group_id'],
+                'schedule_id' => $params['job']['id'],
                 'operator' => OPERATOR,
                 'capital' => $stuPrice,
                 'update_time' => $now,

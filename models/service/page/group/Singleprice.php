@@ -55,7 +55,7 @@ class Service_Page_Group_Singleprice extends Zy_Core_Service{
             ),
             array(
                 "type" => "html",
-                "html" => "<p style='color:red; margin-bottom:2rem;'>修改单人结算价格, 如不配置, 默认为班级客单价, 配置0则为免费</p>"
+                "html" => "<p style='color:red; margin-bottom:2rem;'>修改单人结算价格, 如不配置, 默认为班级客单价, 配置空或0则为免费</p>"
             )
         );
         foreach ($lists as $item) {

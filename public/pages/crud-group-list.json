@@ -279,8 +279,27 @@
                 "name": "lastDurationInfo",
                 "label": "剩余课时数",
                 "type": "text",
-                "classNameExpr": "<%= data.lastDuration < 0 ? 'bg-danger' : (data.lastDuration > 0 ? 'bg-success' : 'bg-default' ) %>",
+                "classNameExpr": "<%= data.lastDuration < 0 ? 'bg-danger' : 'bg-default'%>",
                 "toggled": true
+            },
+            {
+                "type": "progress",
+                "name" : "progress",
+                "label" : "课时比例",
+                "mode": "dashboard",
+                "strokeWidth": 4,
+                "gapDegree": 22,
+                "gapPosition": "bottom",
+                "map": [
+                    {
+                        "value": 20,
+                        "color": "#F96D3E"
+                    },
+                    {
+                        "value": 100,
+                        "color": "#007bff"
+                    }
+                ]
             },
             {
                 "name": "create_time",

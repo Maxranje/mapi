@@ -147,6 +147,11 @@ alter table tblSchedule add index `areaop` (`area_op`);
 ALTER Table tblGroup add column `area_op` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '校区管理者';
 alter table tblGroup add index `areaop` (`area_op`);
 
+
+# 20230323
 ALTER Table tblUser add column `birthplace` varchar(200) NOT NULL DEFAULT '' COMMENT '生源地';
 ALTER TABLE tblGroup add column `student_price` varchar(200) NOT NULL DEFAULT '' COMMENT '学生客单价json';
-ALTER TABLE tblUser drop column `student_price`;
+ALTER TABLE tblCapital add column `group_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '班级id';
+ALTER TABLE tblCapital add column `column_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '课程id';
+ALTER TABLE tblCapital add column `schedule_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排课id';
+alter table tblCapital add index `uid` (`uid`);

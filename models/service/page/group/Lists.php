@@ -168,6 +168,12 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
             }
             $item['lastDurationInfo'] = $item['lastDuration'] . "课时";
 
+            if ($item['lastDuration'] <= 0) {
+                $item["progress"] = 0 ;
+            } else {
+                $item["progress"] = intval(($item['lastDuration']/ $item['duration']) * 100);
+            }
+
             if (!empty($item['area_op']) && !empty($userInfos[$item['area_op']]['nickname'])){
                 $item['area_op_name'] = $userInfos[$item['area_op']]['nickname'];
             }
