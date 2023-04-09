@@ -235,13 +235,6 @@
                 "toggled": true
             },
             {
-                "name": "teacher_capital_format",
-                "label": "收入",
-                "type": "text",
-                "toggled": false,
-                "classNameExpr": "<%= data.teacher_capital < 0 ? 'bg-danger' : (data.teacher_capital > 0 ? 'bg-success' : 'bg-default' ) %>"
-            },
-            {
                 "name": "create_time",
                 "label": "创建时间",
                 "type": "text",
@@ -513,7 +506,7 @@
                                                 "body": [
                                                     {
                                                         "type": "input-text",
-                                                        "name": "teacher_id",
+                                                        "name": "uid",
                                                         "label": "教师ID",
                                                         "disabled": true
                                                     },

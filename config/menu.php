@@ -5,16 +5,9 @@ return array(
         
     ),
     "defualt_amdins" => array(
-        1,2,3,4,41,42,43,44,5,51,
+        1,2,3,41,42,101,102,51,
     ),
     "menu" => array(
-        array(
-            "id" => 1,
-            "label" =>  "Dashboard",
-            "url"=>"/index/1",
-            "icon"=>"fa fa-home",
-            "schemaApi"=>"get:/public/pages/dashboard.json"
-        ),
         array(
             "id" => 2,
             "label"=>"学生管理",
@@ -48,16 +41,24 @@ return array(
                     "url"=>"/schedule/schedulelist",
                     "icon"=>"fa fa-list",
                     "schemaApi"=>"get:/public/pages/crud-schedule-list.json"
-                ),
+                )
+            ]
+        ),
+        array(
+            "id" => 10,
+            "label"=>"教室管理",
+            "url"=>"/arearoom",
+            "icon"=>"fa fa-archive",
+            "children"=>[
                 array(
-                    "id" => 43,
+                    "id" => 101,
                     "label"=>"教室预览",
                     "url"=>"/schedule/arearoute",
                     "icon"=>"fa fa-calendar",
                     "schemaApi"=>"get:/public/pages/crud-area-route.json"
                 ),
                 array(
-                    "id" => 44,
+                    "id" => 102,
                     "label"=>"配置教室",
                     "url"=>"/schedule/pkarealist",
                     "icon"=>"fa fa-bars",

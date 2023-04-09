@@ -7,7 +7,7 @@ class Service_Page_Column_Create extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $teacherId = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
+        $teacherId = empty($this->request['uid']) ? 0 : intval($this->request['uid']);
         $subjectId = empty($this->request['subject_id']) ? 0 : intval($this->request['subject_id']);
         $price      = empty($this->request['price']) ? 0 : $this->request['price'];
         $duration   = empty($this->request['duration']) ? 0 : intval($this->request['duration']);

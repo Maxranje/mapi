@@ -18,7 +18,7 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
 
         $pn = ($pn-1) * $rn;
 
-        $name       = empty($this->request['groupName']) ? "" : $this->request['groupName'];
+        $name       = empty($this->request['name']) ? "" : $this->request['name'];
         $studentId  = empty($this->request['student_id']) ? 0 : intval($this->request['student_id']);
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         $nickname   = empty($this->request['student_nickname']) ? "" : $this->request['student_nickname'];

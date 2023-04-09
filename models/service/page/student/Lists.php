@@ -70,6 +70,6 @@ class Service_Page_Student_Lists extends Zy_Core_Service{
                 }
             }
         }
-        return array('options' => $options, 'value' => $values);
+        return array('options' => $options, 'value' => implode(",", $values));
     }
 }

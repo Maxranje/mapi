@@ -414,7 +414,7 @@
                                     },
                                     {
                                         "label": "选择学生",
-                                        "name": "studentIds",
+                                        "name": "student_ids",
                                         "type": "transfer",
                                         "source": "/mapi/student/lists?isSelect=1&group_id=${id}",
                                         "searchable": true,

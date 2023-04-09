@@ -14,7 +14,7 @@ class Service_Page_Group_Update extends Zy_Core_Service{
         $duration   = empty($this->request['duration']) ? 0 : intval($this->request['duration']);
         $discount   = empty($this->request['discount']) ? 0 : intval($this->request['discount']);
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
-        $studentIds = empty($this->request['studentIds']) ? array() : explode(",", $this->request['studentIds']);
+        $studentIds = empty($this->request['student_ids']) ? array() : explode(",", $this->request['student_ids']);
 
         if ($id <= 0 || empty($name) || empty($studentIds)) {
             throw new Zy_Core_Exception(405, "必要的参数为空, 并且一个班级不允许没有学生, 请检查");

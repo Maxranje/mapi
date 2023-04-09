@@ -15,7 +15,7 @@ class Service_Page_Student_Update extends Zy_Core_Service{
         $graduate   = empty($this->request['graduate']) ? "" : trim($this->request['graduate']);
         $birthplace = empty($this->request['birthplace']) ? "" : trim($this->request['birthplace']);
         $sex        = empty($this->request['sex']) ? "M" : trim($this->request['sex']);
-        $remark     = empty($this->request['sccapital_remarkhool']) ? "" : trim($this->request['capital_remark']);
+        $remark     = empty($this->request['capital_remark']) ? "" : trim($this->request['capital_remark']);
         $capital    = empty($this->request['capital']) ? 0 : $this->request['capital'];
 
         if ($uid <= 0) {

@@ -71,6 +71,10 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
                 $item['name'] = $userInfos[$item['uid']]['nickname'];
                 $item['birthplace'] = $userInfos[$item['uid']]['birthplace'];
                 $item['typeInfo'] = $userInfos[$item['uid']]['type'] == Service_Data_User_Profile::USER_TYPE_STUDENT ? "学生" : "教师";
+            } else {
+                $item['name'] = "未知(已被删)";
+                $item['birthplace'] = "";
+                $item['typeInfo'] = "未知";
             }
             if (isset($userInfos[$item['operator']])) {
                 $item['operatorName'] = $userInfos[$item['operator']]['nickname'];

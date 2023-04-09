@@ -24,14 +24,22 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
                     "redirect" => "/index/1"
                 ),
                 array(
-                    'children' => array(),
+                    'children' => array(
+                        array(
+                            "id" => 1,
+                            "label" =>  "Dashboard",
+                            "url"=>"/index/1",
+                            "icon"=>"fa fa-home",
+                            "schemaApi"=>"get:/public/pages/dashboard.json"
+                        ),
+                    ),
                 ),
             ),
         );
 
         // 管理员直接返回
         if ($this->checkSuper()) {
-            $menuBase['pages'][1]['children'] = $menuConf;
+            $menuBase['pages'][1]['children'] = array_merge($menuBase['pages'][1]['children'], $menuConf);
             return $menuBase;
         }
 
@@ -57,7 +65,7 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
             }
         }
 
-        $menuBase['pages'][1]['children'] = array_values($menuConf);
+        $menuBase['pages'][1]['children'] = array_merge($menuBase['pages'][1]['children'],  array_values($menuConf));
         return $menuBase;
     }
 }

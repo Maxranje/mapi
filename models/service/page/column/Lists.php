@@ -49,13 +49,13 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                 continue;
             }
             $result[] = array(
-                'subjectName' => $subjectInfos[$item['subject_id']]['name'],
-                'teacherName' => $teacherInfos[$item['teacher_id']]['nickname'],
-                'teacherId' => $item['teacher_id'],
-                'subjectId' => $item['subject_id'],
+                'subject_name' => $subjectInfos[$item['subject_id']]['name'],
+                'teacher_name' => $teacherInfos[$item['teacher_id']]['nickname'],
+                'teacher_id' => $item['teacher_id'],
+                'subject_id' => $item['subject_id'],
                 "price" => $item['price'],
-                "priceInfo" => ($item['price'] / 100) . "元",
-                "priceInfo2" => ($item['price'] / 100),
+                "price_info" => ($item['price'] / 100) . "元",
+                "price_info2" => ($item['price'] / 100),
             );
         }
 
@@ -69,11 +69,11 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                 "body"=> [
                     [
                         "label"=> "课程名",
-                        "name"=> "subjectName"
+                        "name"=> "subject_name"
                     ],
                     [
                         "label"=> "课时单价",
-                        "name"=> "priceInfo"
+                        "name"=> "price_info"
                     ]
                 ],
                 "actions"=> [
@@ -115,7 +115,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                                         "type"=> "input-text",
                                         "name"=> "price",
                                         "label"=> "课时单价",
-                                        "value"=>'${priceInfo2}',
+                                        "value"=>'${price_info2}',
                                         "addOn"=> [
                                             "type"=> "text",
                                             "label"=> "元"
@@ -134,7 +134,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                         "confirmText"=> "您确认要删除课程, 删除课程会删除所有未上课的排课?",
                         "api"=> [
                             "method"=> "get",
-                            "url"=> '/mapi/column/delete?teacher_id=$teacherId&subject_id=$subjectId'
+                            "url"=> '/mapi/column/delete?teacher_id=$teacher_id&subject_id=$subject_id'
                         ]
                     ]
                 ]

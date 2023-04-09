@@ -90,10 +90,10 @@ class Service_Data_Roles {
             $conds = array(
                 sprintf("id in (%s)", implode(",", $rolesIds))
             );
-            $data2 = $this->daoRoleMap->getListByConds($conds, array("page_ids"));
+            $data2 = $this->daoRole->getListByConds($conds, array("page_ids"));
             if (!empty($data2)) {
                 $pageIds = array();
-                foreach ($data as $key => $item) {
+                foreach ($data2 as $key => $item) {
                     $pageIds = array_merge($pageIds, explode(",", $item['page_ids']));
                 }
                 $pageIds = array_unique($pageIds);
