@@ -3,12 +3,12 @@
 class Service_Page_Teacher_Create extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
-            throw new Zy_Core_Exception(405, "无权限");
+        if (!$this->checkAdmin()) {
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         if (empty($this->request['excel'])) {
-            throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
+            throw new Zy_Core_Exception(405, "上传文件解析失败, 请检查");
         }
 
         $serviceData = new Service_Data_User_Profile();

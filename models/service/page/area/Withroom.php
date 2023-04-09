@@ -1,15 +1,16 @@
 <?php
 
-class Service_Page_Area_Pkchlists extends Zy_Core_Service{
+// area 和 room数据关联输出
+class Service_Page_Area_Withroom extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限查看");
         }
-        $areaId = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
+
+        $areaId = empty($this->request['aid']) ? 0 : intval($this->request['aid']);
 
         $serviceData = new Service_Data_Area();
-
         if ($areaId <= 0) {
             $lists = $serviceData->getList();
         }else {

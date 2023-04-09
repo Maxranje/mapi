@@ -155,3 +155,29 @@ ALTER TABLE tblCapital add column `group_id` int(11) unsigned NOT NULL DEFAULT '
 ALTER TABLE tblCapital add column `column_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '课程id';
 ALTER TABLE tblCapital add column `schedule_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排课id';
 alter table tblCapital add index `uid` (`uid`);
+
+
+# 20230327
+CREATE TABLE `tblRole` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '权限名称',
+  `descs` varchar(200) NOT NULL DEFAULT '' COMMENT '权限描述',
+  `page_ids` varchar(200) NOT NULL DEFAULT '' COMMENT '能操作的页面',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `ext` varchar(2000) NOT NULL DEFAULT '' COMMENT '冗余',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限表';
+
+CREATE TABLE `tblRoleMap` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `role_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '权限id',
+  `descs` varchar(200) NOT NULL DEFAULT '' COMMENT '权限描述',
+  `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户uid',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `ext` varchar(2000) NOT NULL DEFAULT '' COMMENT '冗余',
+  PRIMARY KEY (`id`),
+  KEY `role_id` (`role_id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限ID关联表';

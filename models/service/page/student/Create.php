@@ -4,63 +4,45 @@ class Service_Page_Student_Create extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
-            throw new Zy_Core_Exception(405, "无权限");
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        if (empty($this->request['name'])
-            || empty($this->request['phone'])
-            || empty($this->request['nickname'])) {
-            throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
+        $name       = empty($this->request['name']) ? "" : trim($this->request['name']);
+        $phone      = empty($this->request['phone']) ? "" : trim($this->request['phone']);
+        $nickname   = empty($this->request['nickname']) ? "" : trim($this->request['nickname']);
+        $school     = empty($this->request['school']) ? "" : trim($this->request['school']);
+        $graduate   = empty($this->request['graduate']) ? "" : trim($this->request['graduate']);
+        $birthplace = empty($this->request['birthplace']) ? "" : trim($this->request['birthplace']);
+        $sex        = empty($this->request['sex']) ? "M" : trim($this->request['sex']);
+        $remark     = empty($this->request['sccapital_remarkhool']) ? "" : trim($this->request['capital_remark']);
+        $capital    = empty($this->request['student_capital']) ? 0 : $this->request['student_capital'];
+
+        if (empty($name) || empty($phone) || empty($nickname)) {
+            throw new Zy_Core_Exception(405, "管理员名或手机号等提交数据有空值, 请检查");
         }
 
-        if (!is_numeric($this->request['phone']) 
-            || strlen($this->request['phone']) < 6
-            || strlen($this->request['phone']) > 12) {
-            throw new Zy_Core_Exception(405, "手机号参数错误, 请检查");
-        }
-
-        if (empty($this->request['school'])) {
-            $this->request['school'] = "";
-        }
-
-        if (empty($this->request['graduate'])) {
-            $this->request['graduate'] = "";
-        }
-
-        if (empty($this->request['birthplace'])) {
-            $this->request['birthplace'] = "";
-        }
-
-        if (empty($this->request['sex'])) {
-            $this->request['sex'] = "M";
-        }
-
-        if (empty($this->request['capital_remark'])) {
-            $this->request['capital_remark'] = "";
-        }
-
-        if (empty($this->request['student_capital'])) {
-            $this->request['student_capital'] = 0;
+        if (!is_numeric($phone) || strlen($phone) < 6 || strlen($phone) > 12) {
+            throw new Zy_Core_Exception(405, "手机号参数错误, 6-12位数字, 请检查");
         }
 
         $serviceData = new Service_Data_User_Profile();
-        $userInfo = $serviceData->getUserInfo($this->request['name'], $this->request['phone']);
+        $userInfo = $serviceData->getUserInfo($name, $phone);
         if (!empty($userInfo)) {
-            throw new Zy_Core_Exception(405, "用户名和手机号已存在");
+            throw new Zy_Core_Exception(405, "用户名/手机号绑定的用户已存在");
         }
 
         $profile = [
-            "type"  => Service_Data_User_Profile::USER_TYPE_STUDENT , 
-            "name"  => $this->request['name'] , 
-            "nickname" => $this->request["nickname"],
-            "phone"  => $this->request['phone']  , 
-            "avatar" => "",
-            "birthplace" => $this->request["birthplace"],
-            "school"  => $this->request['school']  , 
-            "graduate"  => $this->request['graduate']  ,
-            "sex"  => $this->request['sex'] , 
-            "capital_remark" => $this->request['capital_remark'],
-            "student_capital" => $this->request['student_capital'],
+            "type"          => Service_Data_User_Profile::USER_TYPE_STUDENT , 
+            "name"          => $name, 
+            "nickname"      => $nickname,
+            "phone"         => $phone, 
+            "avatar"        => "",
+            "birthplace"    => $birthplace,
+            "school"        => $school, 
+            "graduate"      => $graduate,
+            "sex"           => $sex, 
+            "capital_remark" => $remark,
+            "student_capital" => $capital,
             "teacher_capital" => 0,
             "create_time"  => time() , 
             "update_time"  => time() , 

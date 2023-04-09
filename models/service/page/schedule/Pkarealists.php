@@ -24,11 +24,11 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
 
         $pn = ($pn-1) * $rn;
 
-        $groupId = empty($this->request['group_ids']) ? "" : strval($this->request['group_ids']);
-        $teacherId = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
-        $areaId = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
-        $daterange = empty($this->request['daterange']) ? "" : $this->request['daterange'];
-        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
+        $groupId    = empty($this->request['group_ids']) ? "" : strval($this->request['group_ids']);
+        $teacherId  = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
+        $areaId     = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
+        $daterange  = empty($this->request['daterange']) ? "" : $this->request['daterange'];
+        $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
 
         list($sts, $ets) = empty($daterange) ? array(0,0) : explode(",", $daterange);
 
@@ -198,16 +198,31 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
             // 校区信息
             $item['area_name'] = "";
             $item['room_name'] = "";
+            $item['area_mark'] = "";
+            $item['a_r_id'] = "";
+            $item['is_online'] = 0;
             if (!empty($item['area_id']) && !empty($areaInfos[$item['area_id']]['name'])) {
+                $item['a_r_id'] = $item['area_id'];
                 $item['area_name'] = $areaInfos[$item['area_id']]['name'];
                 if (!empty($item['room_id']) && !empty($roomInfos[$item['room_id']]['name'])) {
                     $item['room_name'] = $roomInfos[$item['room_id']]['name'];
+                    $item['a_r_id'] = sprintf("%s_%s", $item['area_id'], $item['room_id']);
                 } else {
                     $item['room_name'] = "无教室";
                 }
+                // 学生线上课, 教师线下
+                $ext = empty($item['ext']) ? array() : json_decode($item['ext'], true);
+                if (isset($ext['is_online']) && $ext['is_online'] == 1) {
+                    $item['area_mark'] = "线上";
+                    $item['is_online'] = 1;
+                }   
                 if (empty($this->request['export'])) {
                     $item['area_name'] = sprintf("%s(%s)", $item['area_name'], $item['room_name']);
+                    if (!empty($item['area_mark'])) {
+                        $item['area_name'] .= sprintf("(%s)", $item['area_mark']);
+                    }
                     unset($item['room_name']);
+                    unset($item['area_mark']);
                 }
             }
 
@@ -229,7 +244,7 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
 
     private function formatExcel($lists) {
         $result = array(
-            'title' => array('ID', '教师名', '班级名', '课程名', "校区", "教室", '区域管理', '星期', '时长', '时间', '创建时间'),
+            'title' => array('ID', '教师名', '班级名', '课程名', "校区", "教室", "校区教室备注", '区域管理', '星期', '时长', '时间', '创建时间'),
             'lists' => array(),
         );
         
@@ -241,6 +256,7 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
                 $item['subject_name'],
                 $item['area_name'],
                 $item['room_name'],
+                $item['area_mark'],
                 $item['area_op_name'],
                 $item['week_time'],
                 $item['time_len'],

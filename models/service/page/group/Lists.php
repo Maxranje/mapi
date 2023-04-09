@@ -18,31 +18,31 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
 
         $pn = ($pn-1) * $rn;
 
-        $name = empty($this->request['groupName']) ? "" : $this->request['groupName'];
-        $status = empty($this->request['status']) ? 0 : intval($this->request['status']);
-        $studentId = empty($this->request['studentId']) ? 0 : intval($this->request['studentId']);
-        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
-        $studentNickName = empty($this->request['studentNickName']) ? "" : $this->request['studentNickName'];
-        $isSelect = empty($this->request['isSelect']) ? false : true;
+        $name       = empty($this->request['groupName']) ? "" : $this->request['groupName'];
+        $studentId  = empty($this->request['student_id']) ? 0 : intval($this->request['student_id']);
+        $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
+        $nickname   = empty($this->request['student_nickname']) ? "" : $this->request['student_nickname'];
+        $isSelect   = empty($this->request['isSelect']) ? false : true;
 
         $this->serviceGroup = new Service_Data_Group();
         $this->serviceUsers = new Service_Data_User_Profile();
         $this->serviceGroupMap = new Service_Data_User_Group();
 
         $groupConds = array();
-        if (!empty($studentNickName)) {
+        if (!empty($nickname)) {
             $conds = array(
-                "nickname like '%".$studentNickName."%'"
+                "nickname like '%".$nickname."%'"
             );
             $students = $this->serviceUsers->getListByConds($conds);
             if (empty($students)) {
                 return $arrOutput;
             }
 
-            $studentUids = array_column($students, 'uid');
-            foreach ($studentUids as &$v)  {
-                $v = intval($v);
+            $studentUids = array();
+            foreach ($students as $item) {
+                $studentUids[intval($item['uid'])] = intval($item['uid']);
             }
+            $studentUids = array_values($studentUids);
 
             $conds = array(
                 sprintf("student_id in (%s)", implode(",", $studentUids)),
@@ -52,11 +52,11 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
                 return $arrOutput;
             }
 
-            $groupIds = array_column($groupMap, 'group_id');
-            foreach ($groupIds as &$v)  {
-                $v = intval($v);
+            $groupIds = array();
+            foreach ($groupMap as $item) {
+                $groupIds[intval($item['group_id'])] = intval($item['group_id']);
             }
-
+            $groupIds = array_values($groupIds);
             $groupConds[] = sprintf("id in (%s)", implode(",", $groupIds)); 
         }
 
@@ -71,20 +71,16 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
                 return array();
             }
 
-            $groupIds = array_column($groupMap, 'group_id');
-            foreach ($groupIds as &$v)  {
-                $v = intval($v);
+            $groupIds = array();
+            foreach ($groupMap as $item) {
+                $groupIds[intval($item['group_id'])] = intval($item['group_id']);
             }
-
+            $groupIds = array_values($groupIds);
             $groupConds[] = sprintf("id in (%s)", implode(",", $groupIds)); 
         }
 
         if (!empty($name)) {
             $groupConds[] = "name like '%".$name."%'";
-        }
-
-        if (!empty($status)) {
-            $groupConds[] = "status = " . $status;
         }
 
         if ($areaop > 0) {
@@ -116,14 +112,14 @@ class Service_Page_Group_Lists extends Zy_Core_Service{
         }
 
         $groupIds = array();
-        $groupMapInfo = array();
         $uids = array();
         foreach ($lists as $item) {
-            $groupIds[$item['id']] = intval($item['id']);
-            $uids[$item['area_op']] = intval($item['area_op']);
+            $groupIds[intval($item['id'])] = intval($item['id']);
+            $uids[intval($item['area_op'])] = intval($item['area_op']);
         }
         $groupIds = array_values($groupIds);
 
+        $groupMapInfo = array();
         $conds = array(
             sprintf("group_id in (%s)", implode(",", $groupIds))
         );

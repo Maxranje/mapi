@@ -1,0 +1,49 @@
+{
+    "type": "page",
+    "body": [
+        {
+            "type": "container",
+            "body": [
+            {
+                "type": "form",
+                "title": "过滤条件",
+                "autoFocus": true,
+                "mode": "inline",
+                "body": [
+                    {
+                        "type": "tree-select",
+                        "name": "area_id",
+                        "searchable":true,
+                        "onlyLeaf":true,
+                        "label": "校区",
+                        "size":"md",
+                        "source": "/mapi/area/onlyarea"
+                    },
+                    {
+                        "type": "input-date",
+                        "name": "datetime",
+                        "inline": true,
+                        "value":"today",
+                        "label": "日期"
+                    },
+                    {
+                        "type": "button",
+                        "actionType": "reload",
+                        "target": "area_details?area_id=${area_id}&datetime=${datetime}",
+                        "level" : "info",
+                        "label" : "查询"
+                    }
+                ]
+            },
+            {
+                "type": "panel",
+                "title": "班级占用情况(黄色时间点代表已被占用,小于1小时也会占满一格子)",
+                "body": {
+                    "type": "service",
+                    "id" : "area_details",
+                    "schemaApi": "/mapi/area/details?area_id=${area_id}&datetime=${datetime}"
+                }
+            }]
+        }
+    ]
+}

@@ -87,7 +87,7 @@
             "body": [
                 {
                     "type": "input-text",
-                    "name": "subjectName",
+                    "name": "name",
                     "label": "科目",
                     "placeholder": ""
                 },

@@ -1,6 +1,6 @@
 <?php
 
-// 后台学生端 , 查询
+// 后台学生管理学生端查询
 class Service_Page_Schedule_Bscalendar extends Zy_Core_Service{
 
     public function execute () {

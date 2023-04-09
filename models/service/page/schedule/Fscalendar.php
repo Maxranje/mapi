@@ -1,5 +1,5 @@
 <?php
-// 学生端显示
+// 学生/教师端显示
 class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
     public function execute () {
@@ -136,14 +136,19 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
             $subjectName = $subjectInfo[$sid]['name'];
             $groupName = $groupInfos[$item['group_id']]['name'];
 
+            $ext = empty($item['ext']) ? array() : json_decode($item['ext'], true);
+
             // 校区信息
             $areaName = "";
             if (!empty($item['area_id']) && !empty($areaInfos[$item['area_id']]['name'])) {
                 $areaName = $areaInfos[$item['area_id']]['name'];
                 if (!empty($item['room_id']) && !empty($roomInfos[$item['room_id']]['name'])) {
-                    $areaName = sprintf("%s_%s", $areaName, $roomInfos[$item['room_id']]['name']);
+                    $areaName = sprintf("%s(%s)", $areaName, $roomInfos[$item['room_id']]['name']);
                 } else {
-                    $areaName = sprintf("%s_%s", $areaName, "无教室");
+                    $areaName = sprintf("%s(%s)", $areaName, "无教室");
+                }
+                if (isset($ext['is_online']) && $ext['is_online'] == 1) {
+                    $areaName = sprintf("%s(%s)", $areaName, "线上");
                 }
             }
 
@@ -155,6 +160,9 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
                     $tmp['title'] .= "(已结算)";
                 }
             } else {
+                if (isset($ext['is_online']) && $ext['is_online'] == 1) {
+                    $areaName = "线上";
+                }
                 $tmp['title'] = sprintf("%s %s %s", $subjectName, $teacherName, $areaName);
             }
 

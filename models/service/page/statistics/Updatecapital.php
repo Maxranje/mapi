@@ -3,14 +3,14 @@
 class Service_Page_Statistics_Updatecapital extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
+        if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $uid = empty($this->request['uid']) ? 0 : intval($this->request['uid']);
-        $groupId = empty($this->request['group_id']) ? 0 : intval($this->request['group_id']);
-        $newExpenses = empty($this->request['expenses']) ? 0 : intval($this->request['expenses']);
-        $newExpenses = $newExpenses * 100;
+        $uid            = empty($this->request['uid']) ? 0 : intval($this->request['uid']);
+        $groupId        = empty($this->request['group_id']) ? 0 : intval($this->request['group_id']);
+        $newExpenses    = empty($this->request['expenses']) ? 0 : intval($this->request['expenses']);
+        $newExpenses    = $newExpenses * 100;
 
         if ($uid <=0 || $groupId <= 0) {
             throw new Zy_Core_Exception(405, "需要选定一个条目");

@@ -1,15 +1,16 @@
 <?php
 
+// 创建校区
 class Service_Page_Area_Create extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
-            throw new Zy_Core_Exception(405, "无权限");
+        if (!$this->checkAdmin()) {
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $areaId = empty($this->request['area_id']) ? 0 : $this->request['area_id'];
-        $areaName = empty($this->request['area_name']) ? "" : $this->request['area_name'];
-        $roomName = empty($this->request['room_name']) ? "" : $this->request['room_name'];
+        $areaId     = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
+        $areaName   = empty($this->request['area_name']) ? "" : trim($this->request['area_name']);
+        $roomName   = empty($this->request['room_name']) ? "" : trim($this->request['room_name']);
 
         if ((empty($areaName) && empty($areaId)) || empty($roomName) ){
             throw new Zy_Core_Exception(405, "校区参数和房间参数不能为空");

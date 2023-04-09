@@ -1,6 +1,6 @@
 <?php
-
-class Service_Page_Admins_Arealists extends Zy_Core_Service{
+// 区域管理者列表
+class Service_Page_Group_Areaops extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
@@ -12,14 +12,11 @@ class Service_Page_Admins_Arealists extends Zy_Core_Service{
         );
         
         $serviceData = new Service_Data_User_Profile();
+        $lists = $serviceData->getListByConds($conds);
+        if (empty($lists)) {
+            return array();
+        }
 
-        $arrAppends[] = 'order by create_time desc';
-
-        $lists = $serviceData->getListByConds($conds, false, NULL, $arrAppends);
-        return $this->formatBase($lists);
-    }
-
-    private function formatBase($lists) {
         $options = array();
         foreach ($lists as $item) {
             $optionsItem = [

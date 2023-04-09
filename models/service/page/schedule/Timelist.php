@@ -6,7 +6,7 @@ class Service_Page_Schedule_Timelist extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
-            throw new Zy_Core_Exception(405, "无权限");
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         $type       = empty($this->request['type']) ? 0 : intval($this->request['type']);

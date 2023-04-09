@@ -153,19 +153,19 @@
             "body": [
                 {
                     "type": "input-text",
-                    "name": "teacherNickName",
+                    "name": "nickname",
                     "label": "教师昵称",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
-                    "name": "teacherName",
+                    "name": "name",
                     "label": "登录名",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
-                    "name": "teacherPhone",
+                    "name": "phone",
                     "label": "手机号",
                     "placeholder": ""
                 },
@@ -450,7 +450,7 @@
                                     "body": {
                                         "type": "service",
                                         "id" : "bandcards",
-                                        "schemaApi": "/mapi/column/lists?isSelect=1&teacherId=${uid}"
+                                        "schemaApi": "/mapi/column/lists?&teacher_id=${uid}"
                                     }
                                 },
                                 {
@@ -513,7 +513,7 @@
                                                 "body": [
                                                     {
                                                         "type": "input-text",
-                                                        "name": "uid",
+                                                        "name": "teacher_id",
                                                         "label": "教师ID",
                                                         "disabled": true
                                                     },

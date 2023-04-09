@@ -27,11 +27,12 @@ class Service_Page_Group_Singleprice extends Zy_Core_Service{
 
         $uids = array();
         foreach ($studentUids as $item) {
-            $uids[] = intval($item['student_id']);
+            $uids[intval($item['student_id'])] = intval($item['student_id']);
         }
+        $uids = array_values($uids);
 
         $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $uids).')'), array('uid', "nickname"));
+        $userInfos = $serviceUser->getUserInfoByUids($uids);
         if (empty($userInfos)) {
             return array();
         }

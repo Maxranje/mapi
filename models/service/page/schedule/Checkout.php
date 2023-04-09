@@ -8,7 +8,7 @@ class Service_Page_Schedule_Checkout extends Zy_Core_Service{
         }
 
         $id = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        if (empty($id)) {
+        if ($id <= 0) {
             throw new Zy_Core_Exception(405, "请求参数错误");
         }
 

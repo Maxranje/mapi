@@ -7,17 +7,16 @@ class Service_Page_Statistics_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $id = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        $capital_remark = empty($this->request['capital_remark']) ? "" : strval($this->request['capital_remark']);
+        $id     = empty($this->request['id']) ? 0 : intval($this->request['id']);
+        $remark = empty($this->request['capital_remark']) ? "" : strval($this->request['capital_remark']);
 
-        if (empty($id)) {
-            throw new Zy_Core_Exception(405, "备注和ID不能为空");
+        if ($id <= 0) {
+            throw new Zy_Core_Exception(405, "ID不能为空");
         }
 
         $serviceStatic = new Service_Data_Statistics();
-
         $profile = array(
-            "capital_remark" => $capital_remark,
+            "capital_remark" => $remark,
         );
 
         $ret = $serviceStatic->edit($id, $profile);

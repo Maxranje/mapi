@@ -32,6 +32,7 @@ class Zy_Core_Session  {
         $name = $this->getSessionUserName ();
         $phone = $this->getSessionUserPhone ();
         $type = $this->getSessionUserType ();
+        $pages = $this->getSessionUserPages();
 
         if (empty($userid) || empty($name) || empty($phone) || empty($type)) {
             return [];
@@ -42,10 +43,11 @@ class Zy_Core_Session  {
             'name'   => $name,
             'phone'  => $phone,
             'type'   => $type,
+            'pages'  => $pages,
         ];
     }
 
-    public function setSessionUserInfo ($userid, $name, $phone, $type, $avatar = "") {
+    public function setSessionUserInfo ($userid, $name, $phone, $type, $pages = array(), $avatar = "") {
         if (empty($userid) || empty($name) || empty($phone) || empty($type)) {
             return false;
         }
@@ -62,6 +64,7 @@ class Zy_Core_Session  {
         $this->setSessionUserName($name);
         $this->setSessionUserPhone($phone);
         $this->setSessionUserType($type);
+        $this->setSessionUserPages($pages);
         $this->setSessionUserAvatar($avatar);
 
         return true;
@@ -97,6 +100,10 @@ class Zy_Core_Session  {
         return isset($_SESSION['type']) ? $_SESSION['type'] : '';
     }
 
+    public function getSessionUserPages () {
+        return isset($_SESSION['pages']) && is_array($_SESSION['pages']) ? $_SESSION['pages'] : array();
+    }
+
     public function setSessionUserName ($name) {
         $_SESSION['name'] = $name;
     }
@@ -115,6 +122,10 @@ class Zy_Core_Session  {
 
     public function setSessionUserType ($type) {
         $_SESSION['type'] = $type;
+    }
+
+    public function setSessionUserPages ($pages) {
+        $_SESSION['pages'] = $pages;
     }
 
     public function getSessionUserVerify () {

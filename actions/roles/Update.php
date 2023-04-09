@@ -1,14 +1,14 @@
 <?php
 
-class Actions_Aslists extends Zy_Core_Actions {
+class Actions_Update extends Zy_Core_Actions {
 
     // 执行入口
     public function execute() {
         if (!$this->isLogin()) {
-            $this->error(405, "请先登录");
+            return $this->_data;
         }
 
-        $serivce = new Service_Page_Area_Aslists ($this->_request, $this->_userInfo);
+        $serivce = new Service_Page_Roles_Update ($this->_request, $this->_userInfo);
         $this->_data = $serivce->execute();
         return $this->_data;
     }

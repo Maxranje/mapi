@@ -6,15 +6,15 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
-            throw new Zy_Core_Exception(405, "无权限");
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $id = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        $date = empty($this->request['date']) ? 0 : intval($this->request['date']);
-        $timeRange = empty($this->request['timeRange']) ? "" : $this->request['timeRange'];
-        $timeRange = empty($timeRange) ? array() : explode(":", $timeRange);
-        $areaop = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
-        $timeDw = empty($this->request['timeDw']) ? 0 : floatval($this->request['timeDw']);
+        $id         = empty($this->request['id']) ? 0 : intval($this->request['id']);
+        $date       = empty($this->request['date']) ? 0 : intval($this->request['date']);
+        $timeRange  = empty($this->request['timeRange']) ? "" : $this->request['timeRange'];
+        $timeRange  = empty($timeRange) ? array() : explode(":", $timeRange);
+        $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
+        $timeDw     = empty($this->request['timeDw']) ? 0 : floatval($this->request['timeDw']);
 
         if ($id <= 0){
             throw new Zy_Core_Exception(405, "请求参数错误");

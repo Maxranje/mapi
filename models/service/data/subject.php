@@ -102,9 +102,9 @@ class Service_Data_Subject {
         return $ret;
     }
 
-    public function getListByConds($conds, $isSimple = true, $indexs = null, $appends = null) {
-        $fields = $this->daoSubject->arrFieldsMap;
-        $lists = $this->daoSubject->getListByConds($conds, $fields, $indexs, $appends);
+    public function getListByConds($conds, $field = array(), $indexs = null, $appends = null) {
+        $field = empty($field) || !is_array($field) ? $this->daoSubject->arrFieldsMap : $field;
+        $lists = $this->daoSubject->getListByConds($conds, $field, $indexs, $appends);
         if (empty($lists)) {
             return array();
         }

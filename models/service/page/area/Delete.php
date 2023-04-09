@@ -3,8 +3,8 @@
 class Service_Page_Area_Delete extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
-            throw new Zy_Core_Exception(405, "无权限");
+        if (!$this->checkAdmin()) {
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         $rid = empty($this->request['rid']) ? 0 : intval($this->request['rid']);

@@ -3,7 +3,7 @@
 class Service_Page_Area_Update extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
+        if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限");
         }
 

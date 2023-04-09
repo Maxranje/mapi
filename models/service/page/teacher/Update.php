@@ -3,19 +3,19 @@
 class Service_Page_Teacher_Update extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
-            throw new Zy_Core_Exception(405, "无权限");
+        if (!$this->checkAdmin()) {
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         $uid = empty($this->request['uid']) ? "" : intval($this->request['uid']);
-        $name = empty($this->request['name']) ? "" : $this->request['name'];
-        $nickname = empty($this->request['nickname']) ? "" : $this->request['nickname'];
-        $phone = empty($this->request['phone']) ? "" : $this->request['phone'];
-        $sex = empty($this->request['sex']) ? "M" : $this->request['sex'];
-        $capital = empty($this->request['capital']) ? 0 : $this->request['capital'];
+        $name       = empty($this->request['name']) ? "" : trim($this->request['name']);
+        $phone      = empty($this->request['phone']) ? "" : trim($this->request['phone']);
+        $nickname   = empty($this->request['nickname']) ? "" : trim($this->request['nickname']);
+        $sex        = empty($this->request['sex']) ? "M" : trim($this->request['sex']);
+        $capital    = empty($this->request['capital']) ? 0 : $this->request['capital'];
 
         if (empty($name) || empty($nickname) || empty($phone) || !in_array($sex, ['M', "F"])) {
-            throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
+            throw new Zy_Core_Exception(405, "部分参数为空或非法, 请检查");
         }
 
         $serviceData = new Service_Data_User_Profile();
@@ -25,17 +25,17 @@ class Service_Page_Teacher_Update extends Zy_Core_Service{
         }
 
         $profile = [
-            "type"  => Service_Data_User_Profile::USER_TYPE_TEACHER, 
-            "name"  => $name , 
-            "nickname"  => $nickname , 
-            "phone"  => $phone, 
-            "avatar" => "",
-            "sex"  => $sex, 
+            "type"          => Service_Data_User_Profile::USER_TYPE_TEACHER, 
+            "name"          => $name , 
+            "nickname"      => $nickname , 
+            "phone"         => $phone, 
+            "avatar"        => "",
+            "sex"           => $sex, 
             "update_time"  => time() , 
         ];
 
         $needTeacherCapital = false;
-        if (!empty($capital)) {
+        if ($capital > 0) {
             $needTeacherCapital = true;
             $userInfo['teacher_capital'] += intval($capital * 100);
             $profile['teacher_capital'] = $userInfo['teacher_capital'];

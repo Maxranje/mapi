@@ -9,7 +9,7 @@ class Service_Data_User_Profile {
     const USER_TYPE_STUDENT = 12;
     const USER_TYPE_TEACHER = 13;
 
-    const ADMIN_GRANT = [self::USER_TYPE_ADMIN, self::USER_TYPE_SUPER];
+    const ADMIN_GRANT = [self::USER_TYPE_ADMIN, self::USER_TYPE_SUPER, self::USER_TYPE_TEACHER];
 
     public function __construct() {
         $this->daoUser = new Dao_User () ;
@@ -201,11 +201,23 @@ class Service_Data_User_Profile {
             return false;
         }
 
+        // 学生删掉关联的班级
         $daoGroupMap = new Dao_Groupmap();
         $conds = array(
             'student_id' => intval($uid),
         ) ;
         $ret = $daoGroupMap->deleteByConds($conds);
+        if ($ret == false) {
+            $this->daoUser->rollback();
+            return false;
+        }
+
+        // 删掉关联的权限
+        $daoRoles = new Dao_Rolesmap();
+        $conds = array(
+            'uid' => intval($uid),
+        ) ;
+        $ret = $daoRoles->deleteByConds($conds);
         if ($ret == false) {
             $this->daoUser->rollback();
             return false;
@@ -261,16 +273,17 @@ class Service_Data_User_Profile {
             $userInfo['uid'], 
             $userInfo['name'], 
             $userInfo['phone'], 
-            $userInfo['type']);
+            $userInfo['type'],
+            $userInfo['pages']);
     }
 
     public function delUserSession () {
         return Zy_Core_Session::getInstance()->delSessionAndCookie();
     }
 
-    public function getListByConds($conds, $isSimple = true, $indexs = null, $appends = null) {
-        $fields = $this->daoUser->arrFieldsMap;
-        $lists = $this->daoUser->getListByConds($conds, $fields, $indexs, $appends);
+    public function getListByConds($conds, $field = array(), $indexs = null, $appends = null) {
+        $field = empty($field) || !is_array($field)? $this->daoUser->arrFieldsMap : $field;
+        $lists = $this->daoUser->getListByConds($conds, $field, $indexs, $appends);
         if (empty($lists)) {
             return array();
         }

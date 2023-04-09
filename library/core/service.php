@@ -9,6 +9,7 @@ class Zy_Core_Service {
         $this->adption = $adption;
     }
 
+    // 检测是否是超管,  管理员或老师
     public function checkAdmin () {
         if (empty($this->adption['type']) 
             || !in_array($this->adption['type'], Service_Data_User_Profile::ADMIN_GRANT)) {
@@ -41,4 +42,7 @@ class Zy_Core_Service {
         return true;
     }
 
+    public function getUserRolePage () {
+        return empty($this->adption['pages']) ? array() : $this->adption['pages'];
+    }
 }

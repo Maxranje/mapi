@@ -54,36 +54,15 @@
                             "type": "divider"
                         },
                         {
-                            "label": "状态",
-                            "type": "select",
-                            "name": "status",
-                            "value" : "0",
-                            "options": [
-                                {
-                                    "label": "请选择",
-                                    "value": "0"
-                                },
-                                {
-                                    "label": "上线",
-                                    "value": "1"
-                                },
-                                {
-                                    "label": "下线",
-                                    "value": "2"
-                                }
-                            ],
-                            "required": true
-                        },
-                        {
                             "type": "divider"
                         },
                         {
                             "label": "选择学生",
-                            "name": "studentIds",
+                            "name": "student_ids",
                             "type": "transfer",
-                            "source": "/mapi/student/lists?transfer=1&isSelect=1",
+                            "source": "/mapi/student/lists?isSelect=1",
                             "searchable": true,
-                            "searchApi": "/mapi/student/lists?transfer=1&isSelect=1&term=$term",
+                            "searchApi": "/mapi/student/lists?isSelect=1&nickname=$term",
                             "selectMode": "list",
                             "required": true
                         },
@@ -98,7 +77,7 @@
                             "searchable":true,
                             "size":"md",
                             "initiallyOpen":false,
-                            "source": "/mapi/admins/arealists",
+                            "source": "/mapi/group/areaops",
                             "required": true
                         },
                         {
@@ -151,14 +130,14 @@
             "body": [
                 {
                     "type": "input-text",
-                    "name": "groupName",
+                    "name": "name",
                     "label": "班级名称",
                     "size":"md",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
-                    "name": "studentNickName",
+                    "name": "student_nickname",
                     "label": "学生昵称",
                     "size":"md",
                     "placeholder": ""
@@ -171,27 +150,7 @@
                     "searchable":true,
                     "size":"md",
                     "initiallyOpen":false,
-                    "source": "/mapi/admins/arealists"
-                },
-                {
-                    "label": "状态",
-                    "type": "select",
-                    "name": "status",
-                    "value" : 0,
-                    "options": [
-                        {
-                            "label": "全部",
-                            "value": "0"
-                        },
-                        {
-                            "label": "上线",
-                            "value": "1"
-                        },
-                        {
-                            "label": "下线",
-                            "value": "2"
-                        }
-                    ]
+                    "source": "/mapi/group/areaops"
                 },
                 {
                     "type": "submit",
@@ -242,12 +201,6 @@
             {
                 "name": "descs",
                 "label": "描述",
-                "type": "text",
-                "toggled": true
-            },
-            {
-                "name": "statusInfo",
-                "label": "状态",
                 "type": "text",
                 "toggled": true
             },
@@ -342,14 +295,6 @@
                                         "type": "static",
                                         "name": "descs",
                                         "label": "描述"
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "static",
-                                        "name": "statusInfo",
-                                        "label": "状态"
                                     },
                                     {
                                         "type": "divider"
@@ -465,23 +410,6 @@
                                         "type": "divider"
                                     },
                                     {
-                                        "label": "状态",
-                                        "type": "select",
-                                        "name": "status",
-                                        "value" : "${status}",
-                                        "options": [
-                                            {
-                                                "label": "上线",
-                                                "value": "1"
-                                            },
-                                            {
-                                                "label": "下线",
-                                                "value": "2"
-                                            }
-                                        ],
-                                        "required": true
-                                    },
-                                    {
                                         "type": "divider"
                                     },
                                     {
@@ -490,7 +418,7 @@
                                         "type": "transfer",
                                         "source": "/mapi/student/lists?isSelect=1&group_id=${id}",
                                         "searchable": true,
-                                        "searchApi": "/mapi/student/lists?isSelect=1&group_id=${id}&term=$term",
+                                        "searchApi": "/mapi/student/lists?isSelect=1&group_id=${id}&nickname=$term",
                                         "selectMode": "list",
                                         
                                         "required": true
@@ -507,7 +435,7 @@
                                         "size":"md",
                                         "initiallyOpen":false,
                                         "value" : "${area_op}",
-                                        "source": "/mapi/admins/arealists",
+                                        "source": "/mapi/group/areaops",
                                         "required": true
                                     },
                                     {

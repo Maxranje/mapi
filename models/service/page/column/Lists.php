@@ -3,77 +3,51 @@
 class Service_Page_Column_Lists extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
+        if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限查看");
         }
-        
-        $pn = empty($this->request['page']) ? 0 : intval($this->request['page']);
-        $rn = empty($this->request['perPage']) ? 0 : intval($this->request['perPage']);
 
-        $pn = ($pn-1) * $rn;
-
-        $teacherId = empty($this->request['teacherId']) ? 0 : intval($this->request['teacherId']);
-        $isSelect = empty($this->request['isSelect']) ? false : true;
+        $teacherId = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
 
         $conds = array();
-
         if ($teacherId > 0) {
             $conds['teacher_id'] = $teacherId;
         }
         
         $serviceData = new Service_Data_Column();
-
-        $arrAppends[] = 'order by id';
-
-        if (!$isSelect) {
-            $arrAppends[] = "limit {$pn} , {$rn}";
-        }
-
-        $lists = $serviceData->getListByConds($conds, false, NULL, $arrAppends);
-        $lists = $this->formatBase($lists);
-
-        if ($isSelect) {
-            return $this->formatSelect($lists);
-        }
-        $total = $serviceData->getTotalByConds($conds);
-
-        return array(
-            'lists' => $lists,
-            'total' => $total,
-        );
-    }
-
-    private function formatBase ($lists) {
+        $lists = $serviceData->getListByConds($conds);
         if (empty($lists)) {
             return array();
         }
 
-        $subjectIds = array_column($lists, 'subject_id');
-        foreach ($subjectIds as &$v) {
-            $v = intval($v);
-        }
+        return $this->format($lists);
+    }
 
-        $teacherIds = array_column($lists, 'teacher_id');
-        foreach ($teacherIds as &$v) {
-            $v = intval($v);
-        }
+    private function format ($lists) {
 
-        $conds = array(
-            sprintf("id in (%s)", implode(",", $subjectIds)),
-        );
+        $subjectIds = array();
+        $teacherIds = array();
+        foreach ($lists as $item) {
+            $subjectIds[intval($item['subject_id'])] = intval($item['subject_id']);
+            $teacherIds[intval($item['teacher_id'])] = intval($item['teacher_id']);
+        }
+        $subjectIds = array_values($subjectIds);
+        $teacherIds = array_values($teacherIds);
+
         $serviceData = new Service_Data_Subject();
-        $subjectInfos = $serviceData->getListByConds($conds);
+        $subjectInfos = $serviceData->getListByConds(array(sprintf("id in (%s)", implode(",", $subjectIds))));
         $subjectInfos = array_column($subjectInfos, null, 'id');
 
-        $conds = array(
-            sprintf("uid in (%s)", implode(",", $teacherIds)),
-        );
         $serviceData = new Service_Data_User_Profile();
-        $teacherInfos = $serviceData->getListByConds($conds);
+        $teacherInfos = $serviceData->getListByConds(array(sprintf("uid in (%s)", implode(",", $teacherIds))));
         $teacherInfos = array_column($teacherInfos, null, 'uid');
 
         $result = array();
         foreach ($lists as $item) {
+            if (empty($subjectInfos[$item['subject_id']]['name'])
+                || empty($teacherInfos[$item['teacher_id']]['nickname'])) {
+                continue;
+            }
             $result[] = array(
                 'subjectName' => $subjectInfos[$item['subject_id']]['name'],
                 'teacherName' => $teacherInfos[$item['teacher_id']]['nickname'],
@@ -84,14 +58,11 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                 "priceInfo2" => ($item['price'] / 100),
             );
         }
-        return $result;
-    }
 
-    private function formatSelect ($lists) {
         return array(
             "type"=> "cards",
             "data"=> [
-                'items' => $lists,
+                'items' => $result,
             ],
             "source" => '${items}',
             "card"=> [
@@ -124,7 +95,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                                 "body"=> [
                                     [
                                         "type"=> "input-text",
-                                        "name"=> "teacherId",
+                                        "name"=> "teacher_id",
                                         "label"=> "教师ID",
                                         "disabled"=> true
                                     ],
@@ -133,7 +104,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                                     ],
                                     [
                                         "type"=> "input-text",
-                                        "name"=> "subjectId",
+                                        "name"=> "subject_id",
                                         "label"=> "科目ID",
                                         "disabled"=> true
                                     ],

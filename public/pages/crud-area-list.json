@@ -100,7 +100,7 @@
                             "searchable":true,
                             "size":"md",
                             "label": "校区",
-                            "source": "/mapi/area/aslists",
+                            "source": "/mapi/area/onlyarea",
                             "required": true
                         },
                         {

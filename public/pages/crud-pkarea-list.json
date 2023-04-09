@@ -27,7 +27,7 @@
                     "searchable":true,
                     "size":"md",
                     "label": "班级",
-                    "source": "/mapi/group/lists?isSelect=1&status=1"
+                    "source": "/mapi/group/lists?isSelect=1"
                 },
                 {
                     "type": "tree-select",
@@ -45,7 +45,7 @@
                     "onlyLeaf":true,
                     "label": "校区",
                     "size":"md",
-                    "source": "/mapi/area/aslists?noarea=1"
+                    "source": "/mapi/area/onlyarea"
                 },
                 {
                     "type": "tree-select",
@@ -54,7 +54,7 @@
                     "onlyLeaf":true,
                     "label": "区域管理",
                     "size":"md",
-                    "source": "/mapi/admins/arealists"
+                    "source": "/mapi/group/areaops"
                 },
                 {
                     "type": "input-date-range",
@@ -206,14 +206,23 @@
                                     },
                                     {
                                         "type": "tree-select",
-                                        "name": "area_id",
+                                        "name": "a_r_id",
                                         "onlyLeaf":true,
                                         "label": "校区",
                                         "searchable":true,
                                         "size":"md",
-                                        "value": "$area_id",
+                                        "value": "${a_r_id}",
                                         "initiallyOpen":false,
-                                        "source": "/mapi/area/pkchlists?area_id=$area_id"
+                                        "source": "/mapi/area/withroom?aid=$area_id"
+                                    },
+                                    {
+                                        "name": "is_online",
+                                        "type": "switch",
+                                        "trueValue": 1,
+                                        "falseValue": 0,
+                                        "value" : "$is_online",
+                                        "size" : "sm",
+                                        "option": "是否是线上课 (学生线上, 教师线下)"
                                     }
                                 ]
                             }

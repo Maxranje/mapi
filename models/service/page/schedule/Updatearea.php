@@ -10,8 +10,8 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
         }
 
         $id     = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        $areaId = empty($this->request['area_id']) ? "" : $this->request['area_id'];
-
+        $areaId = empty($this->request['a_r_id']) ? "" : $this->request['a_r_id'];
+        $isOnline = empty($this->request['is_online']) ? 0 : 1;
         if ($id <= 0){
             throw new Zy_Core_Exception(405, "请求参数错误");
         }
@@ -26,18 +26,29 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
                 throw new Zy_Core_Exception(405, "校区教室必须都选, 或者都删掉才能保存");
             }    
         }
+
+        // 查询当前排课信息
+        $serviceSchedule = new Service_Data_Schedule();
+        $schedule = $serviceSchedule->getScheduleById($id);
+        if (empty($schedule)) {
+            throw new Zy_Core_Exception(405, "无法找到当前排课, 提供排课编号为: " . $id);   
+        }
         
         // 不允许只配置一个值, 要有都有
+        $ext = empty($schedule['ext']) ? array() : json_decode($schedule['ext'], true);
         if ($roomId <= 0 || $areaId <= 0) {
             $roomId = $areaId = 0;
+            unset($ext['is_online']);
         } else {
-            $this->checkArea($id, $areaId, $roomId);
+            $this->checkArea($schedule, $id, $areaId, $roomId);
+            $ext['is_online'] = $isOnline;
         }
 
         $param = array(
             'id'      => $id,
             'room_id' => $roomId,
             'area_id' => $areaId,
+            'ext' => json_encode($ext),
         );
 
         $serviceSchedule = new Service_Data_Schedule();        
@@ -49,13 +60,7 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
         return array();
     }
 
-    public function checkArea($id, $areaId, $roomId) {
-        $serviceSchedule = new Service_Data_Schedule();
-        $schedule = $serviceSchedule->getScheduleById($id);
-        if (empty($schedule)) {
-            return array();
-        }
-
+    public function checkArea($schedule, $id, $areaId, $roomId) {
         // 查询这个天, 这个校区和教室是否存在,
         $sts = strtotime(date("Ymd 00:00:00", $schedule['start_time']));
         $ets = strtotime(date("Ymd 23:59:59", $schedule['end_time']));
@@ -66,9 +71,10 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
             "room_id" => $roomId,
             "state" => 1,
         );
+        $serviceSchedule = new Service_Data_Schedule();
         $scLists = $serviceSchedule->getListByConds($conds);
         if (empty($scLists)) {
-            return array();
+            return ;
         }
 
         $match = array();
@@ -112,7 +118,7 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, $msg);   
         }
 
-        return array();
+        return ;
     }
 
 }

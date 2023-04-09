@@ -7,8 +7,8 @@ class Service_Page_Schedule_Muiltcheckout extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $id = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        $uids = empty($this->request['uids']) ? "" : strval($this->request['uids']);
+        $id     = empty($this->request['id']) ? 0 : intval($this->request['id']);
+        $uids   = empty($this->request['uids']) ? "" : strval($this->request['uids']);
         if ($id <= 0) {
             throw new Zy_Core_Exception(405, "请求参数错误, 需要选定课程");
         }

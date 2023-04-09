@@ -4,7 +4,7 @@ class Service_Page_Group_Updateprice extends Zy_Core_Service{
 
     public function execute () {
         if (!$this->checkAdmin()) {
-            throw new Zy_Core_Exception(405, "无权限");
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         $groupId = empty($this->request['group_id']) ? 0 : intval($this->request['group_id']);
@@ -21,15 +21,16 @@ class Service_Page_Group_Updateprice extends Zy_Core_Service{
 
         // 查询关联的学生
         $serviceGroupMap = new Service_Data_User_Group();
-        $stuInfos = $serviceGroupMap->getGroupMapByGid($groupId);
-        if (empty($stuInfos)) {
+        $students = $serviceGroupMap->getGroupMapByGid($groupId);
+        if (empty($students)) {
             return array();
         }
 
         $studentUids = array();
-        foreach ($stuInfos as $item) {
-            $studentUids[] = intval($item['student_id']);
+        foreach ($students as $item) {
+            $studentUids[intval($item['student_id'])] = intval($item['student_id']);
         }
+        $studentUids = array_values($studentUids);
 
         $studentPrice = array();
         foreach ($studentUids as $uid) {

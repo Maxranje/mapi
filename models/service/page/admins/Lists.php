@@ -22,7 +22,7 @@ class Service_Page_Admins_Lists extends Zy_Core_Service{
 
         $arrAppends[] = "limit {$pn} , {$rn}";
 
-        $lists = $serviceData->getListByConds($conds, false, NULL, $arrAppends);
+        $lists = $serviceData->getListByConds($conds, array(), NULL, $arrAppends);
         $total = $serviceData->getTotalByConds($conds);
 
         return array(

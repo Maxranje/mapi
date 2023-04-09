@@ -3,7 +3,7 @@
 class Service_Page_Subject_Lists extends Zy_Core_Service{
 
     public function execute () {
-        if (!$this->checkSuper()) {
+        if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
@@ -12,8 +12,8 @@ class Service_Page_Subject_Lists extends Zy_Core_Service{
 
         $pn = ($pn-1) * $rn;
 
-        $name = empty($this->request['subjectName']) ? "" : strval($this->request['subjectName']);
-        $isSelect = empty($this->request['isSelect']) ? false : true;
+        $name       = empty($this->request['name']) ? "" : strval($this->request['name']);
+        $isSelect   = empty($this->request['isSelect']) ? false : true;
 
         $conds = array();
 
@@ -29,13 +29,12 @@ class Service_Page_Subject_Lists extends Zy_Core_Service{
             $arrAppends[] = "limit {$pn} , {$rn}";
         }
         
-        $lists = $serviceData->getListByConds($conds, false, NULL, $arrAppends);
-        $total = $serviceData->getTotalByConds($conds);
-
+        $lists = $serviceData->getListByConds($conds, array(), NULL, $arrAppends);
         if ($isSelect) {
             return $this->formatSelect($lists);
         }
 
+        $total = $serviceData->getTotalByConds($conds);
         return array(
             'rows' => $lists,
             'total' => $total,
@@ -43,6 +42,10 @@ class Service_Page_Subject_Lists extends Zy_Core_Service{
     }
 
     private function formatSelect($lists) {
+        if (empty($lists)) {
+            return array();
+        }
+        
         $options = array();
         foreach ($lists as $item) {
             if (!isset($options[$item['category1']])) {

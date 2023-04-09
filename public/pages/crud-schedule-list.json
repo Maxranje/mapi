@@ -27,7 +27,7 @@
                     "searchable":true,
                     "size":"md",
                     "label": "班级",
-                    "source": "/mapi/group/lists?isSelect=1&status=1"
+                    "source": "/mapi/group/lists?isSelect=1"
                 },
                 {
                     "type": "tree-select",
@@ -45,7 +45,7 @@
                     "onlyLeaf":true,
                     "label": "校区",
                     "size":"md",
-                    "source": "/mapi/area/aslists"
+                    "source": "/mapi/area/onlyarea"
                 },
                 {
                     "type": "tree-select",
@@ -54,7 +54,7 @@
                     "onlyLeaf":true,
                     "label": "区域管理",
                     "size":"md",
-                    "source": "/mapi/admins/arealists"
+                    "source": "/mapi/group/areaops"
                 },
                 {
                     "label": "结算状态",
@@ -264,7 +264,7 @@
                                         "multiple": true,
                                         "searchable":true,
                                         "label": "请选择",
-                                        "source": "/mapi/group/pkslists?group_id=$group_id"
+                                        "source": "/mapi/group/onlystudent?group_id=$group_id"
                                     }
                                 ]
                             }
@@ -378,7 +378,7 @@
                                         "size":"md",
                                         "initiallyOpen":false,
                                         "value":"$area_op",
-                                        "source": "/mapi/admins/arealists",
+                                        "source": "/mapi/group/areaops",
                                         "description": "区域管理非必选"
                                     }
                                 ]

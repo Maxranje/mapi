@@ -185,9 +185,9 @@ class Service_Data_Group {
         return $ret;
     }
 
-    public function getListByConds($conds, $isSimple = true, $indexs = null, $appends = null) {
-        $fields = $this->daoGroup->arrFieldsMap;
-        $lists = $this->daoGroup->getListByConds($conds, $fields, $indexs, $appends);
+    public function getListByConds($conds, $field = array(), $indexs = null, $appends = null) {
+        $field = empty($field) || !is_array($field) ? $this->daoGroup->arrFieldsMap : $field;
+        $lists = $this->daoGroup->getListByConds($conds, $field, $indexs, $appends);
         if (empty($lists)) {
             return array();
         }

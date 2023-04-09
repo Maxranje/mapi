@@ -182,21 +182,21 @@
             "body": [
                 {
                     "type": "input-text",
-                    "name": "studentNickName",
+                    "name": "nickname",
                     "size" : "md",
                     "label": "昵称",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
-                    "name": "studentName",
+                    "name": "name",
                     "size" : "md",
                     "label": "登录名",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
-                    "name": "studentPhone",
+                    "name": "phone",
                     "size" : "md",
                     "label": "手机号",
                     "placeholder": ""
@@ -562,7 +562,7 @@
                                                     "label": "班级",
                                                     "size" : "md",
                                                     "placeholder" : "不选择, 默认查询全部",
-                                                    "source": "/mapi/group/lists?isSelect=1&studentId=${uid}"
+                                                    "source": "/mapi/group/lists?isSelect=1&student_id=${uid}"
                                                 },
                                                 {
                                                     "type": "button",

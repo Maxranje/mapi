@@ -7,26 +7,26 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无权限查看");
         }
 
-        $pn = empty($this->request['page']) ? 0 : intval($this->request['page']);
-        $rn = empty($this->request['perPage']) ? 0 : intval($this->request['perPage']);
+        $pn         = empty($this->request['page']) ? 0 : intval($this->request['page']);
+        $rn         = empty($this->request['perPage']) ? 0 : intval($this->request['perPage']);
+        $uid        = empty($this->request['uid']) ? 0 : intval($this->request['uid']);
+        $category   = empty($this->request['category']) ? 0 : intval($this->request['category']);
+        $dataRange  = empty($this->request['daterangee']) ? array() : explode(",", $this->request['daterangee']);
 
         $pn = ($pn-1) * $rn;
-
+        
         $serviceStatic = new Service_Data_Statistics();
 
         $conds = array();
-        if (!empty($this->request['uid'])) {
-            $conds['uid'] = intval($this->request['uid']);
+        if ($uid > 0) {
+            $conds['uid'] = $uid;
         }
-
-        if (!empty($this->request['category'])) {
-            $conds['category'] = intval($this->request['category']);
+        if ($category > 0) {
+            $conds['category'] = $category;
         }
-
-        if (!empty($this->request['daterangee'])) {
-            list($start_time, $end_time) = explode(",", $this->request['daterangee']);
-            $conds[] = "create_time >= ". $start_time;
-            $conds[] = "create_time <= ". ($end_time + 1);
+        if (!empty($dataRange)) {
+            $conds[] = "create_time >= ". $dataRange[0];
+            $conds[] = "create_time <= ". ($dataRange[1] + 1);
         }
 
         $arrAppends[] = 'order by id desc';

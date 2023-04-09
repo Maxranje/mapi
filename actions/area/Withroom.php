@@ -1,6 +1,6 @@
 <?php
 
-class Actions_Arealists extends Zy_Core_Actions {
+class Actions_Withroom extends Zy_Core_Actions {
 
     // 执行入口
     public function execute() {
@@ -8,7 +8,7 @@ class Actions_Arealists extends Zy_Core_Actions {
             $this->error(405, "请先登录");
         }
 
-        $serivce = new Service_Page_Admins_Arealists ($this->_request, $this->_userInfo);
+        $serivce = new Service_Page_Area_Withroom ($this->_request, $this->_userInfo);
         $this->_data = $serivce->execute();
         return $this->_data;
     }

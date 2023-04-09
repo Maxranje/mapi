@@ -146,6 +146,11 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
                 } else {
                     $areaName = sprintf("%s_%s", $areaName, "无教室");
                 }
+                // 学生线上课, 教师线下
+                $ext = empty($item['ext']) ? array() : json_decode($item['ext'], true);
+                if (isset($ext['is_online']) && $ext['is_online'] == 1) {
+                    $areaName .= "(线上)";
+                }
             }
             
             $end_time = $item['end_time'];

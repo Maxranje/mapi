@@ -66,6 +66,7 @@ class Service_Data_Schedule {
         $profile = array(
             "room_id" => $params['room_id'],
             "area_id" => $params['area_id'],
+            "ext" => $params['ext'],
         );
         return $this->daoSchedule->updateByConds($conds, $profile);
     }
