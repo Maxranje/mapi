@@ -3,6 +3,8 @@
 // 排课中查询功能
 class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
 
+    public $serviceSchedule;
+
     public function execute () {
         if (!$this->checkAdmin()) {
             throw new Zy_Core_Exception(405, "无权限查看");
@@ -25,17 +27,17 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
             "schedules" => array(),
         );   
 
-        $columnIds = array();
+        $type = Service_Data_User_Profile::USER_TYPE_STUDENT;
         if ($groupId == 0 && $teacherId > 0) {
-            $serviceColumn = new Service_Data_Column();
-            $columnInfos = $serviceColumn->getColumnByTId($teacherId);
-            if (empty($columnInfos)) {
-                return $output;
-            }
-            $columnIds = array_column($columnInfos, "id");
+            $type = Service_Data_User_Profile::USER_TYPE_TEACHER;
         }
 
-        $serviceData = new Service_Data_Schedule();
+        $columnIds = array();
+        if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {
+            $serviceColumn = new Service_Data_Column();
+            $columnInfos = $serviceColumn->getColumnByTId($teacherId);
+            $columnIds = array_column($columnInfos, "id");
+        }
 
         $conds = array();
         if ($groupId > 0) {
@@ -49,18 +51,26 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
 
         $arrAppends[] = 'order by start_time';
 
-        $lists = $serviceData->getListByConds($conds, false, null, $arrAppends);
-        if (empty($lists)) {
-            return $output;
+        $this->serviceSchedule = new Service_Data_Schedule();
+        $lists = $this->serviceSchedule->getListByConds($conds, false, null, $arrAppends);
+        
+        // 是否有锁的日程
+        $lock = array();
+        if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {
+            $serviceLock = new Service_Data_Lock();
+            $lock = $serviceLock->getLockListByUid($teacherId, $sts, $ets);
         }
 
-        $lists = $this->formatSelect($lists);
+        $lists = $this->formatSelect($lists, $lock);
 
         $output['schedules'] = $lists;
         return $output;
     }
 
-    private function formatSelect ($lists) {
+    private function formatSelect ($lists, $lock) {
+        if (empty($lists) && empty($lock)) {
+            return array();
+        }
 
         $resultList = array();
 
@@ -69,9 +79,11 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
         $groupIds       = array();
         $areaIds        = array();
         $roomIds        = array();
+        $uids           = array();
         foreach ($lists as $item) {
             $columnIds[intval($item['column_id'])] = intval($item['column_id']);
             $groupIds[intval($item['group_id'])] = intval($item['group_id']);
+            $uids[intval($item['teacher_id'])] = intval($item['teacher_id']);
             
             // 获取校区id
             if (!empty($item['area_id'])) {
@@ -81,20 +93,23 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
                 $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
         }
+        foreach ($lock as $item) {
+            $uids[intval($item['uid'])] = intval($item['uid']);
+        }
         $columnIds = array_values($columnIds);
         $groupIds = array_values($groupIds);
         $areaIds = array_values($areaIds);
         $roomIds = array_values($roomIds);
+        $uids = array_values($uids);
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
         $columnInfos = $serviceColumn->getListByConds(array('id in ('.implode(',', $columnIds).')'));
-        $teacher_ids = array_column($columnInfos, 'teacher_id');
         $subject_ids = array_column($columnInfos, 'subject_id');
         $columnInfos = array_column($columnInfos, null, 'id');
 
         $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $teacher_ids).')'));
+        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $uids).')'));
         $userInfos = array_column($userInfos, null, 'uid');
 
         $serviceGroup = new Service_Data_Group();
@@ -118,14 +133,22 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
         }
         
         foreach ($lists as $item) {
-            if (empty($columnInfos[$item['column_id']]['teacher_id'])) {
-                continue;
-            }
-            $tid = $columnInfos[$item['column_id']]['teacher_id'];
+            $tid = $item['teacher_id'];
             if (empty($userInfos[$tid]['nickname'])) {
                 continue;
             }
             $tname = $userInfos[$tid]['nickname'];
+
+            if ($item['state'] == 3) {
+                $resultList[] = array(
+                    'startTime' => date('Y-m-d H:i:s', $item['start_time']),
+                    'endTime' => date('Y-m-d H:i:s', $item['end_time']),
+                    "className" => "bg-gray-400",
+                    'content' => date('H:i', $item['start_time']) . "-".date('H:i', $item['end_time']). " " .$tname . "锁定",
+                );
+                continue;
+            }
+
             if (empty($groupInfos[$item['group_id']]['name'])) {
                 continue;
             }
@@ -171,6 +194,25 @@ class Service_Page_Schedule_Pkcalendar extends Zy_Core_Service{
             }
 
             $resultList[] = $tm;
+        }
+
+        if (!empty($lock)) {
+            foreach ($lock as $item) {
+                if (empty($userInfos[$item['uid']]['nickname'])) {
+                    continue;
+                }
+                $end_time = $item['end_time'];
+                if (date('H:s', $end_time) == "00:00") {
+                    $item['end_time'] -= 1;
+                }
+                $tm = array(
+                    'startTime' => date('Y-m-d H:i:s', $item['start_time']),
+                    'endTime' => date('Y-m-d H:i:s', $item['end_time']),
+                    "className" =>"bg-gray-700",
+                    "content" => date('H:i', $item['start_time']) . "-".date('H:i', $end_time). " 教师锁定时间",
+                );
+                $resultList[] = $tm;
+            }
         }
 
         return $resultList;

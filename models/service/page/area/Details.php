@@ -32,103 +32,103 @@ class Service_Page_Area_Details extends Zy_Core_Service{
             "area_id = ". $areaId,
             "start_time >= " . $sts,
             "state=1", 
-            "end_time <= " . $ets
+            "end_time <= " . $ets,
         );
 
         $serviceSchedule = new Service_Data_Schedule();
-        $scheduleList = $serviceSchedule->getListByConds($conds);
+        $scheduleInfos = $serviceSchedule->getListByConds($conds);
 
-        $roomList = array();
+        $schedules = array();
         $teacherIds = array();
-        $groupIds = array();
-        foreach ($roomInfos as $room) {
-            $roomList[$room['id']] = array(
-                "name" => $room['name'],
-                "schedule" => array(),
-            );
-            if (empty($scheduleList)) {
-                continue;
-            }
-            foreach ($scheduleList as $schedule) {
-                if ($schedule['room_id'] == $room['id'] && $schedule['area_id'] == $room['area_id']) {
-                    $roomList[$room['id']]['schedule'][] = array(
-                        'start_time' => $schedule['start_time'],
-                        'end_time' => $schedule['end_time'],
-                        "teacher_id" => $schedule['teacher_id'],
-                        "group_id" => $schedule['group_id'],
-                    );
-                    $teacherIds[intval($schedule['teacher_id'])] = intval($schedule['teacher_id']);
-                    $groupIds[intval($schedule['group_id'])] = intval($schedule['group_id']);
+        $groupIds = array();      
+        if (!empty($scheduleInfos)) {
+            foreach ($scheduleInfos as $item)  {
+                if ($item['room_id'] <= 0) {
+                    continue;
                 }
+                if (!isset($schedules[$item['room_id']])) {
+                    $schedules[$item['room_id']] = array();
+                }
+                $schedules[$item['room_id']][] = array(
+                    'sts' => $item['start_time'],
+                    'ets' => $item['end_time'],
+                    "teacher_id" => $item['teacher_id'],
+                    "group_id" => $item['group_id'],
+                );
+                $teacherIds[intval($item['teacher_id'])] = intval($item['teacher_id']);
+                $groupIds[intval($item['group_id'])] = intval($item['group_id']);
             }
+            $teacherIds = array_values($teacherIds);
+            $groupIds = array_values($groupIds);
         }
 
-        $teacherIds = array_values($teacherIds);
-        $groupIds = array_values($groupIds);
+        $userInfos = array();
+        if (!empty($teacherIds)) {
+            $serviceUser = new Service_Data_User_Profile();
+            $userInfos = $serviceUser->getUserInfoByUids($teacherIds);
+            $userInfos = array_column($userInfos, null, "uid");
+        }
 
-        $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getUserInfoByUids($teacherIds);
-        $userInfos = array_column($userInfos, null, "uid");
+        $groupInfos = array();
+        if (!empty($groupIds)) {
+            $serviceGroup = new Service_Data_Group();
+            $groupInfos = $serviceGroup->getListByConds(array(sprintf("id in (%s)", implode(",", $groupIds))));
+            $groupInfos = array_column($groupInfos, null, "id");
+        }
 
-        $serviceGroup = new Service_Data_Group();
-        $groupInfos = $serviceGroup->getListByConds(array(sprintf("id in (%s)", implode(",", $groupIds))));
-        $groupInfos = array_column($groupInfos, null, "id");
-
-        return $this->format($roomList, $userInfos, $groupInfos);    
+        $lists = $this->format($dateTime, $roomInfos, $schedules, $userInfos, $groupInfos);    
+        return array(
+            'lists' => $lists,
+            'total' => count($lists),
+        );
     }
 
-    public function format ($roomList, $userInfos, $groupInfos) {
+    public function format($dateTime , $roomInfos, $schedules, $userInfos, $groupInfos) {
+        $today = strtotime(date("Ymd 00:00:00", $dateTime));
+        
+        $column = array("name" => "");
+        $timelen = array();
+
+        for($i = 80; $i <=200; $i+=5 ) {
+            $k = "T$i";
+            $column[$k] = "-";
+            $timelen[$k] = array(
+                "sts" => $today + (intval($i / 10) * 3600) + ($i % 10 == 5 ? 1800 : 0)
+            );
+            $timelen[$k]['ets'] = $timelen[$k]['sts'] + 1800;
+        }
         $output = array();
 
-        foreach($roomList as $id => $room) {
-            $output[] = array(
-                "type"=> "html",
-                "html"=> $room['name'],
-            );
-            $defulatIndex = 8; 
-            $defulatMax = 14.5;
-            for ($index = 0; $index < 2; $index++) {
-                $tmp = array(
-                    "type"=>"grid",
-                    "className"=>"m-b m-t-sm",
-                    "columns"=> [],
-                );
-                for($i = $defulatIndex; $i < $defulatMax; $i+=0.5) {
-                    $t1 = sprintf("%s:%s", intval($i),  ($i * 10 % 10 == 5) ? "30" : "00");
-                    $column = array(
-                        "columnClassName"=> "text-sm text-secondary py-1 text-center text-white  border-l-4 border-gray-500 rounded-base shadow-lg",
-                        "body"=> [
-                            array(
-                                "type"=> "tooltip-wrapper",
-                                "content"=> "无排课",
-                                "tags" => 123,
-                                "body"=> $t1 . "-29:00"
-                            )
-                        ]
-                    );
-                    $tmp['columns'][] = $column;
+        foreach ($roomInfos as $roomId => $room) {
+            $tmp = $column;
+            $tmp['name'] = $room['name'];
+
+            if (isset($schedules[$roomId])) {
+                foreach ($schedules[$roomId] as $k1 => $item) {
+                    $showMsg = sprintf("未知(可能相关必要信息被删导致)");
+                    if (!empty($userInfos[$item['teacher_id']]['nickname'])
+                        && !empty($groupInfos[$item['group_id']]['name'])) {
+                        $showMsg = sprintf("%s(%s)", $userInfos[$item['teacher_id']]['nickname'], $groupInfos[$item['group_id']]['name']);
+                    }
+                    foreach ($timelen as $k2 => $t) {
+                        if ($t['sts'] > $item['sts'] && $t['sts'] < $item['ets']) {
+                            $tmp[$k2] = $showMsg;
+                        }
+                        if ($t['ets'] > $item['sts'] && $t['ets'] < $item['ets']) {
+                            $tmp[$k2] = $showMsg;
+                        }
+                        if ($t['sts'] < $item['sts'] && $t['ets'] > $item['ets']) {
+                            $tmp[$k2] = $showMsg;
+                        }
+                        if ($t['sts'] == $item['sts'] || $t['ets'] == $item['ets']) {
+                            $tmp[$k2] = $showMsg;
+                        }
+                    }
                 }
-                $output[] = $tmp;
-                $defulatIndex += 6;
-                $defulatMax += 6;
             }
-
-
-            // if (!empty($room['schedule'])) {
-            //     foreach ($room["schedule"] as $item) {
-            //         $t = ceil($item['end_time']  - $item['start_time']) /1800;
-            //         $tname = empty($userInfos[$item['teacher_id']]) ? "" : $userInfos[$item['teacher_id']]['nickname'];
-            //         $gname = empty($groupInfos[$item['group_id']]) ? "" : $groupInfos[$item['group_id']]['name'];
-            //         for ($i= 0; $i < $t; $i++){
-            //             $tt = date("H", $item['start_time']) + $i;
-            //             $tmp['columns'][$tt]['columnClassName'] = "text-xs py-1 text-center text-white  border-l-4 border-gray-500 bg-yellow-500 rounded-base shadow-lg";
-            //             $tmp['columns'][$tt]['body'][0]['content'] = sprintf("%s-%s", $tname, $gname);
-            //         }
-            //     }
-            // }
-            
-            $output[] = array("type" => "divider");
+            $output[] = $tmp;
         }
+
         return $output;
     }
 }

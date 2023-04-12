@@ -26,7 +26,7 @@ class Service_Data_Schedule {
                 "area_op" => $params['area_op'],
                 "end_time"  => $time['ets'], 
                 "operator" => OPERATOR,
-                "state"  => 1 , 
+                "state"  => $params['state'] , 
                 "update_time"  => time(),
                 "create_time"  => time(), 
             );

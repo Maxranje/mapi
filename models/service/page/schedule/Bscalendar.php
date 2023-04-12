@@ -60,19 +60,29 @@ class Service_Page_Schedule_Bscalendar extends Zy_Core_Service{
     }
 
     private function formatSelect ($lists) {
+        if (empty($lists)) {
+            return array();
+        }
 
         $resultList = array();
-        $columnIds = array_column($lists, 'column_id');
+
+        $columnIds = array();
+        $uids = array();
+        foreach ($lists as $item) {
+            $columnIds[intval($item['column_id'])] = intval($item['column_id']);
+            $uids[intval($item['teacher_id'])] = intval($item['teacher_id']);
+        }
+        $columnIds = array_values($columnIds);
+        $uids = array_values($uids);
 
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
         $columnInfos = $serviceColumn->getListByConds(array('id in ('.implode(',', $columnIds).')'));
-        $teacher_ids = array_column($columnInfos, 'teacher_id');
         $subject_ids = array_column($columnInfos, 'subject_id');
         $columnInfos = array_column($columnInfos, null, 'id');
 
         $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $teacher_ids).')'));
+        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $uids).')'));
         $userInfos = array_column($userInfos, null, 'uid');
 
         $serviceSubject = new Service_Data_Subject();
@@ -83,7 +93,7 @@ class Service_Page_Schedule_Bscalendar extends Zy_Core_Service{
             if (empty($columnInfos[$item['column_id']])) {
                 continue;
             }
-            $tid = $columnInfos[$item['column_id']]['teacher_id'];
+            $tid = $item['teacher_id'];
             $sid = $columnInfos[$item['column_id']]['subject_id'];
             if (empty($userInfos[$tid]['nickname']) || empty($subjectInfos[$sid]['name'])) {
                 continue;

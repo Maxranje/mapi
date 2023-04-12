@@ -2,9 +2,10 @@
 // 学生/教师端显示
 class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
+    public $serviceSchedule;
     public function execute () {
         if (!$this->checkStudent() && !$this->checkTeacher()) {
-            throw new Zy_Core_Exception(405, "无权限");
+            throw new Zy_Core_Exception(405, "无权限查看");
         }
 
         $uid = $this->adption['userid'];
@@ -39,7 +40,7 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
             }
         }
 
-        $serviceData = new Service_Data_Schedule();
+        $this->serviceSchedule = new Service_Data_Schedule();
 
         $conds = array();
         if (!empty($groupIds)) {
@@ -48,21 +49,29 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         if (!empty($columnIds)) {
             $conds[] = sprintf('column_id in (%s)', implode(",", $columnIds));
         }
-        if ($sts > 0 && $ets > 0) {
-            $conds[] = "start_time >= ".$sts;
-            $conds[] = "end_time <= ".$ets;
-        }
+        $conds[] = "start_time >= ".$sts;
+        $conds[] = "end_time <= ".$ets;
 
-        $lists = $serviceData->getListByConds($conds);
-        echo json_encode($this->formatBase($lists, $type));
+        // 基础
+        $lists = $this->serviceSchedule->getListByConds($conds);
+
+        // 是否有锁的日程
+        $lock = array();
+        if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {
+            $serviceLock = new Service_Data_Lock();
+            $lock = $serviceLock->getLockListByUid($uid, $sts, $ets);
+        }
+        
+        echo json_encode($this->formatBase($lists, $lock, $type));
         exit;
     }
 
-    private function formatBase ($lists, $type) {
-        if (empty($lists)) {
+    private function formatBase ($lists, $lock, $type) {
+        if (empty($lists) && empty($lock)) {
             return array();
         }
 
+        $teacherIds     = array();
         $columnIds      = array();
         $groupIds       = array();
         $areaIds        = array();
@@ -70,6 +79,7 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         foreach ($lists as $item) {
             $columnIds[intval($item['column_id'])] = intval($item['column_id']);
             $groupIds[intval($item['group_id'])] = intval($item['group_id']);
+            $teacherIds[intval($item['teacher_id'])] = intval($item['teacher_id']);
             
             // 获取校区id
             if (!empty($item['area_id'])) {
@@ -79,6 +89,11 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
                 $roomIds[intval($item['room_id'])] = intval($item['room_id']);
             }
         }
+        foreach ($lock as $item) {
+            $teacherIds[intval($item['uid'])] = intval($item['uid']);
+        }
+        
+        $teacherIds = array_values($teacherIds);
         $columnIds = array_values($columnIds);
         $groupIds = array_values($groupIds);
         $areaIds = array_values($areaIds);
@@ -87,7 +102,6 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         // 获取教师名字
         $serviceColumn = new Service_Data_Column();
         $columnInfos = $serviceColumn->getListByConds(array('id in ('.implode(',', $columnIds).')'));
-        $teacher_ids = array_column($columnInfos, 'teacher_id');
         $subject_ids = array_column($columnInfos, 'subject_id');
         $columnInfos = array_column($columnInfos, null, 'id');
 
@@ -96,7 +110,7 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
         $subjectInfo = array_column($subjectInfo, null, 'id');
 
         $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $teacher_ids).')'));
+        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $teacherIds).')'));
         $userInfos = array_column($userInfos, null, 'uid');
 
         $serviceGroup = new Service_Data_Group();
@@ -121,11 +135,12 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
             $tmp = array();
             $tmp['start'] = date("Y-m-d H:i:s",$item['start_time']);
             $tmp['end'] = date("Y-m-d H:i:s",$item['end_time']);
-            if (empty($columnInfos[$item['column_id']]['teacher_id'])
-                || empty($columnInfos[$item['column_id']]['subject_id'])) {
+
+            if (empty($columnInfos[$item['column_id']]['subject_id'])) {
                 continue;
             }
-            $tid = $columnInfos[$item['column_id']]['teacher_id'];
+            
+            $tid = $item['teacher_id'];
             $sid = $columnInfos[$item['column_id']]['subject_id'];
             if (empty($userInfos[$tid]['nickname'])
                 || empty($subjectInfo[$sid]['name'])
@@ -168,6 +183,20 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
             $result[] = $tmp;            
         }
+
+        if (!empty($lock)) {
+            foreach ($lock as $item) {
+                if (empty($userInfos[$item['uid']]['nickname'])) {
+                    continue;
+                }
+                $tmp = array();
+                $tmp['start'] = date("Y-m-d H:i:s",$item['start_time']);
+                $tmp['end'] = date("Y-m-d H:i:s",$item['end_time']);
+                $tmp['title'] = $userInfos[$item['uid']]['nickname'] . "锁定时间";
+                $result[] = $tmp;
+            }
+        }
+
         return $result;
     }
 }

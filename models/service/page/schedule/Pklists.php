@@ -66,6 +66,8 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
         }
         if ($status > 0) {
             $conds[] = "state = " . ($status == 1 ? 0 : 1) ;
+        } else {
+            $conds[] = "state !=3 ";
         }
         $arrAppends[] = 'order by start_time';
         if (empty($this->request['export'])) {
@@ -120,7 +122,6 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
                 $uids[intval($item['area_op'])] = intval($item['area_op']);
             }
         }
-        $uids = array_values($uids);
         $columnIds = array_values($columnIds);
         $groupIds = array_values($groupIds);
         $areaIds = array_values($areaIds);
@@ -133,9 +134,10 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
 
         $subject_ids = array();
         foreach ($columnInfos as $c) {
-            $uids[] = intval($c['teacher_id']);
+            $uids[$c['teacher_id']] = intval($c['teacher_id']);
             $subject_ids[] = intval($c['subject_id']);
         }
+        $uids = array_values($uids);
 
         $serviceSubject = new Service_Data_Subject();
         $subjectInfo = $serviceSubject->getListByConds(array('id in ('.implode(',', $subject_ids).')'));

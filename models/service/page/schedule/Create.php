@@ -111,6 +111,7 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
             'needTimes' => $needTimes,
             'teacher_id' => $teacherId,
             'area_id' => $areaId,
+            'state'   => 1,
         ];
 
         $ret = $this->serviceSchedule->create($profile);

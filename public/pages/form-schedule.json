@@ -41,7 +41,7 @@
             },
             {
                 "type": "panel",
-                "title": "时间表 (红色未结算, 绿色已结算)",
+                "title": "时间表 (红色未结算, 绿色已结算, 灰色锁定)",
                 "body": {
                     "type": "service",
                     "id" : "time_calendar",
@@ -292,62 +292,6 @@
                                 "initiallyOpen":false,
                                 "source": "/mapi/area/onlyarea",
                                 "description": "校区为非必选项"
-                            },
-                            {
-                                "type": "divider"
-                            },
-                            {
-                                "type": "combo",
-                                "name": "times",
-                                "label": "排课时间",
-                                "multiple": true,
-                                "items": [
-                                    {
-                                        "type": "input-date",
-                                        "name": "date",
-                                        "onlyLeaf":true
-                                    },
-                                    {
-                                        "type": "input-time",
-                                        "name": "timeRange",
-                                        "onlyLeaf":true,
-                                        "format": "HH:mm"
-                                    },
-                                    {
-                                        "type": "input-number",
-                                        "name": "timeDw",
-                                        "min" : 0.5,
-                                        "max" : 4,
-                                        "step" : 0.5,
-                                        "precision" : 1,
-                                        "showSteps":true,
-                                        "suffix" : " hour"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    "title": "教师休假",
-                    "body": {
-                        "type": "form",
-                        "api": {
-                            "method": "post",
-                            "url": "/mapi/schedule/createv3",
-                            "dataType": "form"
-                        },
-                        "title": "",
-                        "autoFocus": true,
-                        "body": [
-                            {
-                                "type": "tree-select",
-                                "name": "teacher_id",
-                                "onlyLeaf":true,
-                                "label": "教师",
-                                "searchable":true,
-                                "initiallyOpen": false,
-                                "source": "/mapi/teacher/lists?isSelect=1&isNoSubject=1"
                             },
                             {
                                 "type": "divider"

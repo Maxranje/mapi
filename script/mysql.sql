@@ -181,3 +181,19 @@ CREATE TABLE `tblRoleMap` (
   KEY `role_id` (`role_id`),
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限ID关联表';
+
+
+CREATE TABLE `tblLock` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `type` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '类型, 9超管, 11管理员, 12学生, 13老师',
+  `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '教师id',
+  `start_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `end_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '截止时间',
+  `operator` int(11) unsigned NOT NULL  COMMENT 'uid',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `ext` VARCHAR(2000) NOT NULL DEFAULT '' COMMENT "冗余",
+  PRIMARY KEY (`id`),
+  KEY `t_s` (`uid`, `start_time`),
+  KEY `s` (`start_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁教师';

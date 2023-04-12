@@ -5,7 +5,7 @@ return array(
         
     ),
     "defualt_amdins" => array(
-        1,2,3,41,42,101,102,51,
+        1,2,3,41,42,101,102,51,72,
     ),
     "menu" => array(
         array(
@@ -100,7 +100,22 @@ return array(
             "label"=>"教师管理",
             "url"=>"/teacher",
             "icon"=>"fa fa-credit-card",
-            "schemaApi"=>"get:/public/pages/crud-teacher-list.json"
+            "children"=>[
+                array(
+                    "id" => 71,
+                    "label"=>"教师列表",
+                    "url"=>"/teacher/lists",
+                    "icon"=>"fa fa-list",
+                    "schemaApi"=>"get:/public/pages/crud-teacher-list.json"
+                ),
+                array(
+                    "id" => 72,
+                    "label"=>"教师锁定",
+                    "url"=>"/teacher/lock",
+                    "icon"=>"fa fa-bars",
+                    "schemaApi"=>"get:/public/pages/crud-teacherlock-list.json"
+                ),
+            ]
         ),
         array(
             "id" => 8,
