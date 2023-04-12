@@ -155,18 +155,21 @@
                     "type": "input-text",
                     "name": "nickname",
                     "label": "教师昵称",
+                    "size" : "md",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
                     "name": "name",
                     "label": "登录名",
+                    "size" : "md",
                     "placeholder": ""
                 },
                 {
                     "type": "input-text",
                     "name": "phone",
                     "label": "手机号",
+                    "size" : "md",
                     "placeholder": ""
                 },
                 {

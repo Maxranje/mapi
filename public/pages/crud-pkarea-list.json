@@ -213,7 +213,7 @@
                                         "size":"md",
                                         "value": "${a_r_id}",
                                         "initiallyOpen":false,
-                                        "source": "/mapi/area/withroom?aid=$area_id"
+                                        "source": "/mapi/area/withroom?aid=$a_r_id"
                                     },
                                     {
                                         "name": "is_online",

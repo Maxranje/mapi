@@ -11,9 +11,15 @@ class Actions_Page extends Zy_Core_Actions {
             || $this->_userInfo['type'] == Service_Data_User_Profile::USER_TYPE_SUPER) {
             $this->redirect("/mapi/dashboard/page");        
         }
-        if ($this->_userInfo['type'] == Service_Data_User_Profile::USER_TYPE_STUDENT
-            || $this->_userInfo['type'] == Service_Data_User_Profile::USER_TYPE_TEACHER) {
+        if ($this->_userInfo['type'] == Service_Data_User_Profile::USER_TYPE_STUDENT) {
             $this->redirect("/mapi/dashboard/home");        
+        }
+        if ($this->_userInfo['type'] == Service_Data_User_Profile::USER_TYPE_TEACHER) {
+            if (empty($this->_userInfo['pages'])) {
+                $this->redirect("/mapi/dashboard/home");
+            } else {
+                $this->redirect("/mapi/dashboard/page");        
+            }
         }
     }
 }

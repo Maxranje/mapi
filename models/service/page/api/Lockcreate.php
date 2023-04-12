@@ -133,7 +133,7 @@ class Service_Page_Api_Lockcreate extends Zy_Core_Service{
             'uid' => intval($teacherId),
         );
         $locks = $this->service->getListByConds($conds);
-        if ($list === false) {
+        if ($locks === false) {
             return false;
         }
         $locks = empty($locks) ? array() : $locks;

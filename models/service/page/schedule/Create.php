@@ -101,7 +101,7 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
 
         $ret = $this->checkTeacherPk($needTimes, $needDays, $teacherId);
         if (!$ret) {
-            throw new Zy_Core_Exception(405, "教师时间有冲突, 请查询后在配置");
+            throw new Zy_Core_Exception(405, "教师时间有冲突(排课或锁时间), 请查询后在配置");
         }
 
         $profile = [
@@ -191,9 +191,28 @@ class Service_Page_Schedule_Create extends Zy_Core_Service{
         if ($list === false) {
             return false;
         }
+        $list = empty($list) ? array() : $list;
+
+        // 锁定的时间
+        $conds= array(
+            sprintf('start_time >= %d', min($needDays)),
+            sprintf('end_time <= %d', max($needDays)),
+            'uid' => intval($teacherId),
+        );
+        $serviceLock = new Service_Data_Lock();
+        $locks = $serviceLock->getListByConds($conds);
+        if ($locks === false) {
+            return false;
+        }
+        $locks = empty($locks) ? array() : $locks;
+
+        // 2个记录合并
+        $list = array_merge($list, $locks);
+
         if (empty($list)) {
             return true;
         }
+
         foreach ($list as $item) {
             foreach ($needTimes as $t) {
                 if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {

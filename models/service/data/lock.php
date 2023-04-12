@@ -54,7 +54,7 @@ class Service_Data_Lock {
     public function getLockListByUid ($uid, $sts, $ets) {
         // 锁时间的数据
         $conds = array();
-        $conds[] = "state=3";
+        $conds[] = "uid=".$uid;
         $conds[] = "start_time >= ".$sts;
         $conds[] = "end_time <= ".$ets;
         $locks = $this->getListByConds($conds);
