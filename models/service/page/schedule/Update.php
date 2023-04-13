@@ -93,6 +93,14 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "班级时间有冲突, 请查询后在配置");
         }
 
+        // 排查教室
+        if (!empty($info['area_id']) && !empty($info['room_id'])) {
+            $ret = $this->checkRoom ($needTimes, $needDays, $info);
+            if (!$ret) {
+                throw new Zy_Core_Exception(405, "校区教室时间有冲突, 请查询后在配置");
+            }
+        }
+
         $profile = [
             "id" => $id,
             "column_id" => $columnInfos['id'],
@@ -157,6 +165,42 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
         if (empty($list)) {
             return true;
         }
+        foreach ($list as $item) {
+            if ($item['id'] == $info['id']) {
+                continue;
+            }
+            if ($needTimes['sts'] > $item['start_time'] && $needTimes['sts'] < $item['end_time']) {
+                return false;
+            }
+            if ($needTimes['ets'] > $item['start_time'] && $needTimes['ets'] < $item['end_time']) {
+                return false;
+            }
+            if ($needTimes['sts'] < $item['start_time'] && $needTimes['ets'] > $item['end_time']) {
+                return false;
+            }
+            if ($needTimes['sts'] == $item['start_time'] || $needTimes['ets'] == $item['end_time']) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function checkRoom ($needTimes, $needDays, $info) {
+        $conds= array(
+            sprintf('start_time >= %d', $needDays['sts']),
+            sprintf('end_time <= %d', $needDays['ets']),
+            "room_id = " . $info['room_id'] ,
+            "area_id = " . $info['area_id'] ,
+            'state' => 1,
+        );
+        $list = $this->serviceSchedule->getListByConds($conds);
+        if ($list === false) {
+            return false;
+        }
+        if (empty($list)) {
+            return true;
+        }
+
         foreach ($list as $item) {
             if ($item['id'] == $info['id']) {
                 continue;

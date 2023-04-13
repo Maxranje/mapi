@@ -77,6 +77,10 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
             return ;
         }
 
+        // 重新定义
+        $sts = $schedule['start_time'];
+        $ets = $schedule['end_time'];
+
         $match = array();
         foreach ($scLists as $k => $t) {
             // 比较, 开始时间大于存开始时间,  结束时间小于存结束时间

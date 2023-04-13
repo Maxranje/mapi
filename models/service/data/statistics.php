@@ -42,14 +42,14 @@ class Service_Data_Statistics {
             left join tblGroup g
             on 
                 g.id = m.group_id 
-            where u.type=12 ";
+            where u.type=12 and m.group_id > 0";
 
         $where = "";
         if (!empty($studentName)) {
-            $where = sprintf(" and u.name like '%" . $studentName . "%'");
+            $where = " and u.nickname like '%" . $studentName . "%'";
         }
         if (!empty($groupName)) {
-            $where = sprintf(" and g.name like '%" . $groupName . "%'");
+            $where = " and g.name like '%" . $groupName . "%'";
         }
         if (!empty($where)) {
             $sql .= $where;
@@ -58,13 +58,15 @@ class Service_Data_Statistics {
         if ($rn > 0) {
             $sql .= " limit " . $pn . ", " . $rn;
         }
-        
+
         $dao = new Dao_Capital();
         $lists = $dao->query($sql);
+        if (empty($lists)) {
+            return array();
+        }
         
         $uids = array();
         $groupIds = array();
-        $areaop = array();
         foreach ($lists as $item) {
             $uids[$item['uid']] = intval($item['uid']);
             $groupIds[$item['group_id']] = intval($item['group_id']);
@@ -85,7 +87,7 @@ class Service_Data_Statistics {
         $userInfos = array_column($userInfos, null, "uid");
         
         # 
-        $capital = $dao->getListByConds($conds, array("uid", "group_id", "category", "capital"));
+        $capital = $dao->getListByConds($conds, array("uid", "group_id", "category", "capital", "ext"));
         $capitalInfos = array();
         foreach ($capital as $item) {
             if (!isset($capitalInfos[$item['uid']])) {
@@ -133,14 +135,23 @@ class Service_Data_Statistics {
             }
 
             $tmp['expenses'] = 0;
+            $realDuration = 0;
             if (!empty($capitalInfos[$item['uid']][$item['group_id']])) {
                 foreach ($capitalInfos[$item['uid']][$item['group_id']] as $info) {
                     if (in_array($info['category'], array(3,5))) {
                         $tmp['expenses'] += $info['capital'];
+                        $capitalExt = empty($info['ext']) ? array() : json_decode($info['ext'], true);
+                        if (!empty($capitalExt['job']['start_time'])  && !empty($capitalExt['job']['end_time'])) {
+                            $realDuration += ($capitalExt['job']['end_time'] - $capitalExt['job']['start_time']) / 3600;
+                        }
                     }
                 }
             }
             
+            $tmp['duration_real'] = "-";
+            if ($realDuration > 0) {
+                $tmp['duration_real'] = $realDuration . "小时";
+            }
             $tmp['expenses'] = $tmp['expenses'] / 100;
             $tmp['expenses_info'] = $tmp['expenses'] . "元" ;
 
@@ -160,14 +171,14 @@ class Service_Data_Statistics {
             left join tblGroup g
             on 
                 g.id = m.group_id 
-            where u.type=12 ";
+            where u.type=12 and m.group_id > 0";
 
         $where = "";
         if (!empty($studentName)) {
-            $where = sprintf(" and u.name like '%" . $studentName . "%'");
+            $where = " and u.nickname like '%" . $studentName . "%'";
         }
         if (!empty($groupName)) {
-            $where = sprintf(" and g.name like '%" . $groupName . "%'");
+            $where = " and g.name like '%" . $groupName . "%'";
         }
         if (!empty($where)) {
             $sql .= $where;
