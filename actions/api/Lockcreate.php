@@ -8,7 +8,7 @@ class Actions_Lockcreate extends Zy_Core_Actions {
             $this->error(405, "请先登录");
         }
 
-        $serivce = new Service_Page_Api_LockCreate ($this->_request, $this->_userInfo);
+        $serivce = new Service_Page_Api_Lockcreate ($this->_request, $this->_userInfo);
         $this->_data = $serivce->execute();
         return $this->_data;
     }

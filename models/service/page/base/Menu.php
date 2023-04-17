@@ -63,6 +63,7 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
                 }
                 $item['children'] = array_values($item['children']);
             }
+            $menuConf[$key] = $item;
         }
 
         $menuBase['pages'][1]['children'] = array_merge($menuBase['pages'][1]['children'],  array_values($menuConf));

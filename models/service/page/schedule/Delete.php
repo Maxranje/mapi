@@ -8,9 +8,9 @@ class Service_Page_Schedule_Delete extends Zy_Core_Service{
         }
 
         $id = empty($this->request['id']) ? 0 : intval($this->request['id']);
-        $ids = empty($this->request['id']) ? "" : trim($this->request['ids']);
+        $ids = empty($this->request['ids']) ? "" : trim($this->request['ids']);
 
-        if ($id <= 0 || empty($ids)) {
+        if ($id <= 0 && empty($ids)) {
             throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
         }
 

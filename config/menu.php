@@ -115,12 +115,6 @@ return array(
                     "icon"=>"fa fa-bars",
                     "schemaApi"=>"get:/public/pages/crud-teacherlock-list.json"
                 ),
-                array(
-                    "id" => 73,
-                    "label"=>"教师课表",
-                    "link"=>"http://www.zdss.cn/mapi/dashboard/home",
-                    "icon"=>"fa fa-calendar"
-                ),
             ]
         ),
         array(

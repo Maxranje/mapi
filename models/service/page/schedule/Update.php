@@ -93,8 +93,9 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "班级时间有冲突, 请查询后在配置");
         }
 
-        // 排查教室
-        if (!empty($info['area_id']) && !empty($info['room_id'])) {
+        // 排查教室 (3.15线上不管)
+        if (!empty($info['area_id']) && !empty($info['room_id'])
+            && $info['area_id'] != 3 && $info['room_id'] != 15) {
             $ret = $this->checkRoom ($needTimes, $needDays, $info);
             if (!$ret) {
                 throw new Zy_Core_Exception(405, "校区教室时间有冲突, 请查询后在配置");

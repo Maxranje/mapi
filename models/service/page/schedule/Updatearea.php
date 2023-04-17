@@ -39,6 +39,8 @@ class Service_Page_Schedule_Updatearea extends Zy_Core_Service{
         if ($roomId <= 0 || $areaId <= 0) {
             $roomId = $areaId = 0;
             unset($ext['is_online']);
+        } else if ($areaId == 3 && $roomId == 15){ // 彻底线上
+            unset($ext['is_online']);
         } else {
             $this->checkArea($schedule, $id, $areaId, $roomId);
             $ext['is_online'] = $isOnline;
