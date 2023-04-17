@@ -19,6 +19,25 @@
 					"title": [
 						{
 						  	"type": "text",
+						  	"value": "2023.04.17 v1.2.3.1 更新记录"
+						},
+						{
+							"type": "button",
+							"label": "查看",
+							"actionType": "dialog",
+							"level": "link",
+							"dialog": {
+								"title": "V1.2.3.1 版本更新",
+								"body":  "<div><h3>版本更新公告</h3><p>Hi,Dears:</p><p>系统于2023年4月17日20点更新为v1.2.3.1版本</p><p>【更新内容】</p><p>1.修改了线上online教室不能随意排课问题</p><p>2.修复了教师锁定时间提示错误问题</p><p>3.修复了一些其他问题</p></div>",
+								"actions":[]
+							}
+						}
+					]
+				},
+				{
+					"title": [
+						{
+						  	"type": "text",
 						  	"value": "2023.04.17 v1.2.3 更新记录"
 						},
 						{
