@@ -23,6 +23,13 @@ return array(
             "schemaApi"=>"get:/public/pages/crud-group-list.json"
         ),
         array(
+            "id" => 11,
+            "label"=>"个人课表",
+            "url"=>"/calendar",
+            "icon"=>"fa fa-calendar",
+            "link"=>"http://127.0.0.1:8060/mapi/dashboard/cale"
+        ),
+        array(
             "id" => 4,
             "label"=>"排课管理",
             "url"=>"/schedule",

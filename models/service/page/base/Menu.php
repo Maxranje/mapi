@@ -46,6 +46,9 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
         // 根据用户pages更新menus
         foreach ($menuConf as $key => $item) {
             if (empty($item['children'])) {
+                if ($item['id'] == 11 && $this->checkTeacher()) {
+                    continue;
+                }
                 if (!in_array($item['id'], $pages)) {
                     unset($menuConf[$key]);
                     continue;

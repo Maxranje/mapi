@@ -7,12 +7,11 @@ class Actions_Cale extends Zy_Core_Actions {
         if (!$this->isLogin() ) {
             $this->redirectLogin();
         }
-        if ($this->_userInfo['type'] != Service_Data_User_Profile::USER_TYPE_ADMIN
-            && $this->_userInfo['type'] != Service_Data_User_Profile::USER_TYPE_SUPER) {
-            throw new Zy_Core_Exception(405, "没权限")  ;
+        if ($this->_userInfo['type'] != Service_Data_User_Profile::USER_TYPE_TEACHER) {
+            $this->displayTemplate("error");
         }
         $this->_output['data'] = $this->_request;
-        $this->displayTemplate("cale");
+        $this->displayTemplate("calendar");
     }
 
 }
