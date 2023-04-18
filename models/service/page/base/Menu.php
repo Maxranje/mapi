@@ -39,6 +39,12 @@ class Service_Page_Base_Menu extends Zy_Core_Service{
 
         // 管理员直接返回
         if ($this->checkSuper()) {
+            foreach ($menuConf as $key => $item) {
+                if ($item['id'] == 11) {
+                    unset($menuConf[$key]);
+                    continue;
+                }
+            }
             $menuBase['pages'][1]['children'] = array_merge($menuBase['pages'][1]['children'], $menuConf);
             return $menuBase;
         }
