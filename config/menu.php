@@ -27,7 +27,7 @@ return array(
             "label"=>"个人课表",
             "url"=>"/calendar",
             "icon"=>"fa fa-calendar",
-            "link"=>"http://127.0.0.1:8060/mapi/dashboard/cale"
+            "link"=>"http://www.zdss.cn/mapi/dashboard/cale"
         ),
         array(
             "id" => 4,
