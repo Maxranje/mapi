@@ -68,6 +68,8 @@
                 }
             ]
         },
+        "orderBy":"teacher_name",
+        "orderDir":"asc",
         "filterTogglable": true,
         "bulkActions": [],
         "headerToolbar": [
@@ -113,6 +115,7 @@
                 "name": "teacher_name",
                 "label": "教师名",
                 "type": "text",
+                "sortable": true,
                 "toggled": true
             },
             {

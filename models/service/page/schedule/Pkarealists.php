@@ -29,6 +29,7 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
         $areaId     = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
         $daterange  = empty($this->request['daterange']) ? "" : $this->request['daterange'];
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
+        $orderDir   = empty($this->request['orderDir']) ? "desc" : trim($this->request['orderDir']);
 
         list($sts, $ets) = empty($daterange) ? array(0,0) : explode(",", $daterange);
 
@@ -70,7 +71,13 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
             $conds[] = "end_time <= ".($ets + 1);
         }
         $conds[] = "state = 1" ;
-        $arrAppends[] = 'order by start_time';
+
+        $orderby = 'order by start_time';
+        if (!empty($orderDir)) {
+            $orderby = "order by teacher_id " . ($orderDir == "desc" ? "desc" : "asc");
+        }
+        $arrAppends[] = $orderby;
+
         if (empty($this->request['export'])) {
             $arrAppends[] = "limit {$pn} , {$rn}";
         }
