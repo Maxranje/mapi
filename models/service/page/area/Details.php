@@ -25,8 +25,8 @@ class Service_Page_Area_Details extends Zy_Core_Service{
         }
         $roomInfos = array_column($roomInfos, null, "id");
 
-        $sts = $dateTime + (8 * 3600);
-        $ets = $dateTime + (20 * 3600);
+        $sts = $dateTime + (7 * 3600);
+        $ets = $dateTime + (21 * 3600);
 
         $conds = array(
             "area_id = ". $areaId,
@@ -89,7 +89,7 @@ class Service_Page_Area_Details extends Zy_Core_Service{
         $column = array("name" => "");
         $timelen = array();
 
-        for($i = 80; $i <=200; $i+=5 ) {
+        for($i = 70; $i <=210; $i+=5 ) {
             $k = "T$i";
             $column[$k] = "-";
             $timelen[$k] = array(

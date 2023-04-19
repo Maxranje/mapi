@@ -60,6 +60,20 @@
                                 "fixed": "left"
                             },
                             {
+                                "name": "T70",
+                                "width": 100,
+                                "value":"<%= data.T70 != '-' ? data.T70 : '-' %>",
+                                "classNameExpr": "<%= data.T70 != '-' ? 'bg-yellow-400' : 'bg-deualt' %>",
+                                "label": "07:00"
+                            },
+                            {
+                                "name": "T75",
+                                "width": 100,
+                                "value":"<%= data.T75 != '-' ? data.T75 : '-' %>",
+                                "classNameExpr": "<%= data.T75 != '-' ? 'bg-yellow-400' : 'bg-deualt' %>",
+                                "label": "07:30"
+                            },
+                            {
                                 "name": "T80",
                                 "width": 100,
                                 "value":"<%= data.T80 != '-' ? data.T80 : '-' %>",
@@ -233,6 +247,20 @@
                                 "value":"<%= data.T200 != '-' ? data.T200 : '-' %>",
                                 "classNameExpr": "<%= data.T200 != '-' ? 'bg-yellow-400' : 'bg-deualt' %>",
                                 "label": "20:00"
+                            },
+                            {
+                                "name": "T205",
+                                "width": 100,
+                                "value":"<%= data.T205 != '-' ? data.T205 : '-' %>",
+                                "classNameExpr": "<%= data.T205 != '-' ? 'bg-yellow-400' : 'bg-deualt' %>",
+                                "label": "20:30"
+                            },
+                            {
+                                "name": "T210",
+                                "width": 100,
+                                "value":"<%= data.T210 != '-' ? data.T210 : '-' %>",
+                                "classNameExpr": "<%= data.T210 != '-' ? 'bg-yellow-400' : 'bg-deualt' %>",
+                                "label": "21:00"
                             }
                         ]
                     }
