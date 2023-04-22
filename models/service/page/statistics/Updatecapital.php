@@ -75,7 +75,7 @@ class Service_Page_Statistics_Updatecapital extends Zy_Core_Service{
         }
 
         if ($oldExpenses == $newExpenses) {
-            throw new Zy_Core_Exception(405, "调整前后花销一致");
+            throw new Zy_Core_Exception(405, "调整前结转金额一致");
         }
 
         if ($checkTimeLen <= 0) {

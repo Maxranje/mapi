@@ -183,6 +183,12 @@
                 "toggled": true
             },
             {
+                "name": "birthplace",
+                "label": "生源地",
+                "type": "text",
+                "toggled": true
+            },
+            {
                 "name": "stateInfo",
                 "label": "状态",
                 "type": "text",

@@ -35,7 +35,7 @@ class Service_Page_Statistics_Details extends Zy_Core_Service{
 
     private function formatExcel($lists) {
         $result = array(
-            'title' => array('UID', 'GID', '学生', '班级', "生源地", '班级客单价', '学生客单价', '存额', '剩余/总课时', '区域管理', '花销'),
+            'title' => array('UID', 'GID', '学生', '班级', "生源地", '班级客单价', '学生客单价', '存额', '剩余/总课时', '区域管理', '结转金额'),
             'lists' => array(),
         );
         

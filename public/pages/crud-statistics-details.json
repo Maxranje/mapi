@@ -122,13 +122,13 @@
             },
             {
                 "name": "duration_scale",
-                "label": "剩余(班级剩余)/总课时",     
+                "label": "班级剩余课时/总课时",     
                 "type": "text",
                 "toggled": true
             },
             {
                 "name": "duration_real",
-                "label": "实际使用(点名剔除)",     
+                "label": "已结转课时",     
                 "type": "text",
                 "toggled": true
             },
@@ -159,9 +159,9 @@
             },
             {
                 "name": "expenses_info",
-                "label": "花销",     
+                "label": "结转金额",     
                 "type": "text",
-                "remark" : "花销是按照历史消耗进行统计, 由于存在动态改客单价场景,  所以不一定等于消耗课时乘以当前客单价",
+                "remark" : "结转金额是按照历史消耗进行统计, 由于存在动态改客单价场景,  所以不一定等于消耗课时乘以当前客单价",
                 "toggled": true
             },
             {
@@ -172,7 +172,6 @@
                     {
                         "type": "button",
                         "icon": "fa fa-pencil",
-                        "tooltip": "编辑",
                         "actionType": "drawer",
                         "drawer": {
                             "position": "right",
@@ -212,8 +211,8 @@
                                     {
                                         "type": "input-text",
                                         "name": "expenses",
-                                        "label": "修改花销",
-                                        "desc": "花销修改会根据实际情况返还/扣减存额, 同时会修改学生在班级的客单价和历史存根(老订单中每一笔), 数据实时统计, 因为除法保留小数点后两位, 导致除不尽时, 会与设置值不同"
+                                        "label": "修改结转金额",
+                                        "desc": "结转金额修改会根据实际情况返还/扣减存额, 同时会修改学生在班级的客单价和历史存根(老订单中每一笔), 数据实时统计, 因为除法保留小数点后两位, 导致除不尽时, 会与设置值不同"
                                     }
                                 ]
                             }

@@ -177,7 +177,6 @@
                         "type": "button",
                         "icon": "fa fa-edit",
                         "disabledOn": "this.state === '0'",
-                        "tooltip": "编辑校区",
                         "actionType": "dialog",
                         "dialog": {
                             "title": "默认选择班级, 但如果要更换校区, 选择框中x掉校区即可",

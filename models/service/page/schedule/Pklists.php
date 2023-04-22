@@ -137,23 +137,37 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
             $uids[$c['teacher_id']] = intval($c['teacher_id']);
             $subject_ids[] = intval($c['subject_id']);
         }
-        $uids = array_values($uids);
 
         $serviceSubject = new Service_Data_Subject();
         $subjectInfo = $serviceSubject->getListByConds(array('id in ('.implode(',', $subject_ids).')'));
         $subjectInfo = array_column($subjectInfo, null, 'id');
-
-        $serviceUser = new Service_Data_User_Profile();
-        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $uids).')'));
-        $userInfos = array_column($userInfos, null, 'uid');
 
         $serviceGroup = new Service_Data_Group();
         $groupInfos = $serviceGroup->getListByConds(array('id in ('.implode(",", $groupIds).')'));
         $groupInfos = array_column($groupInfos, null, 'id');
 
         $serviceGroupMap = new Service_Data_User_Group();
-        $groupMapInfos = $serviceGroupMap->getStudentCountByConds(array('group_id in ('.implode(",", $groupIds).')'));
-        $groupMapInfos = array_column($groupMapInfos, null, 'group_id');
+        $groupMapInfos = $serviceGroupMap->getListByConds(array('group_id in ('.implode(",", $groupIds).')'));
+
+        // 如果班级只有一个学生要拿到学生生源地
+        $groupMaps = array();
+        foreach ($groupMapInfos as $map) {
+            if (!isset($groupMaps[$map['group_id']])) {
+                $groupMaps[$map['group_id']] = array();
+            }
+            $groupMaps[$map['group_id']][] = intval($map['student_id']);
+        }
+
+        foreach ($groupMaps as $key => $value) {
+            if (is_array($value) && count($value) == 1) {
+                $uids[intval($value[0])] = intval($value[0]);
+            }
+        }
+        $uids = array_values($uids);
+
+        $serviceUser = new Service_Data_User_Profile();
+        $userInfos = $serviceUser->getListByConds(array('uid in ('.implode(',', $uids).')'));
+        $userInfos = array_column($userInfos, null, 'uid');
 
         $areaInfos = $roomInfos = array();
         if (!empty($roomIds)) {
@@ -226,9 +240,17 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
 
             // 学生数量是不是大于1个
             $item['muilt_scount'] = 0;
-            if (!empty($groupMapInfos[$item['group_id']]['count']) && $groupMapInfos[$item['group_id']]['count'] > 1) {
+            $item['birthplace'] = "-";
+            if (!empty($groupMaps[$item['group_id']]) && count($groupMaps[$item['group_id']]) > 1) {
                 $item['muilt_scount'] = 1;
+            } else if (!empty($groupMaps[$item['group_id']]) && count($groupMaps[$item['group_id']]) == 1) {
+                $suid = $groupMaps[$item['group_id']][0];
+                if (!empty($userInfos[$suid]['birthplace'])) {
+                    $item['birthplace'] = $userInfos[$suid]['birthplace'];
+                }
             }
+
+
 
             $item['area_op_name'] = "-";
             if (!empty($userInfos[$item['area_op']]['nickname'])) {
