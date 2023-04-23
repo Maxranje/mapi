@@ -197,3 +197,7 @@ CREATE TABLE `tblLock` (
   KEY `t_s` (`uid`, `start_time`),
   KEY `s` (`start_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='锁教师';
+
+
+# 20230423
+ALTER table tblGroup change column `duration` `duration` varchar(50) NOT NULL DEFAULT '0' COMMENT 'duration';

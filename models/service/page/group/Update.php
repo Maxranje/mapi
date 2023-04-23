@@ -11,7 +11,7 @@ class Service_Page_Group_Update extends Zy_Core_Service{
         $name       = empty($this->request['name']) ? "" : trim($this->request['name']);
         $descs      = empty($this->request['descs']) ? "" : trim($this->request['descs']);
         $price      = empty($this->request['price']) ? 0 : $this->request['price'];
-        $duration   = empty($this->request['duration']) ? 0 : intval($this->request['duration']);
+        $duration   = empty($this->request['duration']) ? 0 : floatval($this->request['duration']);
         $discount   = empty($this->request['discount']) ? 0 : intval($this->request['discount']);
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         $studentIds = empty($this->request['student_ids']) ? array() : explode(",", $this->request['student_ids']);
@@ -39,7 +39,7 @@ class Service_Page_Group_Update extends Zy_Core_Service{
             "area_op"       => $areaop,
             "status"        => 1,
             "price"         => intval($price * 100),
-            'duration'      => $duration,
+            'duration'      => sprintf("%.2f", $duration),
             'discount'      => $discount,
         ];
 
