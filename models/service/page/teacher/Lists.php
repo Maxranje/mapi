@@ -14,6 +14,7 @@ class Service_Page_Teacher_Lists extends Zy_Core_Service{
         $nickname       = empty($this->request['nickname']) ? "" : $this->request['nickname'];
         $name           = empty($this->request['name']) ? "" : $this->request['name'];
         $phone          = empty($this->request['phone']) ? "" : $this->request['phone'];
+        $state          = empty($this->request['state']) ? 0 : intval($this->request['state']);
         $isSelect       = empty($this->request['isSelect']) ? false : true;
         $isNoSubject    = empty($this->request['isNoSubject']) ? false : true;
 
@@ -33,6 +34,10 @@ class Service_Page_Teacher_Lists extends Zy_Core_Service{
             $conds[] = "phone = '".$phone."'";
         }
         
+        if (!empty($state)) {
+            $conds[] = "state = " . ($state == 1 ? 0 : 1);
+        }
+
         $serviceData = new Service_Data_User_Profile();
 
         $arrAppends[] = 'order by uid desc';

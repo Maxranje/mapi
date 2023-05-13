@@ -85,7 +85,7 @@
                                         "label": "教师",
                                         "initiallyOpen":false,
                                         "size": "full",
-                                        "source": "/mapi/teacher/lists?isSelect=1"
+                                        "source": "/mapi/teacher/lists?isSelect=1&state=1"
                                     }
                                 ]
                             },
@@ -186,28 +186,11 @@
                                 "type": "divider"
                             },
                             {
-                                "type": "combo",
-                                "name": "default_time",
-                                "label" : "默认时间",
-                                "description": "详细时间以默认时间为基础值, 进行填充, 从几点开始, 课时长度最小0.5小时, 最大4小时",
-                                "items": [
-                                    {
-                                        "type": "input-time",
-                                        "name": "timeRange",
-                                        "format": "HH:mm",
-                                        "onlyLeaf":true
-                                    },
-                                    {
-                                        "type": "input-number",
-                                        "name": "timeDw",
-                                        "min" : 0.5,
-                                        "max" : 4,
-                                        "step" : 0.5,
-                                        "precision" : 1,
-                                        "showSteps":true,
-                                        "suffix" : " hour"
-                                    }
-                                ]
+                                "type": "input-time-range",
+                                "format":"HH:mm",
+                                "label" : "模板时间",
+                                "name": "time_range",
+                                "desc" : "<p style='color:red;'>以模板时间为基础值, 按照周期进行计算出详细时间, 模板时间必须填写开始课程开始[时:分]和结束[时:分], 课时长度最小5分钟, 最大4小时</p>"
                             },
                             {
                                 "type": "divider"
@@ -275,7 +258,7 @@
                                         "searchable":true,
                                         "initiallyOpen": false,
                                         "size": "full",
-                                        "source": "/mapi/teacher/lists?isSelect=1"
+                                        "source": "/mapi/teacher/lists?isSelect=1&state=1"
                                     }
                                 ]
                             },
@@ -308,20 +291,10 @@
                                         "onlyLeaf":true
                                     },
                                     {
-                                        "type": "input-time",
-                                        "name": "timeRange",
-                                        "onlyLeaf":true,
-                                        "format": "HH:mm"
-                                    },
-                                    {
-                                        "type": "input-number",
-                                        "name": "timeDw",
-                                        "min" : 0.5,
-                                        "max" : 4,
-                                        "step" : 0.5,
-                                        "precision" : 1,
-                                        "showSteps":true,
-                                        "suffix" : " hour"
+                                        "type": "input-time-range",
+                                        "format":"HH:mm",
+                                        "label" : "模板时间",
+                                        "name": "time_range"
                                     }
                                 ]
                             }

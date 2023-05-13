@@ -293,6 +293,7 @@ class Service_Data_User_Profile {
             $item['sexInfo']  = $item['sex'] == "M" ? "男" : "女";
             $item['student_capital_format']  = ($item['student_capital'] / 100) . "元";
             $item['teacher_capital_format']  = ($item['teacher_capital'] / 100) . "元";
+            $item['state_info'] = $item['state'] == 1 ? "不可排课" : "可排课";
             $lists[$index] = $item;
         }
         return $lists;

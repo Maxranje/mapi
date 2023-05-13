@@ -284,10 +284,23 @@
                         "disabledOn": "this.state === '0'",
                         "hiddenOn" : "this.muilt_scount === 1",
                         "actionType": "ajax",
-                        "tooltip": "结算",
                         "api": {
                             "method": "get",
                             "url": "/mapi/schedule/checkout?id=$id"
+                        }
+                    },
+                    {
+                        "type": "button",
+                        "icon": "fa fa-mail-reply",
+                        "level" : "danger",
+                        "label" : "撤销",
+                        "disabledOn": "this.state === '1'",
+                        "hiddenOn" : "this.isSuper === 0",
+                        "actionType": "ajax",
+                        "confirmText": "是否确认撤销操作?",
+                        "api": {
+                            "method": "get",
+                            "url": "/mapi/schedule/revoke?id=$id"
                         }
                     }
                 ],
@@ -343,7 +356,7 @@
                                         "searchable":true,
                                         "value": "${s_t_id}",
                                         "required": true,
-                                        "source": "/mapi/teacher/lists?isSelect=1"
+                                        "source": "/mapi/teacher/lists?isSelect=1&state=1"
                                     },
                                     {
                                         "type": "input-date",
@@ -354,26 +367,13 @@
                                         "onlyLeaf":true
                                     },
                                     {
-                                        "type": "input-time",
-                                        "name": "timeRange",
-                                        "label": "调整时间",
-                                        "value" : "${time_hm}",
+                                        "type": "input-time-range",
+                                        "format":"HH:mm",
+                                        "value" : "${time_range}",
+                                        "label" : "模板时间",
                                         "onlyLeaf":true,
                                         "required": true,
-                                        "format": "HH:mm"
-                                    },
-                                    {
-                                        "type": "input-number",
-                                        "name": "timeDw",
-                                        "min" : 0.5,
-                                        "label":"调整时长",
-                                        "value" : "${time_len}",
-                                        "max" : 4,
-                                        "step" : 0.5,
-                                        "precision" : 1,
-                                        "showSteps":true,
-                                        "required": true,
-                                        "suffix" : " hour"
+                                        "name": "time_range"
                                     },
                                     {
                                         "type": "tree-select",

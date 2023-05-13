@@ -11,9 +11,15 @@ class Service_Page_Column_Create extends Zy_Core_Service{
         $subjectId = empty($this->request['subject_id']) ? 0 : intval($this->request['subject_id']);
         $price      = empty($this->request['price']) ? 0 : $this->request['price'];
         $duration   = empty($this->request['duration']) ? 0 : intval($this->request['duration']);
+        $number   = empty($this->request['number']) ? 0 : intval($this->request['number']);
+        $muiltPrice = empty($this->request['muilt_price']) ? 0 : $this->request['muilt_price'];
 
         if ($teacherId <= 0 || $subjectId <= 0) {
             throw new Zy_Core_Exception(405, "无法获取教师或科目, 请检查");
+        }
+
+        if ($number <= 1) {
+            throw new Zy_Core_Exception(405, "阈值数量必须大于1");
         }
 
         $serviceData = new Service_Data_Column();
@@ -27,6 +33,8 @@ class Service_Page_Column_Create extends Zy_Core_Service{
             "teacher_id"    => $teacherId, 
             "price"         => intval($price) * 100, 
             "duration"      => $duration, 
+            "number"        => $number,
+            "muilt_price"   => intval($muiltPrice) * 100,
             'update_time'   => time(),
             'create_time'   => time(),
         ];

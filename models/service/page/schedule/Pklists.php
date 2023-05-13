@@ -183,10 +183,10 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
         
         $sum_duration = 0;
         foreach ($lists as $key => &$item) {
+            $item['isSuper'] = $this->checkSuper() ? 1 : 0;
             $item["week_time"] = $this->weekName[date("w", $item['start_time'])];
             $item['time_day'] = strtotime(date("Y-m-d", $item['start_time']));
-            $item['time_hm'] = date("H:i", $item['start_time']);
-            $item['time_len'] = ($item['end_time'] - $item['start_time']) / 3600;
+            $item['time_range'] = sprintf("%s,%s", date("H:i", $item['start_time']), date("H:i", $item['end_time']));
             $item['range_time'] = date('Y-m-d H:i', $item['start_time']) . "~".date('H:i', $item['end_time']);
             $item['duration'] = (($item['end_time'] - $item['start_time']) / 3600);
             $sum_duration += $item['duration'];
@@ -270,7 +270,7 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
 
     private function formatExcel($lists) {
         $result = array(
-            'title' => array('ID', '教师名', '班级名', '课程名', '校区', '教室', '校区说明',  '排课人员', '区域管理', '状态', '星期', '时长', '时间', '创建时间'),
+            'title' => array('ID', '教师名', '班级名', '课程名', '校区', '教室', '校区说明',  '排课人员', '生源地', '区域管理', '状态', '星期', '时长', '时间', '创建时间'),
             'lists' => array(),
         );
         
@@ -284,6 +284,7 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
                 $item['room_name'],
                 $item['area_mark'],
                 $item['operator_name'],
+                $item['birthplace'],
                 $item['area_op_name'],
                 $item['stateInfo'],
                 $item['week_time'],

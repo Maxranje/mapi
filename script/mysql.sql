@@ -201,3 +201,8 @@ CREATE TABLE `tblLock` (
 
 # 20230423
 ALTER table tblGroup change column `duration` `duration` varchar(50) NOT NULL DEFAULT '0' COMMENT 'duration';
+
+#20230508
+ALTER table tblUser add column `state` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0:正常,1:下线';
+ALTER table tblColumn add column `number` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '阈值人数';
+ALTER table tblColumn add column `muilt_price` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '超阈值价格';

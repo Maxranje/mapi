@@ -39,7 +39,7 @@
                             "label": "教师",
                             "searchable":true,
                             "initiallyOpen": false,
-                            "source": "/mapi/teacher/lists?isSelect=1&isNoSubject=1"
+                            "source": "/mapi/teacher/lists?isSelect=1&isNoSubject=1&state=1"
                         },
                         {
                             "type": "divider"

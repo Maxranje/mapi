@@ -11,10 +11,8 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
 
         $id         = empty($this->request['id']) ? 0 : intval($this->request['id']);
         $date       = empty($this->request['date']) ? 0 : intval($this->request['date']);
-        $timeRange  = empty($this->request['timeRange']) ? "" : $this->request['timeRange'];
-        $timeRange  = empty($timeRange) ? array() : explode(":", $timeRange);
+        $timeRange  = empty($this->request['time_range']) ? "" : $this->request['time_range'];
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
-        $timeDw     = empty($this->request['timeDw']) ? 0 : floatval($this->request['timeDw']);
 
         if ($id <= 0){
             throw new Zy_Core_Exception(405, "请求参数错误");
@@ -37,18 +35,35 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "调整日期格式不正确");
         }
 
-        if (empty($timeRange)){
-            throw new Zy_Core_Exception(405, "调整时间格式不正确");
+        $timeRange = empty($timeRange) ? array() : explode(",", $timeRange);
+        if (empty($timeRange) || count($timeRange) != 2) {
+            throw new Zy_Core_Exception(405, "时间范围有问题");
         }
 
-        if ($timeDw <=0 || $timeDw > 4){
-            throw new Zy_Core_Exception(405, "调整时长格式不正确");
+        $needTimes = array();
+        foreach ($timeRange as $item) {
+            $range = explode(":", $item);
+            if (empty($range) || count($range) != 2) {
+                throw new Zy_Core_Exception(405, "时间必须都要配置并且时间格式不能有错");
+            }
+            $needTimes[] = $date + ($range[0] * 3600) + ($range[1] * 60);
+        }
+
+        if (empty($needTimes)) {
+            throw new Zy_Core_Exception(405, "时间不正确, 请检查");
         }
 
         $needTimes = array(
-            'sts' => $date + ($timeRange[0] * 3600) + ($timeRange[1] * 60),
-            'ets' => $date + $timeDw * 3600 + (($timeRange[0] * 3600) + ($timeRange[1] * 60)),
+            'sts' => min($needTimes),
+            'ets' => max($needTimes),
         );
+
+        // 5分钟到4小时
+        if ($needTimes['sts'] >= $needTimes['ets'] 
+            || $needTimes['ets'] - $needTimes['sts'] > (4 * 3600)
+            || $needTimes['ets'] - $needTimes['sts'] < 300) {
+            throw new Zy_Core_Exception(405, "模板时间必须在5分钟到4小时之间");
+        }
 
         $needDays = array(
             'sts' => strtotime(date('Ymd', $needTimes['sts'])),
@@ -77,9 +92,16 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
 
         }
 
-        $ret = $this->checkTeacherPk($needTimes, $needDays, $columnInfos['teacher_id'], $info);
-        if (!$ret) {
-            throw new Zy_Core_Exception(405, "教师时间有冲突, 请查询后在配置");
+        $ret = $this->serviceSchedule->checkTeacherPk(array($needTimes), $needDays, $columnInfos['teacher_id'], $info);
+        if ($ret === false) {
+            throw new Zy_Core_Exception(405, "查询教师排课冲突情况失败, 请重新提交");
+        }
+        if (!empty($ret)) {
+            if (!empty($ret['column_id'])) {
+                throw new Zy_Core_Exception(405, "教师时间有冲突, 请检查教师时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+            } else {
+                throw new Zy_Core_Exception(405, "教师时间有冲突, 排课时间被教师锁定");
+            }
         }
         
         $serviceGroup = new Service_Data_Group();
@@ -88,17 +110,22 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "无法查到班级信息");
         }
 
-        $ret = $this->checkGroup ($needTimes, $needDays, $groupInfos['id'], $info);
-        if (!$ret) {
-            throw new Zy_Core_Exception(405, "班级时间有冲突, 请查询后在配置");
+        $ret = $this->serviceSchedule->checkGroup (array($needTimes), $needDays, $groupInfos['id'], $info);
+        if ($ret === false) {
+            throw new Zy_Core_Exception(405, "查询班级排课冲突情况失败, 请重新提交");
+        }
+        if (!empty($ret)) {
+            throw new Zy_Core_Exception(405, "班级时间有冲突, 请检查班级时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
         }
 
         // 排查教室 (3.15线上不管)
-        if (!empty($info['area_id']) && !empty($info['room_id'])
-            && $info['area_id'] != 3 && $info['room_id'] != 15) {
-            $ret = $this->checkRoom ($needTimes, $needDays, $info);
-            if (!$ret) {
-                throw new Zy_Core_Exception(405, "校区教室时间有冲突, 请查询后在配置");
+        if (!empty($info['area_id']) && !empty($info['room_id']) && $info['area_id'] != 3 && $info['room_id'] != 15) {
+            $ret = $this->serviceSchedule->checkRoom (array($needTimes), $needDays, $info);
+            if ($ret === false) {
+                throw new Zy_Core_Exception(405, "查询教室冲突情况失败, 请重新提交");
+            }
+            if (!empty($ret)) {
+                throw new Zy_Core_Exception(405, "教室时间有冲突, 请检查教室占用, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
             }
         }
 
@@ -115,110 +142,5 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "更新失败, 请重试");
         }
         return array();
-    }
-
-    private function checkGroup ($needTimes, $needDays, $groupId, $info) {
-        $conds= array(
-            sprintf('start_time >= %d', $needDays['sts']),
-            sprintf('end_time <= %d', $needDays['ets']),
-            'group_id' => $groupId,
-            'state' => 1,
-        );
-        $list = $this->serviceSchedule->getListByConds($conds);
-        if ($list === false) {
-            return false;
-        }
-        if (empty($list)) {
-            return true;
-        }
-
-        foreach ($list as $item) {
-            if ($item['id'] == $info['id']) {
-                continue;
-            }
-            if ($needTimes['sts'] > $item['start_time'] && $needTimes['sts'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['ets'] > $item['start_time'] && $needTimes['ets'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] < $item['start_time'] && $needTimes['ets'] > $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] == $item['start_time'] || $needTimes['ets'] == $item['end_time']) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function checkTeacherPk ($needTimes, $needDays, $teacherId, $info) {
-        $conds= array(
-            sprintf('start_time >= %d', $needDays['sts']),
-            sprintf('end_time <= %d', $needDays['ets']),
-            'teacher_id' => intval($teacherId),
-            'state' => 1,
-        );
-        $list = $this->serviceSchedule->getListByConds($conds);
-        if ($list === false) {
-            return false;
-        }
-        if (empty($list)) {
-            return true;
-        }
-        foreach ($list as $item) {
-            if ($item['id'] == $info['id']) {
-                continue;
-            }
-            if ($needTimes['sts'] > $item['start_time'] && $needTimes['sts'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['ets'] > $item['start_time'] && $needTimes['ets'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] < $item['start_time'] && $needTimes['ets'] > $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] == $item['start_time'] || $needTimes['ets'] == $item['end_time']) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function checkRoom ($needTimes, $needDays, $info) {
-        $conds= array(
-            sprintf('start_time >= %d', $needDays['sts']),
-            sprintf('end_time <= %d', $needDays['ets']),
-            "room_id = " . $info['room_id'] ,
-            "area_id = " . $info['area_id'] ,
-            'state' => 1,
-        );
-        $list = $this->serviceSchedule->getListByConds($conds);
-        if ($list === false) {
-            return false;
-        }
-        if (empty($list)) {
-            return true;
-        }
-
-        foreach ($list as $item) {
-            if ($item['id'] == $info['id']) {
-                continue;
-            }
-            if ($needTimes['sts'] > $item['start_time'] && $needTimes['sts'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['ets'] > $item['start_time'] && $needTimes['ets'] < $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] < $item['start_time'] && $needTimes['ets'] > $item['end_time']) {
-                return false;
-            }
-            if ($needTimes['sts'] == $item['start_time'] || $needTimes['ets'] == $item['end_time']) {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -21,6 +21,18 @@ class Service_Data_Statistics {
         return  $this->daoCapital->getCntByConds($conds);
     }
 
+    public function getListByJobId($jobId) {
+        $conds = array(
+            'schedule_id' => $jobId,
+        );
+        $field = empty($field) || !is_array($field) ? $this->daoCapital->arrFieldsMap : $field;
+        $lists = $this->daoCapital->getListByConds($conds, $field);
+        if (empty($lists)) {
+            return array();
+        }
+        return $lists;
+    }
+
 
     public function edit ($id, $profile) {
         $arrConds = array(

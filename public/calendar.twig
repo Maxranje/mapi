@@ -69,15 +69,35 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="content calender-content">
-                             <div class="col-lg-8 col-xl-9" style="padding: 0px 5px;">
-                                <div class="alert success-color text-white" role="alert"> <i class="ti-close close" data-dismiss="alert"></i> <strong>提醒:</strong> 课表显示当前时间前60天后90天的排课. 
-                                {% if data.user.type == 13 %}
-                                    , 您本月共有{{ data.lists.total }}课时
-                                {% endif %}
+                            {% if data.user.type == 13 %}
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-lg-4 mb-30">
+                                    <!-- Widget Social Content -->
+                                    <div class="widget-social-content p-3 primary-color full-height wow fadeInUp" data-wow-delay="200ms">
+                                        <h5 class="text-white">本月课时</h5>
+                                        <h5 class="text-white">{{ data.lists.month }}</h5>
+                                        <!-- Widget Social Icon -->
+                                        <div class="widget-social-icon">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 mb-30">
+                                    <!-- Widget Social Content -->
+                                    <div class="widget-social-content p-3 bg-teal full-height wow fadeInUp" data-wow-delay="300ms">
+                                        <h5 class="text-white">上月课时</h5>
+                                        <h5 class="text-white">{{ data.lists.lastMonth }}</h5>
+                                        <!-- Widget Social Icon -->
+                                        <div class="widget-social-icon">
+                                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="row">
-                                <div class="col-lg-8 col-xl-9" style="padding: 0px 5px;">
+                                <div class="col-lg-8" style="padding: 0px 5px;">
                                     <div class="card bg-boxshadow mb-30">
                                         <div class="card-body" >
                                             <div id='fullcalendar-default-view'></div>

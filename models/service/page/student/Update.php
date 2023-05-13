@@ -51,7 +51,7 @@ class Service_Page_Student_Update extends Zy_Core_Service{
         ];
 
         $needStudentCapital = false;
-        if ($capital > 0) {
+        if (is_numeric($capital) && $capital != 0) {
             $needStudentCapital = true;
             $userInfo['student_capital'] += intval($capital * 100);
             $profile['student_capital'] = $userInfo['student_capital'];

@@ -10,9 +10,15 @@ class Service_Page_Column_Update extends Zy_Core_Service{
         $teacherId  = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
         $subjectId  = empty($this->request['subject_id']) ? 0 : intval($this->request['subject_id']);
         $price      = empty($this->request['price']) ? 0 : floatval($this->request['price']);
+        $number     = empty($this->request['number']) ? 0 : intval($this->request['number']);
+        $muiltPrice = empty($this->request['muilt_price']) ? 0 : $this->request['muilt_price'];
 
         if ($teacherId <= 0 || $subjectId <= 0) {
             throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
+        }
+
+        if ($number <= 1) {
+            throw new Zy_Core_Exception(405, "阈值数量必须大于1");
         }
 
         $serviceSubject = new Service_Data_Subject();
@@ -34,6 +40,8 @@ class Service_Page_Column_Update extends Zy_Core_Service{
         );
         $profile = [
             "price"         => intval($price) * 100, 
+            "number"        => $number,
+            "muilt_price"   => intval($muiltPrice) * 100,
             "discount"      => 0,
             'update_time'   => time(),
         ];

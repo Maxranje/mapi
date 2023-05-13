@@ -7,6 +7,7 @@ class Service_Data_Schedule {
     const CATEGORY_STUDENT_PAID = 3;
     const CATEGORY_TEACHER_PAID = 4;
     const CATEGORY_STUDENT_PAID_PERSONAL = 5;
+    const CATEGORY_TEACHER_MUILT_PAID = 6;
 
     private $daoSchedule ;
 
@@ -166,6 +167,7 @@ class Service_Data_Schedule {
         // 按小时计算
         $timeLength = ($params['job']['end_time'] - $params['job']['start_time']) / 3600;
         $teacherPrice = $params['column']['price'] * $timeLength;
+        $teacherCategory = self::CATEGORY_TEACHER_PAID;
         $studentPrice = $params['group']['price'] * $timeLength;
 
         // 过滤有效的uid
@@ -176,6 +178,12 @@ class Service_Data_Schedule {
         }
         $params['studentUids'] = array_values($params['studentUids']);
         unset($params['studentInfos']);
+
+        // 根据用户数量判断是否走重新算价
+        if (!empty($params['column']['number']) && count($params['studentUids']) >= $params['column']['number']){
+            $teacherPrice = $params['column']['muilt_price'] * $timeLength;
+            $teacherCategory = self::CATEGORY_TEACHER_MUILT_PAID;
+        }
 
         // 获取班级单个学生价格
         $singlePrice = array();
@@ -191,7 +199,7 @@ class Service_Data_Schedule {
             'column_id' => $params['job']['column_id'],
             'group_id' => $params['job']['group_id'],
             'schedule_id' => $params['job']['id'],
-            'category' => self::CATEGORY_TEACHER_PAID,  // 1用户充值, 2作者充值, 3,用户消耗, 4,作者收入
+            'category' => $teacherCategory,  // 1用户充值, 2作者充值, 3,用户消耗, 4,作者收入
             'operator' => OPERATOR,
             'capital' => $teacherPrice,
             'update_time' => $now,
@@ -274,5 +282,166 @@ class Service_Data_Schedule {
         $this->daoSchedule->commit();
 
         return true;
+    }
+
+    public function revoke($params) {
+        $this->daoSchedule->startTransaction();
+        $daoCapital = new Dao_Capital();
+        $daoUser = new Dao_User();
+        $conds = array(
+            'uid' => 0,
+        );
+        foreach ($params['list'] as $item) {
+            $conds['uid'] = intval($item['uid']);
+            if ($item['type'] == Service_Data_User_Profile::USER_TYPE_STUDENT) {
+                $ret= $daoUser->updateByConds($conds, "student_capital=student_capital+".$item['capital']);
+            } else {
+                $ret= $daoUser->updateByConds($conds, "teacher_capital=teacher_capital-".$item['capital']);
+            }
+
+            if ($ret == false ) {
+                $this->daoSchedule->rollback();
+                return false;
+            }
+        }
+        $ret = $daoCapital->deleteByConds(array('schedule_id' => $params['id']));
+        if ($ret == false) {
+            $this->daoSchedule->rollback();
+            return false;
+        }
+        $ret = $this->daoSchedule->updateByConds(array('id' => $params['id']), array('state' => 1));
+        if ($ret == false) {
+            $this->daoSchedule->rollback();
+            return false;
+        }
+        $this->daoSchedule->commit();
+        return true;
+    }
+
+    public function checkGroup ($needTimes, $needDays, $groupId, $info = array()) {
+        $conds= array(
+            sprintf('start_time >= %d', $needDays['sts']),
+            sprintf('end_time <= %d', $needDays['ets']),
+            'group_id' => intval($groupId),
+            'state' => 1,
+        );
+        $list = $this->getListByConds($conds);
+        if ($list === false) {
+            return false;
+        }
+        if (empty($list)) {
+            return array();
+        }
+
+        foreach ($list as $item) {
+            if (!empty($info) && $item['id'] == $info['id']) {
+                continue;
+            }
+            foreach ($needTimes as $t) {
+                if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
+                    return $item;
+                }
+            }
+        }
+        return array();
+    }
+
+    public function checkTeacherPk ($needTimes, $needDays, $teacherId, $info = array()) {
+        $conds= array(
+            sprintf('start_time >= %d', $needDays['sts']),
+            sprintf('end_time <= %d', $needDays['ets']),
+            'teacher_id' => intval($teacherId),
+            'state' => 1,
+        );
+        $list = $this->getListByConds($conds);
+        if ($list === false) {
+            return false;
+        }
+
+        // 锁定的时间
+        $conds= array(
+            sprintf('start_time >= %d', $needDays['sts']),
+            sprintf('end_time <= %d', $needDays['ets']),
+            'uid' => intval($teacherId),
+        );
+        $serviceLock = new Service_Data_Lock();
+        $locks = $serviceLock->getListByConds($conds);
+        if ($locks === false) {
+            return false;
+        }
+
+        if (empty($list) && empty($locks)) {
+            return array();
+        }
+
+        // 2个记录合并
+        $list = array_merge($list, $locks);
+        foreach ($list as $item) {
+            if (!empty($info) && $item['id'] == $info['id']) {
+                continue;
+            }
+            foreach ($needTimes as $t) {
+                if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
+                    return $item;
+                }
+            }
+        }
+        return array();
+    }
+
+    public function checkRoom ($needTimes, $needDays, $info) {
+        $conds= array(
+            sprintf('start_time >= %d', $needDays['sts']),
+            sprintf('end_time <= %d', $needDays['ets']),
+            "room_id = " . intval($info['room_id']) ,
+            "area_id = " . intval($info['area_id']) ,
+            'state' => 1,
+        );
+        $list = $this->getListByConds($conds);
+        if ($list === false) {
+            return false;
+        }
+        if (empty($list)) {
+            return array();
+        }
+
+        foreach ($list as $item) {
+            if (!empty($info) && $item['id'] == $info['id']) {
+                continue;
+            }
+            foreach ($needTimes as $t) {
+                if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
+                    return $item;
+                }
+                if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
+                    return $item;
+                }
+            }
+        }
+        return array();
     }
 }

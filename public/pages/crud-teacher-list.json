@@ -173,6 +173,26 @@
                     "placeholder": ""
                 },
                 {
+                    "label": "教师状态",
+                    "type": "select",
+                    "name": "state",
+                    "value" : "0",
+                    "options": [
+                        {
+                            "label": "请选择",
+                            "value": "0"
+                        },
+                        {
+                            "label": "可排课",
+                            "value": "1"
+                        },
+                        {
+                            "label": "不可排课",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
                     "type": "submit",
                     "label": "搜索"
                 }
@@ -232,6 +252,15 @@
                 "toggled": true
             },
             {
+                "name": "state",
+                "label": "状态",
+                "type": "mapping",
+                "map": {
+                  "1": "<span class='label label-danger'>不可排课</span>",
+                  "0": "<span class='label label-success'>可排课</span>"
+                }
+              },
+            {
                 "name": "sexInfo",
                 "label": "性别",
                 "type": "text",
@@ -286,6 +315,14 @@
                                         "type": "static",
                                         "name": "phone",
                                         "label": "手机号"
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "static",
+                                        "name": "state_info",
+                                        "label": "状态"
                                     },
                                     {
                                         "type": "divider"
@@ -389,6 +426,26 @@
                                         "type": "input-text",
                                         "name": "phone",
                                         "label": "手机号",
+                                        "required": true
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "radios",
+                                        "name": "state",
+                                        "label": "状态",
+                                        "value": "{$data.state}",
+                                        "options": [
+                                            {
+                                                "label": "可排课",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "label": "不可排课",
+                                                "value": "1"
+                                            }
+                                        ],
                                         "required": true
                                     },
                                     {
@@ -537,6 +594,34 @@
                                                         },
                                                         "value" : 0,
                                                         "desc": "一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格, 0为免费课"
+                                                    },
+                                                    {
+                                                        "type": "divider"
+                                                    },
+                                                    {
+                                                        "type": "input-text",
+                                                        "name": "number",
+                                                        "label": "人数阈值",
+                                                        "addOn": {
+                                                            "type": "text",
+                                                            "label": "人"
+                                                        },
+                                                        "value" : 0,
+                                                        "desc": "超过阈值人数可以按新价格给教师算价, 人数必须大于1人, 否则保存失败"
+                                                    },
+                                                    {
+                                                        "type": "divider"
+                                                    },
+                                                    {
+                                                        "type": "input-text",
+                                                        "name": "muilt_price",
+                                                        "label": "超阈值单价",
+                                                        "addOn": {
+                                                            "type": "text",
+                                                            "label": "元"
+                                                        },
+                                                        "value" : 0,
+                                                        "desc": "超阈值一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格, 0为免费课"
                                                     }
                                                 ]
                                             }

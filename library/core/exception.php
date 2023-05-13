@@ -34,7 +34,6 @@ class Zy_Core_Exception extends Exception {
         if (empty($this->arg) || !is_array($this->arg)) {
             $this->arg = array();
         }
-        $this->arg = json_encode($this->arg);
 
         $stackTrace   = $this->getTrace();
         $class        = @$stackTrace[0]['class'];
@@ -51,7 +50,7 @@ class Zy_Core_Exception extends Exception {
             $level    = self::WARNING;
         }
 
-        Zy_Helper_Log::$level("{$this->em} at [{$function} in {$file}:{$line}] content-text:[{$this->arg}]");
+        Zy_Helper_Log::$level("{$this->em} at [{$function} in {$file}:{$line}] content-text:[".json_encode($this->arg)."]");
         parent::__construct($this->em, $this->ec);
     }
 

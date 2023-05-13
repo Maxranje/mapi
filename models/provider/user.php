@@ -9,6 +9,7 @@ class Dao_User extends Zy_Core_Dao {
             "uid"  => "uid" , 
             "type"  => "type" , 
             "name"  => "name" , 
+            "state" => "state",
             "nickname"  => "nickname" , 
             "phone"  => "phone" , 
             "avatar" => "avatar",

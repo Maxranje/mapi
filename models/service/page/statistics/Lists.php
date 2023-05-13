@@ -89,6 +89,8 @@ class Service_Page_Statistics_Lists extends Zy_Core_Service{
                 $item['categoryInfo'] = "学生充值";
             } else if ($item['category'] == Service_Data_Schedule::CATEGORY_STUDENT_PAID_PERSONAL) {
                 $item['categoryInfo'] = "学生消耗(个人定价)";
+            } else if ($item['category'] == Service_Data_Schedule::CATEGORY_TEACHER_MUILT_PAID) {
+                $item['categoryInfo'] = "教师收入(超阈值定价)";
             }
             $item['capitalInfo']  = ($item['capital'] / 100) . "元";
             $item['create_time'] = date('Y年m月d日 H:i:s', $item['create_time']);

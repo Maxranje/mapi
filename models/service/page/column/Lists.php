@@ -54,8 +54,11 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                 'teacher_id' => $item['teacher_id'],
                 'subject_id' => $item['subject_id'],
                 "price" => $item['price'],
+                "number" => $item["number"],
                 "price_info" => ($item['price'] / 100) . "元",
                 "price_info2" => ($item['price'] / 100),
+                "muilt_price_info" => ($item['muilt_price'] / 100) . "元",
+                "muilt_price_info2" => ($item['muilt_price'] / 100),
             );
         }
 
@@ -74,6 +77,14 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                     [
                         "label"=> "课时单价",
                         "name"=> "price_info"
+                    ],
+                    [
+                        "label"=> "阈值人数",
+                        "name"=> "number"
+                    ],
+                    [
+                        "label"=> "超阈值单价",
+                        "name"=> "muilt_price_info"
                     ]
                 ],
                 "actions"=> [
@@ -84,6 +95,7 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                         "actionType"=> "dialog",
                         "dialog"=> [
                             "title"=> "查看详情",
+                            "size"=> "lg",
                             "body"=>[
                                 "type"=> "form",
                                 "name"=> "update-column-form",
@@ -121,7 +133,35 @@ class Service_Page_Column_Lists extends Zy_Core_Service{
                                             "label"=> "元"
                                         ],
                                         "desc"=> "一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格, 0为免费课"
-                                    ]
+                                    ],
+                                    [
+                                        "type"=> "divider"
+                                    ],
+                                    [
+                                        "type"=> "input-text",
+                                        "name"=> "number",
+                                        "label"=> "人数阈值",
+                                        "value"=>'${number}',
+                                        "addOn"=> [
+                                            "type"=> "text",
+                                            "label"=> "人"
+                                        ],
+                                        "desc"=> "超过阈值人数可以按新价格给教师算价, 人数必须大于1人, 否则保存失败"
+                                    ],
+                                    [
+                                        "type"=> "divider"
+                                    ],
+                                    [
+                                        "type"=> "input-text",
+                                        "name"=> "muilt_price",
+                                        "label"=> "课时单价",
+                                        "value"=>'${muilt_price_info2}',
+                                        "addOn"=> [
+                                            "type"=> "text",
+                                            "label"=> "元"
+                                        ],
+                                        "desc"=> "超阈值一小时单价, 元为单位, 保留小数点后两位, 谨慎填写价格, 0为免费课"
+                                    ],
                                 ]
                             ]
                         ]
