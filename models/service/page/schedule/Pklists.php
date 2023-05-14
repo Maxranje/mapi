@@ -24,6 +24,7 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
 
         $pn = ($pn-1) * $rn;
 
+        $id = empty($this->request['id']) ? "" : strval($this->request['id']);
         $groupId = empty($this->request['group_ids']) ? "" : strval($this->request['group_ids']);
         $teacherId = empty($this->request['teacher_id']) ? 0 : intval($this->request['teacher_id']);
         $areaId = empty($this->request['area_id']) ? 0 : intval($this->request['area_id']);
@@ -46,6 +47,13 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
         $serviceData = new Service_Data_Schedule();
 
         $conds = array();
+        if (!empty($id)) {
+            $id = explode(",", $id);
+            foreach ($id as $k => $i) {
+                $id[$k] = intval($i);
+            }
+            $conds[] = sprintf("id in (%s)", implode(",", $id));
+        }
         if (!empty($groupId)) {
             $conds[] = sprintf("group_id in (%s)", $groupId);
         } 
@@ -88,7 +96,7 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
         $result = array(
             'rows' => $lists,
             'total' => $total,
-            'sum_duration' => $sum_duration > 0 ? $sum_duration . "小时" : "-",
+            'sum_duration' => $sum_duration > 0 ? $sum_duration / 60 . "小时" : "-",
         );
         return $result;
     }
@@ -188,10 +196,10 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
             $item['time_day'] = strtotime(date("Y-m-d", $item['start_time']));
             $item['time_range'] = sprintf("%s,%s", date("H:i", $item['start_time']), date("H:i", $item['end_time']));
             $item['range_time'] = date('Y-m-d H:i', $item['start_time']) . "~".date('H:i', $item['end_time']);
-            $item['duration'] = (($item['end_time'] - $item['start_time']) / 3600);
+            $item['duration'] = (($item['end_time'] - $item['start_time']) / 60);
             $sum_duration += $item['duration'];
             if (empty($this->request['export'])) {
-                $item['duration'] .= "小时";
+                $item['duration'] .= "分钟";
             }
             $item['create_time'] = date('Y-m-d H:i:s', $item['create_time']);
             if (empty($columnInfos[$item['column_id']]['teacher_id'])
@@ -241,8 +249,8 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
             // 学生数量是不是大于1个
             $item['muilt_scount'] = 0;
             $item['birthplace'] = "-";
-            if (!empty($groupMaps[$item['group_id']]) && count($groupMaps[$item['group_id']]) > 1) {
-                $item['muilt_scount'] = 1;
+            if (!empty($groupMaps[$item['group_id']])) {
+                $item['muilt_scount'] = count($groupMaps[$item['group_id']]);
             } else if (!empty($groupMaps[$item['group_id']]) && count($groupMaps[$item['group_id']]) == 1) {
                 $suid = $groupMaps[$item['group_id']][0];
                 if (!empty($userInfos[$suid]['birthplace'])) {

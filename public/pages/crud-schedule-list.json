@@ -20,6 +20,13 @@
             "submitText": "",
             "body": [
                 {
+                    "type": "input-text",
+                    "name": "id",
+                    "size":"md",
+                    "label": "编号",
+                    "placeholder" : "支持多个,用英文逗号分割不要有空格"
+                },
+                {
                     "type": "tree-select",
                     "name": "group_ids",
                     "onlyLeaf":true,
@@ -232,7 +239,7 @@
                         "level" : "success",
                         "label" : "点名",
                         "disabledOn": "this.state === '0'",
-                        "hiddenOn" : "this.muilt_scount === 0",
+                        "hiddenOn" : "this.muilt_scount <= 1",
                         "actionType": "dialog",
                         "tooltip": "点名",
                         "dialog": {
@@ -282,7 +289,7 @@
                         "level" : "success",
                         "label" : "结算",
                         "disabledOn": "this.state === '0'",
-                        "hiddenOn" : "this.muilt_scount === 1",
+                        "hiddenOn" : "this.muilt_scount > 1 || this.muilt_scount === 0",
                         "actionType": "ajax",
                         "api": {
                             "method": "get",

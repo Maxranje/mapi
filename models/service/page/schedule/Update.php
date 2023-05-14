@@ -96,12 +96,18 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
         if ($ret === false) {
             throw new Zy_Core_Exception(405, "查询教师排课冲突情况失败, 请重新提交");
         }
-        if (!empty($ret)) {
-            if (!empty($ret['column_id'])) {
-                throw new Zy_Core_Exception(405, "教师时间有冲突, 请检查教师时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
-            } else {
-                throw new Zy_Core_Exception(405, "教师时间有冲突, 排课时间被教师锁定");
+        if (!empty($ret['schedule']) || !empty($ret['lock'])) {
+            $jobIds = implode(", ", array_column($ret['schedule'], 'id'));
+            $lockIds = implode(", ", array_column($ret['lock'], 'id'));
+            $msg = "教师时间有冲突, 请检查教师时间或教师锁定时间";
+            if (!empty($jobIds)) {
+                $msg.= ", 排课编号分别是: " . $jobIds;
             }
+            if (!empty($lockIds)) {
+                $msg.= ", 锁定编号分别是: " . $lockIds;
+            }
+            $msg .= ", 仅供参考";
+            throw new Zy_Core_Exception(405, $msg);
         }
         
         $serviceGroup = new Service_Data_Group();
@@ -115,7 +121,8 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "查询班级排课冲突情况失败, 请重新提交");
         }
         if (!empty($ret)) {
-            throw new Zy_Core_Exception(405, "班级时间有冲突, 请检查班级时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+            $jobIds = implode(", ", array_column($ret, 'id'));
+            throw new Zy_Core_Exception(406, "班级时间有冲突, 请检查班级时间, 排课编号分别为" . $jobIds. " 仅做参考");
         }
 
         // 排查教室 (3.15线上不管)
@@ -125,7 +132,8 @@ class Service_Page_Schedule_Update extends Zy_Core_Service{
                 throw new Zy_Core_Exception(405, "查询教室冲突情况失败, 请重新提交");
             }
             if (!empty($ret)) {
-                throw new Zy_Core_Exception(405, "教室时间有冲突, 请检查教室占用, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+                $jobIds = implode(", ", array_column($ret, 'id'));
+                throw new Zy_Core_Exception(406, "教室占用时间有冲突, 请检查教室占用情况, 排课编号分别为" . $jobIds. " 仅做参考");
             }
         }
 

@@ -15,7 +15,7 @@ class Service_Page_Group_Create extends Zy_Core_Service{
         $studentIds = empty($this->request['student_ids']) ? array() : explode(",", $this->request['student_ids']);
         $areaop     = empty($this->request['area_op']) ? 0 : intval($this->request['area_op']);
         
-        if (empty($studentIds) || empty($name) || $duration <= 0 || $areaop <= 0){
+        if (empty($name) || $duration <= 0 || $areaop <= 0){
             throw new Zy_Core_Exception(405, "某些必填字段为空, 请检查表单填写项");
         }
 

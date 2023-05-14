@@ -63,8 +63,7 @@
                             "source": "/mapi/student/lists?isSelect=1",
                             "searchable": true,
                             "searchApi": "/mapi/student/lists?isSelect=1&nickname=$term",
-                            "selectMode": "list",
-                            "required": true
+                            "selectMode": "list"
                         },
                         {
                             "type": "divider"
@@ -218,7 +217,7 @@
             },
             {
                 "name": "priceInfo",
-                "label": "课时单价",
+                "label": "班级单价",
                 "type": "text",
                 "toggled": true
             },
@@ -419,9 +418,7 @@
                                         "source": "/mapi/student/lists?isSelect=1&group_id=${id}",
                                         "searchable": true,
                                         "searchApi": "/mapi/student/lists?isSelect=1&group_id=${id}&nickname=$term",
-                                        "selectMode": "list",
-                                        
-                                        "required": true
+                                        "selectMode": "list"
                                     },
                                     {
                                         "type": "divider"

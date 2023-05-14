@@ -127,19 +127,21 @@ class Service_Data_Group {
             return false;
         }
 
-        $daoGroupMap = new Dao_Groupmap();
-        foreach ($params['student_ids'] as $studentId) {
-            
-            $profile = array( 
-                "group_id" => $groupId,
-                "student_id" => intval($studentId),
-                "update_time"  => $now, 
-                "create_time" => $now,
-            );
-            $ret = $daoGroupMap->insertRecords($profile);
-            if ($ret == false) {
-                $this->daoGroup->rollback();
-                return false;
+        if (!empty($params['student_ids'])) {
+            $daoGroupMap = new Dao_Groupmap();
+            foreach ($params['student_ids'] as $studentId) {
+                
+                $profile = array( 
+                    "group_id" => $groupId,
+                    "student_id" => intval($studentId),
+                    "update_time"  => $now, 
+                    "create_time" => $now,
+                );
+                $ret = $daoGroupMap->insertRecords($profile);
+                if ($ret == false) {
+                    $this->daoGroup->rollback();
+                    return false;
+                }
             }
         }
         

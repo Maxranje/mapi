@@ -17,8 +17,8 @@ class Service_Page_Column_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "部分参数为空, 请检查");
         }
 
-        if ($number <= 1) {
-            throw new Zy_Core_Exception(405, "阈值数量必须大于1");
+        if ($number <= 1 && $muiltPrice > 0) {
+            throw new Zy_Core_Exception(405, "阈值数量必须大于1, 才能设置价格");
         }
 
         $serviceSubject = new Service_Data_Subject();

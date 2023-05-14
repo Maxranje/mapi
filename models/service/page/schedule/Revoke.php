@@ -72,19 +72,31 @@ class Service_Page_Schedule_Revoke extends Zy_Core_Service{
 
         $ret = $serviceSchedule->checkGroup($needTimes, $needDays, $info['group_id'], $info);
         if (!empty($ret)) {
-            throw new Zy_Core_Exception(0, "班级时间有冲突, 请检查班级时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+            $jobIds = implode(", ", array_column($ret, 'id'));
+            throw new Zy_Core_Exception(0, "操作成功, 不过班级时间有冲突, 请检查班级时间, 排课编号分别为" . $jobIds. " 仅做参考");
         }
 
         $ret = $serviceSchedule->checkTeacherPk($needTimes, $needDays, $info['teacher_id'], $info);
-        if (!empty($ret)) {
-            throw new Zy_Core_Exception(0, "教师时间有冲突, 请检查教师时间, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+        if (!empty($ret['schedule']) || !empty($ret['lock'])) {
+            $jobIds = implode(", ", array_column($ret['schedule'], 'id'));
+            $lockIds = implode(", ", array_column($ret['lock'], 'id'));
+            $msg = "操作成功, 不过教师时间有冲突, 请检查教师时间或教师锁定时间";
+            if (!empty($jobIds)) {
+                $msg.= ", 排课编号分别是: " . $jobIds;
+            }
+            if (!empty($lockIds)) {
+                $msg.= ", 锁定编号分别是: " . $lockIds;
+            }
+            $msg .= ", 仅供参考";
+            throw new Zy_Core_Exception(0, $msg);
         }
 
         // 排查教室 (3.15线上不管)
         if (!empty($info['area_id']) && !empty($info['room_id']) && $info['area_id'] != 3 && $info['room_id'] != 15) {
             $ret = $serviceSchedule->checkRoom ($needTimes, $needDays, $info);
             if (!empty($ret)) {
-                throw new Zy_Core_Exception(0, "教室时间有冲突, 请检查教室占用, 系统查询到其中一个排课编号ID=" . $ret['id']. " 仅做参考");
+                $jobIds = implode(", ", array_column($ret, 'id'));
+                throw new Zy_Core_Exception(0, "操作成功, 不过教室占用时间有冲突, 请检查教室占用情况, 排课编号分别为" . $jobIds. " 仅做参考");
             }
         }
 

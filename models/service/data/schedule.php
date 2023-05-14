@@ -166,9 +166,9 @@ class Service_Data_Schedule {
 
         // 按小时计算
         $timeLength = ($params['job']['end_time'] - $params['job']['start_time']) / 3600;
-        $teacherPrice = $params['column']['price'] * $timeLength;
+        $teacherPrice = intval($params['column']['price'] * $timeLength);
         $teacherCategory = self::CATEGORY_TEACHER_PAID;
-        $studentPrice = $params['group']['price'] * $timeLength;
+        $studentPrice = intval($params['group']['price'] * $timeLength);
 
         // 过滤有效的uid
         foreach ($params['studentUids'] as $key => $uid) {
@@ -181,7 +181,7 @@ class Service_Data_Schedule {
 
         // 根据用户数量判断是否走重新算价
         if (!empty($params['column']['number']) && count($params['studentUids']) >= $params['column']['number']){
-            $teacherPrice = $params['column']['muilt_price'] * $timeLength;
+            $teacherPrice = intval($params['column']['muilt_price'] * $timeLength);
             $teacherCategory = self::CATEGORY_TEACHER_MUILT_PAID;
         }
 
@@ -230,7 +230,7 @@ class Service_Data_Schedule {
             $stuPrice = $studentPrice; 
             $stuCategory =  self::CATEGORY_STUDENT_PAID;
             if (isset($singlePrice[$uid])) {
-                $stuPrice = intval($singlePrice[$uid]) * $timeLength;
+                $stuPrice = intval(intval($singlePrice[$uid]) * $timeLength);
                 $stuCategory = self::CATEGORY_STUDENT_PAID_PERSONAL;
             }
             // 学生支出
@@ -333,26 +333,35 @@ class Service_Data_Schedule {
             return array();
         }
 
+        $diff = array();
         foreach ($list as $item) {
             if (!empty($info) && $item['id'] == $info['id']) {
                 continue;
             }
+            $flag = false;
             foreach ($needTimes as $t) {
                 if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
+                    break;
                 }
                 if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
+                    break;
                 }
                 if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
-                    return $item;
+                    $flag = true;
+                    break;
                 }
                 if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
-                    return $item;
+                    $flag = true;
+                    break;
                 }
             }
+            if ($flag) {
+                $diff[] = $item;
+            }
         }
-        return array();
+        return $diff;
     }
 
     public function checkTeacherPk ($needTimes, $needDays, $teacherId, $info = array()) {
@@ -384,27 +393,39 @@ class Service_Data_Schedule {
         }
 
         // 2个记录合并
+        $diff = array(
+            "lock" => array(),
+            'schedule' => array(),
+        );
         $list = array_merge($list, $locks);
         foreach ($list as $item) {
             if (!empty($info) && $item['id'] == $info['id']) {
                 continue;
             }
+            $flag = false;
             foreach ($needTimes as $t) {
                 if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
-                    return $item;
+                    $flag = true;
+                }
+            }
+            if ($flag) {
+                if (!empty($item['column_id'])) {
+                    $diff['schedule'][] = $item;
+                } else {
+                    $diff['lock'][] = $item;
                 }
             }
         }
-        return array();
+        return $diff;
     }
 
     public function checkRoom ($needTimes, $needDays, $info) {
@@ -423,25 +444,30 @@ class Service_Data_Schedule {
             return array();
         }
 
+        $diff = array();
         foreach ($list as $item) {
             if (!empty($info) && $item['id'] == $info['id']) {
                 continue;
             }
+            $flag = false;
             foreach ($needTimes as $t) {
                 if ($t['sts'] > $item['start_time'] && $t['sts'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['ets'] > $item['start_time'] && $t['ets'] < $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['sts'] < $item['start_time'] && $t['ets'] > $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
                 if ($t['sts'] == $item['start_time'] || $t['ets'] == $item['end_time']) {
-                    return $item;
+                    $flag = true;
                 }
             }
+            if ($flag) {
+                $diff[] = $item;
+            }
         }
-        return array();
+        return $diff;
     }
 }
