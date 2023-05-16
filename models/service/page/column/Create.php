@@ -22,6 +22,10 @@ class Service_Page_Column_Create extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "阈值数量必须大于1, 才能设置价格");
         }
 
+        if ($muiltPrice < 0 || $price < 0) {
+            throw new Zy_Core_Exception(405, "单价或超阈值价格不能是负数");
+        }
+
         $serviceData = new Service_Data_Column();
         $column = $serviceData->getColumnByTSId($teacherId, $subjectId);
         if (!empty($column)) {

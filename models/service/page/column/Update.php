@@ -21,6 +21,10 @@ class Service_Page_Column_Update extends Zy_Core_Service{
             throw new Zy_Core_Exception(405, "阈值数量必须大于1, 才能设置价格");
         }
 
+        if ($muiltPrice < 0 || $price < 0) {
+            throw new Zy_Core_Exception(405, "单价或超阈值价格不能是负数");
+        }
+
         $serviceSubject = new Service_Data_Subject();
         $subjectInfo = $serviceSubject->getSubjectById($subjectId);
         if (empty($subjectInfo)) {

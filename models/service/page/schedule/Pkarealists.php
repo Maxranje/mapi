@@ -178,10 +178,10 @@ class Service_Page_Schedule_Pkarealists extends Zy_Core_Service{
             $item['time_hm'] = date("H:i", $item['start_time']);
             $item['time_len'] = ($item['end_time'] - $item['start_time']) / 3600;
             $item['range_time'] = date('Y-m-d H:i', $item['start_time']) . "~".date('H:i', $item['end_time']);
-            $item['duration'] = (($item['end_time'] - $item['start_time']) / 3600);
+            $item['duration'] = (($item['end_time'] - $item['start_time']) / 60);
             $sum_duration += $item['duration'];
             if (empty($this->request['export'])) {
-                $item['duration'] .= "小时";
+                $item['duration'] .= "分钟";
             }
             $item['create_time'] = date('Y-m-d H:i:s', $item['create_time']);
             if (empty($columnInfos[$item['column_id']]['teacher_id'])
