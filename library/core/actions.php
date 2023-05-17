@@ -85,6 +85,7 @@ class Zy_Core_Actions {
 
     public function displayTemplate ($tpl) {
         header('Content-Type: text/html; charset=utf-8');
+        header("Cache-Control: no-cache, must-revalidate");
         
         $loader = new Twig_Loader_Filesystem(VIEWPATH);
         // 配置环境
