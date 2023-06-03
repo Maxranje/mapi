@@ -251,12 +251,13 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
             $item['birthplace'] = "-";
             if (!empty($groupMaps[$item['group_id']])) {
                 $item['muilt_scount'] = count($groupMaps[$item['group_id']]);
-            } else if (!empty($groupMaps[$item['group_id']]) && count($groupMaps[$item['group_id']]) == 1) {
-                $suid = $groupMaps[$item['group_id']][0];
-                if (!empty($userInfos[$suid]['birthplace'])) {
-                    $item['birthplace'] = $userInfos[$suid]['birthplace'];
+                if ($item['muilt_scount'] == 1) {
+                    $suid = $groupMaps[$item['group_id']][0];
+                    if (!empty($userInfos[$suid]['birthplace'])) {
+                        $item['birthplace'] = $userInfos[$suid]['birthplace'];
+                    }
                 }
-            }
+            } 
 
 
 

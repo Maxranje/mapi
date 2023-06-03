@@ -169,7 +169,7 @@ class Service_Page_Schedule_Fscalendar extends Zy_Core_Service{
 
 
             if ($type == Service_Data_User_Profile::USER_TYPE_TEACHER) {
-		        $duration = (($item['end_time'] - $item['start_time']) / 3600) . "小时";
+		        $duration = sprintf("%.2f", ($item['end_time'] - $item['start_time']) / 3600) . "小时";
                 $tmp['title'] = sprintf("%s %s %s %s", $duration, $groupName, $subjectName, $areaName);    
 		        if ($item['state'] == 0) {
                     $tmp['title'] .= "(已结算)";
