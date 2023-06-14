@@ -96,7 +96,7 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
         $result = array(
             'rows' => $lists,
             'total' => $total,
-            'sum_duration' => $sum_duration > 0 ? $sum_duration / 60 . "小时" : "-",
+            'sum_duration' => $sum_duration > 0 ? $sum_duration / 3600 . "小时" : "-",
         );
         return $result;
     }
@@ -196,11 +196,10 @@ class Service_Page_Schedule_Pklists extends Zy_Core_Service{
             $item['time_day'] = strtotime(date("Y-m-d", $item['start_time']));
             $item['time_range'] = sprintf("%s,%s", date("H:i", $item['start_time']), date("H:i", $item['end_time']));
             $item['range_time'] = date('Y-m-d H:i', $item['start_time']) . "~".date('H:i', $item['end_time']);
-            $item['duration'] = (($item['end_time'] - $item['start_time']) / 60);
+            $item['duration'] = $item['end_time'] - $item['start_time'];
             $sum_duration += $item['duration'];
-            if (empty($this->request['export'])) {
-                $item['duration'] .= "分钟";
-            }
+            $item['duration'] = sprintf("%.2f小时",  $item['duration'] / 3600);
+
             $item['create_time'] = date('Y-m-d H:i:s', $item['create_time']);
             if (empty($columnInfos[$item['column_id']]['teacher_id'])
                 || empty($columnInfos[$item['column_id']]['subject_id'])) {

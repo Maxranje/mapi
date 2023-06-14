@@ -4,10 +4,66 @@ class Service_Page_Base_Page extends Zy_Core_Service{
 
     // 查询通过登录uid上课俩表, 
     public function execute () {
-        if (!$this->checkTeacher()) {
+        if (!$this->checkTeacher() && !$this->checkStudent()) {
             return ;  
         }
 
+        if ($this->checkTeacher()) {
+            return $this->getTeacherData();
+        } 
+        if ($this->checkStudent()) {
+            return $this->getStudentData();
+        }
+        return array();
+    }
+
+    private function getStudentData() {
+
+        // 先查当前用户有哪些班级
+        $serviceGroupMap = new Service_Data_User_Group();
+        $groupMap = $serviceGroupMap->getGroupMapBySid($this->adption['userid']);
+        if (empty($groupMap)) {
+            return array();;
+        }
+
+        $groupIds = array();
+        foreach ($groupMap as $item) {
+            $groupIds[intval($item['group_id'])] = intval($item['group_id']);
+        }
+        $groupIds = array_values($groupIds);
+
+        $serviceGroup = new Service_Data_Group();
+        $groups = $serviceGroup->getListByConds(array(sprintf("id in (%s)", implode(",", $groupIds))));
+        if (empty($groups)) {
+            return array();
+        }
+
+        $serviceSchedule = new Service_Data_Schedule();
+        $scheduleLists = $serviceSchedule->getLastDuration($groupIds);
+
+        $result =array();
+        foreach ($groups as &$item) {
+            $lastDuration = $item['duration'];
+            if (isset($scheduleLists[$item['id']])) {
+                if ($item['duration'] <= $scheduleLists[$item['id']]) {
+                    continue;
+                }
+
+                $lastDuration = $item['duration'] - $scheduleLists[$item['id']];
+            }
+            $lastDuration = $lastDuration == 0 ? "-" : $lastDuration . "课时";
+            $result[] = array(
+                "groupName" => $item['name'],
+                'duration' => $item['duration'] . "课时",
+                'lastDuration' => $lastDuration,
+                'icon' => ["fa-bar-chart-o", "fa-clock-o", "fa-line-chart"][mt_rand(0,2)],
+                'bg' => ["btn-c-gradient-2", "btn-c-gradient-3", "btn-c-gradient-4"][mt_rand(0,2)],
+            );
+        }
+        return $result;
+    }
+
+    private function getTeacherData() {
         $sts = strtotime(date("Y-m-1"));
         $ets = strtotime(date('Y-m-d', strtotime('first day of next month')));
 
