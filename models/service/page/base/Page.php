@@ -45,17 +45,13 @@ class Service_Page_Base_Page extends Zy_Core_Service{
         foreach ($groups as &$item) {
             $lastDuration = $item['duration'];
             if (isset($scheduleLists[$item['id']])) {
-                if ($item['duration'] <= $scheduleLists[$item['id']]) {
-                    continue;
-                }
-
                 $lastDuration = $item['duration'] - $scheduleLists[$item['id']];
             }
-            $lastDuration = $lastDuration == 0 ? "-" : $lastDuration . "课时";
+            $msg = $lastDuration <= 0 ? "(已完结)" : "";
             $result[] = array(
                 "groupName" => $item['name'],
-                'duration' => $item['duration'] . "课时",
-                'lastDuration' => $lastDuration,
+                'duration' => sprintf("%.2f课时", $item['duration']), 
+                'lastDuration' => sprintf("%.2f课时" . $msg, $lastDuration),
                 'icon' => ["fa-bar-chart-o", "fa-clock-o", "fa-line-chart"][mt_rand(0,2)],
                 'bg' => ["btn-c-gradient-2", "btn-c-gradient-3", "btn-c-gradient-4"][mt_rand(0,2)],
             );
@@ -98,6 +94,9 @@ class Service_Page_Base_Page extends Zy_Core_Service{
                 $lastMonth += $timeLength;
             }
         }
-        return array("month" => $month . "H", "lastMonth" => $lastMonth . "H");
+        return array(
+            "month" => sprintf("%.2f课时", $month), 
+            "lastMonth" => sprintf("%.2f课时", $lastMonth),
+        );
     }
 }
