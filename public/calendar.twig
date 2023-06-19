@@ -107,7 +107,7 @@
                                     <div class="widget-social-content p-3 {{ foo.bg }} full-height wow fadeInUp" data-wow-delay="200ms">
                                         <h5 class="text-white"><span style="width:5rem;display:inline-block;">班级</span>{{ foo.groupName }}</h5>
                                         <h5 class="text-white"><span style="width:5rem;display:inline-block;">总课时</span>{{ foo.duration }}</h5>
-                                        <h5 class="text-white"><span style="width:5rem;display:inline-block;">剩余课时</span>{{ foo.lastDuration }}</h5>
+                                        <h5 class="{{ foo.durationColor }}"><span style="width:5rem;display:inline-block;" class="text-white">剩余课时</span>{{ foo.lastDuration }}</h5>
                                         <!-- Widget Social Icon -->
                                         <div class="widget-social-icon">
                                             <i class="fa {{ foo.icon }}" aria-hidden="true"></i>

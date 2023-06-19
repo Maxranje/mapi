@@ -47,11 +47,11 @@ class Service_Page_Base_Page extends Zy_Core_Service{
             if (isset($scheduleLists[$item['id']])) {
                 $lastDuration = $item['duration'] - $scheduleLists[$item['id']];
             }
-            $msg = $lastDuration <= 0 ? "(已完结)" : "";
             $result[] = array(
                 "groupName" => $item['name'],
                 'duration' => sprintf("%.2f课时", $item['duration']), 
-                'lastDuration' => sprintf("%.2f课时" . $msg, $lastDuration),
+                'lastDuration' => sprintf("%.2f课时", $lastDuration),
+                'durationColor' => $lastDuration <= 0 ? "text-danger" : "text-white",
                 'icon' => ["fa-bar-chart-o", "fa-clock-o", "fa-line-chart"][mt_rand(0,2)],
                 'bg' => ["btn-c-gradient-2", "btn-c-gradient-3", "btn-c-gradient-4"][mt_rand(0,2)],
             );
